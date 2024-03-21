@@ -27,12 +27,12 @@ CPlayer::~CPlayer()
 
 void CPlayer::Initialize()
 {
-	m_tInfo		= { 100.f, WINCY / 2.f, 200.f, 200.f };
+	m_tInfo		= { 100.f, WINCY / 2.f, 64.f, 64.f };
 	m_fSpeed	= 3.f;
 	m_fDistance = 100.f;
 	m_fPower = 20.f;
 
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Player_DOWN.bmp",  L"Player_DOWN");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_resize.bmp",  L"Player_DOWN");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Player_UP.bmp",	 L"Player_UP");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Player_LEFT.bmp",  L"Player_LEFT");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Player_RIGHT.bmp", L"Player_RIGHT");
@@ -44,7 +44,7 @@ void CPlayer::Initialize()
 
 
 	m_eCurState = IDLE;
-	m_tFrame = { 0, 3, 0, 200, GetTickCount() };
+	m_tFrame = { 0, 0, 0, 200, GetTickCount() };
 	m_pFrameKey = L"Player_DOWN";
 
 	m_eRender = RENDER_GAMEOBJECT;
@@ -76,19 +76,6 @@ void CPlayer::Render(HDC hDC)
 	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
 
 	HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
-
-	// 비트맵 출력 함수
-	/*BitBlt(hDC,		// 최종적인 그림을 그릴 dc
-		m_tRect.left + iScrollX,	// 복사 받을 위치의 left
-		m_tRect.top,				// 복사 받을 위치의 top
-		m_tInfo.fCX,				// 복사 받을 가로 길이
-		m_tInfo.fCY,				// 복사 받을 세로 길이
-		hMemDC,	// 비트맵을 가지고 있는 dc
-		0,							// 출력할 비트맵의 시작 x좌표
-		0,							// 출력할 비트맵의 시작 y좌표		
-		SRCCOPY);					// 출력 효과(그래도 출력)
-		*/
-
 	GdiTransparentBlt(hDC, // 최종적인 그림을 그릴 dc
 		m_tRect.left + iScrollX, // 복사 받을 위치의 left
 		m_tRect.top+ iScrollY,			 // 복사 받을 위치의 top
@@ -99,7 +86,7 @@ void CPlayer::Render(HDC hDC)
 		m_tFrame.iMotion * (int)m_tInfo.fCY,						// 출력할 비트맵의 시작 y좌표
 		(int)m_tInfo.fCX,			// 출력할 비트맵의 가로 사이즈
 		(int)m_tInfo.fCY,			// 출력할 비트맵의 세로 사이즈
-		RGB(0, 0, 0));	// 제거할 픽셀의 색상 값
+		RGB(252, 0, 255));	// 제거할 픽셀의 색상 값
 }
 
 void CPlayer::Release()
@@ -113,7 +100,8 @@ void CPlayer::Key_Input()
 	if (GetAsyncKeyState(VK_LEFT))
 	{
 		m_tInfo.fX -= m_fSpeed;
-		m_pFrameKey = L"Player_LEFT";
+		m_pFrameKey = L"Player_DOWN";
+		//m_pFrameKey = L"Player_LEFT";
 		m_eCurState = WALK;
 
 	}
@@ -121,14 +109,16 @@ void CPlayer::Key_Input()
 	else if (GetAsyncKeyState(VK_RIGHT))
 	{
 		m_tInfo.fX += m_fSpeed;
-		m_pFrameKey = L"Player_RIGHT";
+		m_pFrameKey = L"Player_DOWN";
+		//m_pFrameKey = L"Player_RIGHT";
 		m_eCurState = WALK;
 	}
 
 	else if (GetAsyncKeyState(VK_UP))
 	{
 		m_tInfo.fY -= m_fSpeed;
-		m_pFrameKey = L"Player_UP";
+		m_pFrameKey = L"Player_DOWN";
+		//m_pFrameKey = L"Player_UP";
 		m_eCurState = WALK;
 
 	}
@@ -218,7 +208,7 @@ void CPlayer::Motion_Change()
 		{
 		case CPlayer::IDLE:
 			m_tFrame.iFrameStart = 0;
-			m_tFrame.iFrameEnd = 3;
+			m_tFrame.iFrameEnd = 0;
 			m_tFrame.iMotion = 0;
 			m_tFrame.dwSpeed = 200;
 			m_tFrame.dwTime = GetTickCount();
