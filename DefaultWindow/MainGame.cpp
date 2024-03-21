@@ -13,6 +13,7 @@
 
 CMainGame::CMainGame() : m_iFPS(0), m_dwTime(GetTickCount())
 {
+
 	ZeroMemory(m_szFPS, sizeof(m_szFPS));
 }
 
