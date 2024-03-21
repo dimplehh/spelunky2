@@ -79,15 +79,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,			// HINSTANCE : 현재 프로그램의
 
 				dwTime = GetTickCount();		// 1050
 			}	
-
-			/*MainGame.Update();
-			MainGame.Late_Update();
-			MainGame.Render();*/
 		}
 	}
-
-
-
+	
     return (int) msg.wParam;
 }	 // 
 

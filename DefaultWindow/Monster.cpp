@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "Monster.h"
+#include "BmpMgr.h"
+#include "ScrollMgr.h"
 
 CMonster::CMonster()
 {
@@ -12,34 +14,17 @@ CMonster::~CMonster()
 
 void CMonster::Initialize()
 {
-	m_tInfo = { 200.f, 200.f, 50.f, 50.f };
+	m_tInfo = { 200.f, 200.f, 300.f, 300.f };
 	m_fSpeed = 3.f;
+
+	m_pFrameKey = L"Monster";
+	m_eRender = RENDER_GAMEOBJECT;
 }
 
 int CMonster::Update()
 {
 	if (m_bDead)
 		return OBJ_DEAD;
-
-	//float	fWidth(0.f), fHeight(0.f), fDiagonal(0.f), fRadian(0.f);
-
-	//fWidth  = m_pTarget->Get_Info().fX - m_tInfo.fX;
-	//fHeight = m_pTarget->Get_Info().fY - m_tInfo.fY;
-
-	//fDiagonal = sqrt(fWidth * fWidth + fHeight * fHeight);
-
-	//fRadian = acos(fWidth / fDiagonal);
-
-	///*if (m_pTarget->Get_Info().fY > m_tInfo.fY)
-	//	fRadian = (2 * PI) - fRadian;*/
-
-	//m_fAngle = fRadian * (180.f / PI);
-
-	//if (m_pTarget->Get_Info().fY > m_tInfo.fY)
-	//	m_fAngle *= -1.f;
-
-	//m_tInfo.fX += cos(m_fAngle * (PI / 180.f)) * m_fSpeed;
-	//m_tInfo.fY -= sin(m_fAngle * (PI / 180.f)) * m_fSpeed;
 
 
 	__super::Update_Rect();
@@ -54,7 +39,22 @@ void CMonster::Late_Update()
 
 void CMonster::Render(HDC hDC)
 {
-	Rectangle(hDC, m_tRect.left, m_tRect.top, m_tRect.right, m_tRect.bottom);
+	HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
+
+	int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
+	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
+	
+	GdiTransparentBlt(hDC, 
+		m_tRect.left + iScrollX,
+		m_tRect.top + iScrollY,
+		(int)m_tInfo.fCX,
+		(int)m_tInfo.fCY,
+		hMemDC,			
+		0,
+		0,
+		(int)m_tInfo.fCX,
+		(int)m_tInfo.fCY,
+		RGB(255, 255, 255));	
 }
 
 void CMonster::Release()

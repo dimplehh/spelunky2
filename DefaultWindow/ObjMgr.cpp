@@ -81,20 +81,30 @@ void CObjMgr::Late_Update()
 
 			if (m_ObjList[i].empty())
 				break;
+
+			RENDERID eID = iter->Get_GroupID();
+			m_RenderList[eID].push_back(iter);
 		}
 	}
 
-	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_MONSTER], m_ObjList[OBJ_PLAYER]);
-	CCollisionMgr::Collision_Sphere(m_ObjList[OBJ_BULLET], m_ObjList[OBJ_MONSTER]);
+	//CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_MONSTER], m_ObjList[OBJ_PLAYER]);
+	//CCollisionMgr::Collision_Sphere(m_ObjList[OBJ_BULLET], m_ObjList[OBJ_MONSTER]);
 }
 
 void CObjMgr::Render(HDC hDC)
 {
 
-	for (size_t i = 0; i < OBJ_END; ++i)
+	for (size_t i = 0; i < RENDER_END; ++i)
 	{
-		for (auto& iter : m_ObjList[i])
+		m_RenderList[i].sort([](CObj* pDst, CObj* pSrc)->bool 
+		{
+			return pDst->Get_Info().fY < pSrc->Get_Info().fY;
+		});
+
+		for (auto& iter : m_RenderList[i])
 			iter->Render(hDC);
+
+		m_RenderList[i].clear();
 	}
 
 }

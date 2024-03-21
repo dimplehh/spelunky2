@@ -22,8 +22,7 @@ void CMyButton::Initialize()
 
 	m_pFrameKey = L"Start";
 
-
-
+	m_eRender = RENDER_UI;	
 }
 
 int CMyButton::Update()

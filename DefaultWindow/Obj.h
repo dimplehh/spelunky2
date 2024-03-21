@@ -22,6 +22,7 @@ public:
 	void		Set_PosY(float _fY) { m_tInfo.fY += _fY; }
 	void		Set_PosX(float _fX) { m_tInfo.fX += _fX; }
 
+	RENDERID		Get_GroupID() const { return m_eRender; }
 
 	RECT			Get_Rect() { return m_tRect; }
 	INFO			Get_Info() { return m_tInfo; }
@@ -48,6 +49,7 @@ protected:
 	FRAME		m_tFrame;
 
 	DIRECTION	m_eDir;
+	RENDERID	m_eRender;
 
 	float		m_fSpeed;
 	bool		m_bDead;
