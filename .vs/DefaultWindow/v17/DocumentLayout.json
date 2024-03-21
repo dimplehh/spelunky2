@@ -1,0 +1,58 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\dimpl\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\\uC2A4\uD3A0\uB801\uD0A4\\\uD504\uB85C\uC81D\uD2B8\\spelunky2\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{7C8F2AD4-BC95-442C-B41B-0A97CBC99B3B}|DefaultWindow\\DefaultWindow.vcxproj|C:\\Users\\dimpl\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\\uC2A4\uD3A0\uB801\uD0A4\\\uD504\uB85C\uC81D\uD2B8\\spelunky2\\DefaultWindow\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{7C8F2AD4-BC95-442C-B41B-0A97CBC99B3B}|DefaultWindow\\DefaultWindow.vcxproj|solutionrelative:DefaultWindow\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7C8F2AD4-BC95-442C-B41B-0A97CBC99B3B}|DefaultWindow\\DefaultWindow.vcxproj|C:\\Users\\dimpl\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\\uC2A4\uD3A0\uB801\uD0A4\\\uD504\uB85C\uC81D\uD2B8\\spelunky2\\DefaultWindow\\MainGame.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{7C8F2AD4-BC95-442C-B41B-0A97CBC99B3B}|DefaultWindow\\DefaultWindow.vcxproj|solutionrelative:DefaultWindow\\MainGame.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Player.cpp",
+              "DocumentMoniker": "C:\\Users\\dimpl\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\\uC2A4\uD3A0\uB801\uD0A4\\\uD504\uB85C\uC81D\uD2B8\\spelunky2\\DefaultWindow\\Player.cpp",
+              "RelativeDocumentMoniker": "DefaultWindow\\Player.cpp",
+              "ToolTip": "C:\\Users\\dimpl\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\\uC2A4\uD3A0\uB801\uD0A4\\\uD504\uB85C\uC81D\uD2B8\\spelunky2\\DefaultWindow\\Player.cpp",
+              "RelativeToolTip": "DefaultWindow\\Player.cpp",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABMAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-03-21T02:18:19.08Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MainGame.cpp",
+              "DocumentMoniker": "C:\\Users\\dimpl\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\\uC2A4\uD3A0\uB801\uD0A4\\\uD504\uB85C\uC81D\uD2B8\\spelunky2\\DefaultWindow\\MainGame.cpp",
+              "RelativeDocumentMoniker": "DefaultWindow\\MainGame.cpp",
+              "ToolTip": "C:\\Users\\dimpl\\OneDrive\\\uBC14\uD0D5 \uD654\uBA74\\\uC2A4\uD3A0\uB801\uD0A4\\\uD504\uB85C\uC81D\uD2B8\\spelunky2\\DefaultWindow\\MainGame.cpp",
+              "RelativeToolTip": "DefaultWindow\\MainGame.cpp",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAACAAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-03-21T02:12:37.191Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
