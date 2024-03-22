@@ -96,10 +96,10 @@ void CObjMgr::Render(HDC hDC)
 
 	for (size_t i = 0; i < RENDER_END; ++i)
 	{
-		m_RenderList[i].sort([](CObj* pDst, CObj* pSrc)->bool 
-		{
-			return pDst->Get_Info().fY < pSrc->Get_Info().fY;
-		});
+		//m_RenderList[i].sort([](CObj* pDst, CObj* pSrc)->bool 
+		//{
+		//	return pDst->Get_Info().fY < pSrc->Get_Info().fY;
+		//});
 
 		for (auto& iter : m_RenderList[i])
 			iter->Render(hDC);

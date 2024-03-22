@@ -42,13 +42,14 @@ public:
 protected:
 	void		Update_Rect();
 	void		Move_Frame();
-	void		Set_Frame(int _frameMax, int _frameStart, int _frameEnd, int _motion, bool _roop, int _dwSpeed);
+	void		Set_Frame(int _frameStart, int _frameEnd, int _motion, bool _roop, int _dwSpeed);
 	bool		Check_Move_End();
 
 protected:
 	INFO		m_tInfo;
 	RECT		m_tRect;
 	FRAME		m_tFrame;
+	int			m_iFirstFrameStart;
 
 	DIRECTION	m_eDir;
 	RENDERID	m_eRender;

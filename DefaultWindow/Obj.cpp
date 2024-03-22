@@ -22,9 +22,8 @@ void CObj::Update_Rect()
 	m_tRect.bottom	= long(m_tInfo.fY + (m_tInfo.fCY * 0.5f));
 }
 
-void CObj::Set_Frame(int _frameMax, int _frameStart, int _frameEnd, int _motion, bool _roop, int _dwSpeed)
+void CObj::Set_Frame(int _frameStart, int _frameEnd, int _motion, bool _roop, int _dwSpeed)
 {
-	m_tFrame.iFrameMax = _frameMax;
 	if (m_bFlip == false)
 	{
 		m_tFrame.iFrameStart = _frameStart;
@@ -32,9 +31,11 @@ void CObj::Set_Frame(int _frameMax, int _frameStart, int _frameEnd, int _motion,
 	}
 	else
 	{
-		m_tFrame.iFrameStart = _frameMax - _frameStart;
-		m_tFrame.iFrameEnd = _frameMax - _frameEnd;
+		m_tFrame.iFrameStart = m_tFrame.iFrameMax - _frameStart;
+		m_tFrame.iFrameEnd = m_tFrame.iFrameMax - _frameEnd;
 	}
+	m_iFirstFrameStart = m_tFrame.iFrameStart;
+
 	m_tFrame.iMotion = _motion;
 	m_tFrame.bRoop = _roop;
 	m_tFrame.dwSpeed = _dwSpeed;
@@ -54,7 +55,7 @@ void CObj::Move_Frame()
 				if (m_tFrame.bRoop == false)
 					m_tFrame.iFrameStart = m_tFrame.iFrameEnd;
 				else
-					m_tFrame.iFrameStart = 0;
+					m_tFrame.iFrameStart = m_iFirstFrameStart;
 			}
 		}
 		else
@@ -65,7 +66,7 @@ void CObj::Move_Frame()
 				if (m_tFrame.bRoop == false)
 					m_tFrame.iFrameStart = m_tFrame.iFrameEnd;
 				else
-					m_tFrame.iFrameStart = m_tFrame.iFrameMax;
+					m_tFrame.iFrameStart = m_iFirstFrameStart;
 			}
 		}
 	}

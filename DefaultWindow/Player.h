@@ -4,10 +4,10 @@
 
 class CPlayer :	public CObj
 {
-public:								//±âÀý	//À§¸¦ º½			// ¾þµå¸²  //±â¾î°¨	//ÀÏ¾î¼¶
-	enum STATE { IDLE, WALK, JUMP, DIZZY, DIE, LOOKUP, LOOKFRONT, KNEELDOWN, CRAWL, STANDUP, 
-			GRAB, ATTACKED, ALMOSTFELL, ATTACK, ENTER, EXIT, LADDER, PUSH, ST_END };
-							//¶³¾îÁú »·								
+public:								//±âÀý	//À§¸¦ º½			// ¾þµå¸²				//±â¾î°¨	//ÀÏ¾î¼¶
+	enum STATE { IDLE, WALK, JUMP, DIZZY, DIE, LOOKUP, LOOKFRONT, KNEELDOWN, KNEELSTAY, CRAWL, STANDUP, 
+					ATTACKED, ALMOSTFELL, ATTACK, ENTER, EXIT, LADDER, PUSH, HANGON, ST_END };
+							//¶³¾îÁú »·									// ¸Å´Þ¸²
 public:
 	CPlayer();
 	virtual ~CPlayer();
@@ -21,9 +21,11 @@ public:
 
 private:
 	void		Key_Input();
-	void		Load_Line();
 	void		Offset();
 	void		Motion_Change();
+
+	void		Gravity();
+	void		InLadder();
 
 private:
 
@@ -31,6 +33,7 @@ private:
 	float		m_fDistance;
 
 	bool		m_bJump;
+	bool		m_bLadder;
 	bool		m_bKneelDown; //¾þµå¸° »óÅÂ
 
 	float		m_fPower;
@@ -38,10 +41,6 @@ private:
 
 	STATE		m_ePreState;
 	STATE		m_eCurState;
-
-
-	// y = ÆÄ¿ö(Èû) * sin(90) * ½Ã°£ - (9.8f * ½Ã°£ * ½Ã°£) / 2
-
 };
 
 
