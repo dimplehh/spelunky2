@@ -7,7 +7,7 @@ class CPlayer :	public CObj
 public:								//기절	//위를 봄			// 엎드림				//기어감	//일어섬
 	enum STATE { IDLE, WALK, JUMP, DIZZY, DIE, LOOKUP, LOOKFRONT, KNEELDOWN, KNEELSTAY, CRAWL, STANDUP, 
 					ATTACKED, ALMOSTFELL, ATTACK, ENTER, EXIT, LADDER, PUSH, HANGON, ST_END };
-							//떨어질 뻔									// 매달림
+							//떨어질 뻔										// 매달림
 public:
 	CPlayer();
 	virtual ~CPlayer();
@@ -35,6 +35,7 @@ private:
 	bool		m_bJump;
 	bool		m_bLadder;
 	bool		m_bKneelDown; //엎드린 상태
+	int			m_iJumpCount;
 
 	float		m_fPower;
 	float		m_fTime;

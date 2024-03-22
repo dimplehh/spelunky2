@@ -13,7 +13,7 @@
 
 
 CPlayer::CPlayer()
-	: m_fDistance(0.f), m_bJump(false), m_bLadder(false),
+	: m_fDistance(0.f), m_bJump(false), m_bLadder(false), m_iJumpCount(0),
 	m_fTime(0.f), m_fPower(0.f), m_ePreState(ST_END), m_eCurState(IDLE), m_bKneelDown(false)
 {
 	ZeroMemory(&m_tPosin, sizeof(POINT));
@@ -71,7 +71,11 @@ void CPlayer::Render(HDC hDC)
 		(int)m_tInfo.fCX, (int)m_tInfo.fCY,	RGB(62, 62, 62));
 	TCHAR	szBuff[80] = L"";
 	//swprintf_s(szBuff, L"start frame,end frame, 줄 번호: %d, %d, %d",m_tFrame.iFrameStart, m_tFrame.iFrameEnd, m_tFrame.iMotion);
-	swprintf_s(szBuff, L"사다리, 스크롤 y, 플레이어좌표: %d, %f, %f, %f", m_bLadder, CScrollMgr::Get_Instance()->Get_ScrollY(), m_tInfo.fX, m_tInfo.fY);
+	if (nullptr == CLineMgr::Get_Instance()->Get_AttachedLine())
+	{
+		swprintf_s(szBuff, L"선 양끝점:  %f, %f", CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tLPoint,
+			CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tRPoint);
+	}
 	TextOut(hDC, 50, 100, szBuff, lstrlen(szBuff));
 }
 
@@ -177,11 +181,32 @@ void CPlayer::Key_Input()	// 이 코드 자체를 좀 깔끔히 정리 필요
 
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::Z) == KEY_STATE::TAP)
 	{
-		m_bJump = true;
-		m_eCurState = JUMP;
-		m_fTime = 0.f;
-		m_fPower = 10.f;
-		m_bLadder = false;
+		if (m_bKneelDown == true)	// 하향점프
+		{
+			if (CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
+			{
+				if (CLineMgr::Get_Instance()->LastBottom_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
+				{
+					m_tInfo.fY += m_tInfo.fCY / 3.f;
+				}
+			}
+			if (170.f < m_fAngle && m_fAngle < 270.f)
+				m_fAngle += 10.f;
+			else
+				m_fAngle -= 10.f;
+		}
+		else
+		{
+			if (m_iJumpCount < 1)
+			{
+				m_bJump = true;
+				m_eCurState = JUMP;
+				m_fTime = 0.f;
+				m_fPower = 10.f;
+				m_bLadder = false;
+				m_iJumpCount++;
+			}
+		}
 	}
 }
 
@@ -260,6 +285,7 @@ void CPlayer::Gravity()	//숫자 의미 판단, 더 정리 필요
 		else
 		{
 			m_fPower = 0.f;
+			m_iJumpCount = 0;
 			return;
 		}
 	}
@@ -268,7 +294,10 @@ void CPlayer::Gravity()	//숫자 의미 판단, 더 정리 필요
 void CPlayer::InLadder()
 {
 	if (CLineMgr::Get_Instance()->Ladder_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
+	{
+		m_iJumpCount = 0;
 		m_bLadder = true;
+	}
 	else
 		m_bLadder = false;
 }

@@ -26,6 +26,7 @@ bool CLineMgr::Collision_Line(float & fX, float * pY)
 			fX < iter->Get_Info().tRPoint.fX)
 		{
 			pTargetLine = iter;
+			m_AttachedLine = iter;
 		}
 	}
 
@@ -71,6 +72,7 @@ bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool
 				if (((fY + (fCY / 3.f)) <= Liney) && (Liney <= (fY + (fCY / 2.f))))
 				{    // 하단 부분 충돌 범위 지정 전체 사이즈의 1/3 가량
 					pTargetLine = iter;
+					m_AttachedLine = iter;
 					fY = Liney - (fCY / 2.f);
 					return true;
 				}
@@ -102,6 +104,7 @@ bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY)
 			if (((fY + (fCY / 3.f)) <= Liney) && (Liney <= (fY + (fCY / 2.f))))
 			{    // 하단 부분 충돌 범위 지정 전체 사이즈의 1/3 가량
 				pTargetLine = iter;
+				m_AttachedLine = iter;
 				fY = Liney - (fCY / 2.f);
 				return true;
 			}
