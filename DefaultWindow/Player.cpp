@@ -27,10 +27,10 @@ CPlayer::~CPlayer()
 
 void CPlayer::Initialize()
 {
-	m_tInfo		= { WINCX / 2.f, 200, 64.f, 64.f };
+	m_tInfo		= { WINCX / 2.f, WINCY / 2.f, 64.f, 64.f };
 	m_fSpeed	= 5.f;
 	m_fDistance = 100.f;
-	m_fPower = 10.f;
+	m_fPower = 6.f;
 
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_base.bmp",  L"Player_BASE");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_flip.bmp", L"Player_FLIP");
@@ -69,9 +69,9 @@ void CPlayer::Render(HDC hDC)
 		(int)m_tInfo.fCX, (int)m_tInfo.fCY, hMemDC,	
 		m_tFrame.iFrameStart * (int)m_tInfo.fCX, m_tFrame.iMotion * (int)m_tInfo.fCY,
 		(int)m_tInfo.fCX, (int)m_tInfo.fCY,	RGB(62, 62, 62));
-	TCHAR	szBuff[50] = L"";
+	TCHAR	szBuff[80] = L"";
 	//swprintf_s(szBuff, L"start frame,end frame, 줄 번호: %d, %d, %d",m_tFrame.iFrameStart, m_tFrame.iFrameEnd, m_tFrame.iMotion);
-	swprintf_s(szBuff, L"m_bLadder: %d", m_bLadder);
+	swprintf_s(szBuff, L"사다리, 스크롤 y, 플레이어좌표: %d, %f, %f, %f", m_bLadder, CScrollMgr::Get_Instance()->Get_ScrollY(), m_tInfo.fX, m_tInfo.fY);
 	TextOut(hDC, 50, 100, szBuff, lstrlen(szBuff));
 }
 
@@ -87,7 +87,7 @@ void CPlayer::Key_Input()	// 이 코드 자체를 좀 깔끔히 정리 필요
 	{
 		m_pFrameKey = L"Player_FLIP";
 		m_bFlip = true;
-		if (!m_bJump && !m_bLadder) 
+		if (!m_bLadder) 
 		{
 			if (m_bKneelDown)
 			{
@@ -96,7 +96,8 @@ void CPlayer::Key_Input()	// 이 코드 자체를 좀 깔끔히 정리 필요
 			}
 			else
 			{
-				m_eCurState = WALK;
+				if(!m_bJump)
+					m_eCurState = WALK;
 				m_tInfo.fX -= m_fSpeed;
 			}
 		}
@@ -105,7 +106,7 @@ void CPlayer::Key_Input()	// 이 코드 자체를 좀 깔끔히 정리 필요
 	{
 		m_pFrameKey = L"Player_BASE";
 		m_bFlip = false;
-		if (!m_bJump && !m_bLadder)
+		if (!m_bLadder)
 		{
 			if (m_bKneelDown)
 			{
@@ -114,7 +115,8 @@ void CPlayer::Key_Input()	// 이 코드 자체를 좀 깔끔히 정리 필요
 			}
 			else
 			{
-				m_eCurState = WALK;
+				if (!m_bJump)
+					m_eCurState = WALK;
 				m_tInfo.fX += m_fSpeed;
 			}
 		}
@@ -156,7 +158,7 @@ void CPlayer::Key_Input()	// 이 코드 자체를 좀 깔끔히 정리 필요
 	}
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::AWAY)
 	{
-		if (m_bLadder)
+		if (!m_bLadder)
 		{
 			m_eCurState = STANDUP;
 			m_bKneelDown = false;
@@ -185,26 +187,52 @@ void CPlayer::Key_Input()	// 이 코드 자체를 좀 깔끔히 정리 필요
 
 void CPlayer::Offset()
 {
-	int		iOffSetminX = 100;
-	int		iOffSetmaxX = 700;
+	int		iOffSetminX = 390;
+	int		iOffSetmaxX = 410;
 
-	int		iOffSetminY = 100;
-	int		iOffSetmaxY = 500;
+	int		iOffSetminY = 290;
+	int		iOffSetmaxY = 310;
 
 	float	fScrollX = CScrollMgr::Get_Instance()->Get_ScrollX();
 	float	fScrollY = CScrollMgr::Get_Instance()->Get_ScrollY();
 
-	if ((float)iOffSetminX > m_tInfo.fX + fScrollX)
-		CScrollMgr::Get_Instance()->Set_ScrollX(m_fSpeed);
+	if (m_eCurState == LOOKUP)
+	{
+		if (Check_Move_End() == true)
+		{
+			if (m_fMoveOffset < 15.f)
+			{
+				m_fMoveOffset += 0.8f;
+				CScrollMgr::Get_Instance()->Set_ScrollY(m_fMoveOffset);
+			}
+		}
+	}
+	else if (m_eCurState == KNEELSTAY)
+	{
+		if (Check_Move_End() == true)
+		{
+			if (m_fMoveOffset < 15.f)
+			{
+				m_fMoveOffset += 0.8f;
+				CScrollMgr::Get_Instance()->Set_ScrollY(-m_fMoveOffset);
+			}
+		}
+	}
+	else
+	{
+		m_fMoveOffset = 0.f;
+		if ((float)iOffSetminX > m_tInfo.fX + fScrollX)
+			CScrollMgr::Get_Instance()->Set_ScrollX(m_fSpeed);
 
-	if ((float)iOffSetmaxX < m_tInfo.fX + fScrollX)
-		CScrollMgr::Get_Instance()->Set_ScrollX(-m_fSpeed);
+		if ((float)iOffSetmaxX < m_tInfo.fX + fScrollX)
+			CScrollMgr::Get_Instance()->Set_ScrollX(-m_fSpeed);
 
-	if ((float)iOffSetminY > m_tInfo.fY + fScrollY)
-		CScrollMgr::Get_Instance()->Set_ScrollY(m_fSpeed);
+		if ((float)iOffSetminY > m_tInfo.fY + fScrollY)
+			CScrollMgr::Get_Instance()->Set_ScrollY(m_fSpeed);
 
-	if ((float)iOffSetmaxY < m_tInfo.fY + fScrollY)
-		CScrollMgr::Get_Instance()->Set_ScrollY(-m_fSpeed);
+		if ((float)iOffSetmaxY < m_tInfo.fY + fScrollY)
+			CScrollMgr::Get_Instance()->Set_ScrollY(-m_fSpeed);
+	}
 }
 
 void CPlayer::Gravity()	//숫자 의미 판단, 더 정리 필요

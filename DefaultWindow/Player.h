@@ -41,6 +41,8 @@ private:
 
 	STATE		m_ePreState;
 	STATE		m_eCurState;
+
+	float		m_fMoveOffset = 0;
 };
 
 
