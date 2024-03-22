@@ -80,10 +80,11 @@ typedef struct tagLine
 
 typedef struct tagFrame
 {
-	int		iFrameStart;	// 몇 번 인덱스부터 시작할 것인가
+	int		iFrameStart;
 	int		iFrameEnd;
 	int		iMotion;
 	int		iFrameMax;
+	bool	bRoop;
 	DWORD	dwSpeed;
 	DWORD	dwTime;
 

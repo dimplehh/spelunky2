@@ -22,27 +22,7 @@ void CObj::Update_Rect()
 	m_tRect.bottom	= long(m_tInfo.fY + (m_tInfo.fCY * 0.5f));
 }
 
-void CObj::Move_Frame()
-{
-	if (m_tFrame.dwTime + m_tFrame.dwSpeed < GetTickCount())
-	{
-		m_tFrame.dwTime = GetTickCount();
-		if (m_bFlip == false)
-		{
-			++m_tFrame.iFrameStart;
-			if (m_tFrame.iFrameStart > m_tFrame.iFrameEnd)
-				m_tFrame.iFrameStart = 0;
-		}
-		else
-		{
-			--m_tFrame.iFrameStart;
-			if(m_tFrame.iFrameStart < m_tFrame.iFrameEnd)
-				m_tFrame.iFrameStart = m_tFrame.iFrameMax;
-		}
-	}
-}
-
-void CObj::Set_Frame(int _frameMax, int _frameStart, int _frameEnd, int _motion, int _dwSpeed)
+void CObj::Set_Frame(int _frameMax, int _frameStart, int _frameEnd, int _motion, bool _roop, int _dwSpeed)
 {
 	m_tFrame.iFrameMax = _frameMax;
 	if (m_bFlip == false)
@@ -56,6 +36,37 @@ void CObj::Set_Frame(int _frameMax, int _frameStart, int _frameEnd, int _motion,
 		m_tFrame.iFrameEnd = _frameMax - _frameEnd;
 	}
 	m_tFrame.iMotion = _motion;
+	m_tFrame.bRoop = _roop;
 	m_tFrame.dwSpeed = _dwSpeed;
 	m_tFrame.dwTime = GetTickCount();
+}
+
+void CObj::Move_Frame()
+{
+	if (m_tFrame.dwTime + m_tFrame.dwSpeed < GetTickCount())
+	{
+		m_tFrame.dwTime = GetTickCount();
+		if (m_bFlip == false)
+		{
+			++m_tFrame.iFrameStart;
+			if (m_tFrame.iFrameStart >= m_tFrame.iFrameEnd)
+			{
+				if (m_tFrame.bRoop == false)
+					m_tFrame.iFrameStart = m_tFrame.iFrameEnd;
+				else
+					m_tFrame.iFrameStart = 0;
+			}
+		}
+		else
+		{
+			--m_tFrame.iFrameStart;
+			if (m_tFrame.iFrameStart <= m_tFrame.iFrameEnd)
+			{
+				if (m_tFrame.bRoop == false)
+					m_tFrame.iFrameStart = m_tFrame.iFrameEnd;
+				else
+					m_tFrame.iFrameStart = m_tFrame.iFrameMax;
+			}
+		}
+	}
 }

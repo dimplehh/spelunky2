@@ -42,7 +42,8 @@ public:
 protected:
 	void		Update_Rect();
 	void		Move_Frame();
-	void		Set_Frame(int _frameMax, int _frameStart, int _frameEnd, int _motion, int _dwSpeed);
+	void		Set_Frame(int _frameMax, int _frameStart, int _frameEnd, int _motion, bool _roop, int _dwSpeed);
+	bool		Check_Move_Finish();
 
 protected:
 	INFO		m_tInfo;
