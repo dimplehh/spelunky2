@@ -24,6 +24,7 @@ private:
 	void		Offset();
 	void		Motion_Change();
 
+	bool		Die();
 	void		Gravity();
 	void		InLadder();
 
@@ -31,6 +32,7 @@ private:
 
 	POINT		m_tPosin;
 	float		m_fDistance;
+	int			m_iHp;
 
 	bool		m_bJump;
 	bool		m_bLadder;

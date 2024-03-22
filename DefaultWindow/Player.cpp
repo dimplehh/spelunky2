@@ -13,7 +13,7 @@
 
 
 CPlayer::CPlayer()
-	: m_fDistance(0.f), m_bJump(false), m_bLadder(false), m_iJumpCount(0),
+	: m_fDistance(0.f), m_bJump(false), m_bLadder(false), m_iJumpCount(0), m_iHp(100),
 	m_fTime(0.f), m_fPower(0.f), m_ePreState(ST_END), m_eCurState(IDLE), m_bKneelDown(false)
 {
 	ZeroMemory(&m_tPosin, sizeof(POINT));
@@ -44,6 +44,7 @@ void CPlayer::Initialize()
 
 int CPlayer::Update()
 {
+	Die();
 	Key_Input();
 	Offset();
 	__super::Update_Rect();
@@ -69,7 +70,8 @@ void CPlayer::Render(HDC hDC)
 		(int)m_tInfo.fCX, (int)m_tInfo.fCY, hMemDC,	
 		m_tFrame.iFrameStart * (int)m_tInfo.fCX, m_tFrame.iMotion * (int)m_tInfo.fCY,
 		(int)m_tInfo.fCX, (int)m_tInfo.fCY,	RGB(62, 62, 62));
-	TCHAR	szBuff[80] = L"";
+	TCHAR	szBuff[80] = L""; 
+	swprintf_s(szBuff, L"체력:  %d", m_iHp);
 	//swprintf_s(szBuff, L"start frame,end frame, 줄 번호: %d, %d, %d",m_tFrame.iFrameStart, m_tFrame.iFrameEnd, m_tFrame.iMotion);
 	if (nullptr == CLineMgr::Get_Instance()->Get_AttachedLine())
 	{
@@ -85,13 +87,15 @@ void CPlayer::Release()
 
 void CPlayer::Key_Input()	// 이 코드 자체를 좀 깔끔히 정리 필요
 {
+	if (m_eCurState == DIE)
+		return;
 	float	fY(0.f);
 
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::HOLD)
 	{
 		m_pFrameKey = L"Player_FLIP";
 		m_bFlip = true;
-		if (!m_bLadder) 
+		if (!m_bLadder)
 		{
 			if (m_bKneelDown)
 			{
@@ -100,7 +104,7 @@ void CPlayer::Key_Input()	// 이 코드 자체를 좀 깔끔히 정리 필요
 			}
 			else
 			{
-				if(!m_bJump)
+				if (!m_bJump)
 					m_eCurState = WALK;
 				m_tInfo.fX -= m_fSpeed;
 			}
@@ -168,6 +172,8 @@ void CPlayer::Key_Input()	// 이 코드 자체를 좀 깔끔히 정리 필요
 			m_bKneelDown = false;
 		}
 	}
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::P) == KEY_STATE::HOLD)
+		m_iHp--;
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::HOLD)
 	{
 		m_eCurState = ENTER;
@@ -258,6 +264,17 @@ void CPlayer::Offset()
 		if ((float)iOffSetmaxY < m_tInfo.fY + fScrollY)
 			CScrollMgr::Get_Instance()->Set_ScrollY(-m_fSpeed);
 	}
+}
+
+bool CPlayer::Die()
+{
+	if (m_iHp < 0)
+	{
+		m_iHp = 0;
+		m_eCurState = DIE;
+		return true;
+	}
+	return false;
 }
 
 void CPlayer::Gravity()	//숫자 의미 판단, 더 정리 필요
