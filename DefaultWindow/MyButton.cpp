@@ -41,7 +41,7 @@ void CMyButton::Late_Update()
 
 	if (PtInRect(&m_tRect, pt))
 	{
-		if (CKeyMgr::Get_Instance()->Key_Down(VK_LBUTTON))
+		if ((CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LBUTTON) == KEY_STATE::TAP))
 		{
 			if (!lstrcmp(L"Start", m_pFrameKey))
 				CSceneMgr::Get_Instance()->Scene_Change(SC_STAGE);

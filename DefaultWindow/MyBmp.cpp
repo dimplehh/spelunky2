@@ -28,9 +28,8 @@ void CMyBmp::Load_Bmp(const TCHAR * pFilePath)
 							LR_LOADFROMFILE | LR_CREATEDIBSECTION);
 							//LR_LOADFROMFILE : 파일로부터 이미지를 읽어들인다는 옵션
 							// LR_CREATEDIBSECTION : 읽어온 파일을 DIB 형태로 변환
-
-	// SelectObject : 준비한 DC의 GDI 오브젝트를 불러 비트맵을 선택하게 만드는 함수
-	// 현재 이 코드는 GDI 오브젝트를 선택하기 전 기존에 가지고 있던 오브젝트를 반환하게 만든다.
+	if (m_hBitmap == 0)
+		::MessageBox(g_hWnd, pFilePath, L"Image load failed", NULL);
 	m_hOldBmp = (HBITMAP)SelectObject(m_hMemDC, m_hBitmap);
 				
 }	

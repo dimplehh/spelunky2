@@ -1,61 +1,76 @@
 #include "stdafx.h"
 #include "KeyMgr.h"
 
-CKeyMgr*	CKeyMgr::m_pInstance = nullptr;
+int g_arrVK[(UINT)KEY::END] =
+{
+	VK_LBUTTON,
+	VK_LEFT,
+	VK_RIGHT,
+	VK_UP,
+	VK_DOWN,
+
+	'Q','W','E','R',
+	'Y','U','I','P',
+	'A','S','D','F','G',
+	'Z','X','C','V','B',
+
+	VK_MENU,
+	VK_CONTROL,
+	VK_LSHIFT,
+	VK_SPACE,
+	VK_RETURN,
+	VK_ESCAPE,
+
+	VK_F1,
+	VK_F2
+};
+
+
 
 CKeyMgr::CKeyMgr()
 {
-	ZeroMemory(m_bKeyState, sizeof(m_bKeyState));
+
 }
 
 CKeyMgr::~CKeyMgr()
 {
+
 }
 
-bool CKeyMgr::Key_Pressing(int _iKey)
-{
-	if (GetAsyncKeyState(_iKey) & 0x8000)
-		return true;
 
-	return false;
+void CKeyMgr::init()
+{
+	for (int i = 0; i < (int)KEY::END; ++i)
+	{
+		m_vecKey.push_back({ KEY_STATE::NONE,false });
+	}
+
 }
 
-bool CKeyMgr::Key_Down(int _iKey)
+void CKeyMgr::Update()
 {
-	// 이전에 눌린 적이 없고, 현재 눌린 상태
-
-	if ((!m_bKeyState[_iKey]) && (GetAsyncKeyState(_iKey) & 0x8000))
+	for (int i = 0; i < (int)KEY::END; ++i)
 	{
-		m_bKeyState[_iKey] = !m_bKeyState[_iKey];
-		return true;
+		// 지금 키가 눌렸다면
+		if (GetAsyncKeyState(g_arrVK[i]) & 0x8000)
+		{
+			// 이전에도 눌렸다
+			if (m_vecKey[i].bPrePush)
+				m_vecKey[i].eKeyState = KEY_STATE::HOLD;
+			else
+				m_vecKey[i].eKeyState = KEY_STATE::TAP;
+
+			m_vecKey[i].bPrePush = true;
+		}
+		else // 지금 안눌렸는데
+		{
+			// 이전엔 눌렸다
+			if (m_vecKey[i].bPrePush)
+				m_vecKey[i].eKeyState = KEY_STATE::AWAY;
+			else
+				m_vecKey[i].eKeyState = KEY_STATE::NONE;
+
+			m_vecKey[i].bPrePush = false;
+		}
 	}
-
-	// key 상태 복원
-	for (int i = 0; i < VK_MAX; ++i)
-	{
-		if ((m_bKeyState[i]) && !(GetAsyncKeyState(_iKey) & 0x8000))
-			m_bKeyState[i] = !m_bKeyState[i];
-	}
-
-	return false;
-}
-
-bool CKeyMgr::Key_Up(int _iKey)
-{
-	// 이전에 눌린 적이 있고, 현재는 눌리지 않은 상태
-
-	if ((m_bKeyState[_iKey]) && !(GetAsyncKeyState(_iKey) & 0x8000))
-	{
-		m_bKeyState[_iKey] = !m_bKeyState[_iKey];
-		return true;
-	}
-
-	// key 상태 복원
-	for (int i = 0; i < VK_MAX; ++i)
-	{
-		if ((!m_bKeyState[i]) && (GetAsyncKeyState(_iKey) & 0x8000))
-			m_bKeyState[i] = !m_bKeyState[i];
-	}
-
-	return false;
 }

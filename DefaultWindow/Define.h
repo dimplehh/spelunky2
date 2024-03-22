@@ -20,6 +20,17 @@ extern	HWND		g_hWnd;
 #define			TILEX		30
 #define			TILEY		20
 
+#define SINGLE(type)\
+private:\
+	type();\
+	~type();\
+public:\
+	static type* CreateSingleTonInst()\
+	{\
+		static type mgr;\
+		return &mgr;\
+	}\
+
 enum OBJID { OBJ_PLAYER, OBJ_MONSTER, OBJ_BULLET, OBJ_MOUSE, OBJ_SHIELD, OBJ_UI, OBJ_END };
 enum RENDERID { RENDER_BACKGROUND, RENDER_GAMEOBJECT, RENDER_EFFECT, RENDER_UI, RENDER_END };
 
@@ -72,6 +83,7 @@ typedef struct tagFrame
 	int		iFrameStart;	// 몇 번 인덱스부터 시작할 것인가
 	int		iFrameEnd;
 	int		iMotion;
+	int		iFrameMax;
 	DWORD	dwSpeed;
 	DWORD	dwTime;
 

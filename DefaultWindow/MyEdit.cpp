@@ -46,19 +46,19 @@ void CMyEdit::Release()
 
 void CMyEdit::Key_Input()
 {
-	if (CKeyMgr::Get_Instance()->Key_Pressing(VK_LEFT))
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::HOLD)
 		CScrollMgr::Get_Instance()->Set_ScrollX(5.f);
 
-	if (CKeyMgr::Get_Instance()->Key_Pressing(VK_RIGHT))
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::HOLD)
 		CScrollMgr::Get_Instance()->Set_ScrollX(-5.f);
 
-	if (CKeyMgr::Get_Instance()->Key_Pressing(VK_UP))
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::UP) == KEY_STATE::HOLD)
 		CScrollMgr::Get_Instance()->Set_ScrollY(5.f);
 
-	if (CKeyMgr::Get_Instance()->Key_Pressing(VK_DOWN))
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::HOLD)
 		CScrollMgr::Get_Instance()->Set_ScrollY(-5.f);
 
-	if (CKeyMgr::Get_Instance()->Key_Down(VK_LBUTTON))
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LBUTTON) == KEY_STATE::TAP)
 	{
 		POINT	pt{};
 		GetCursorPos(&pt);
@@ -70,9 +70,9 @@ void CMyEdit::Key_Input()
 		CTileMgr::Get_Instance()->Picking_Tile(pt, 1, 1);
 	}
 
-	if (CKeyMgr::Get_Instance()->Key_Down(VK_F1))
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::F1) == KEY_STATE::TAP)
 		CTileMgr::Get_Instance()->Save_Tile();
 
-	if (CKeyMgr::Get_Instance()->Key_Down(VK_F2))
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::F2) == KEY_STATE::TAP)
 		CTileMgr::Get_Instance()->Load_Tile();
 }

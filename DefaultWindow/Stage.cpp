@@ -7,7 +7,7 @@
 #include "ScrollMgr.h"
 #include "TileMgr.h"
 #include "Monster.h"
-
+#include "LineMgr.h"
 
 CStage::CStage()
 {
@@ -23,7 +23,7 @@ void CStage::Initialize()
 {
 	
 
-	//CLineMgr::Get_Instance()->Initialize();
+	CLineMgr::Get_Instance()->Initialize();
 
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Ground.bmp", L"Ground");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Tile.bmp", L"Tile");
@@ -31,10 +31,10 @@ void CStage::Initialize()
 
 	CObjMgr::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CPlayer>::Create());
 
-	for (int i = 0; i < 3; ++i)
-	{
-		CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CAbstractFactory<CMonster>::Create(float(rand() % WINCX), float(rand() % WINCY)));
-	}
+	//for (int i = 0; i < 3; ++i)
+	//{
+	//	CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CAbstractFactory<CMonster>::Create(float(rand() % WINCX), float(rand() % WINCY)));
+	//}
 
 	CTileMgr::Get_Instance()->Load_Tile();
 }
@@ -65,7 +65,7 @@ void CStage::Render(HDC hDC)
 	CTileMgr::Get_Instance()->Render(hDC);
 	CObjMgr::Get_Instance()->Render(hDC);
 
-	//CLineMgr::Get_Instance()->Render(hDC);
+	CLineMgr::Get_Instance()->Render(hDC);
 }
 
 void CStage::Release()

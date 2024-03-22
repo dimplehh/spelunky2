@@ -13,8 +13,8 @@
 
 
 CPlayer::CPlayer()
-	: m_fDistance(0.f), m_bJump(false), m_fTime(0.f), m_fPower(0.f)
-	, m_ePreState(ST_END), m_eCurState(IDLE)
+	: m_fDistance(0.f), m_bJump(false), 
+	m_fTime(0.f), m_fPower(0.f), m_ePreState(ST_END), m_eCurState(IDLE)
 {
 	ZeroMemory(&m_tPosin, sizeof(POINT));
 }
@@ -28,27 +28,18 @@ CPlayer::~CPlayer()
 void CPlayer::Initialize()
 {
 	m_tInfo		= { 100.f, WINCY / 2.f, 64.f, 64.f };
-	m_fSpeed	= 3.f;
+	m_fSpeed	= 5.f;
 	m_fDistance = 100.f;
-	m_fPower = 20.f;
+	m_fPower = 10.f;
 
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_resize.bmp",  L"Player_DOWN");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Player_UP.bmp",	 L"Player_UP");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Player_LEFT.bmp",  L"Player_LEFT");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Player_RIGHT.bmp", L"Player_RIGHT");
-	
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Player_LU.bmp", L"Player_LU");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Player_RU.bmp", L"Player_RU");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Player_LD.bmp", L"Player_LD");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Player_RD.bmp", L"Player_RD");
-
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_base.bmp",  L"Player_BASE");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_flip.bmp", L"Player_FLIP");
 
 	m_eCurState = IDLE;
-	m_tFrame = { 0, 0, 0, 200, GetTickCount() };
-	m_pFrameKey = L"Player_DOWN";
+	m_tFrame = { 0, 0, 0, 200, 15, GetTickCount()};
+	m_pFrameKey = L"Player_BASE";
 
 	m_eRender = RENDER_GAMEOBJECT;
-
 }
 
 int CPlayer::Update()
@@ -64,7 +55,6 @@ int CPlayer::Update()
 void CPlayer::Late_Update()
 {							
 	Jump();
-	
 	Motion_Change();
 	__super::Move_Frame();
 
@@ -86,57 +76,52 @@ void CPlayer::Render(HDC hDC)
 		m_tFrame.iMotion * (int)m_tInfo.fCY,						// 출력할 비트맵의 시작 y좌표
 		(int)m_tInfo.fCX,			// 출력할 비트맵의 가로 사이즈
 		(int)m_tInfo.fCY,			// 출력할 비트맵의 세로 사이즈
-		RGB(252, 0, 255));	// 제거할 픽셀의 색상 값
+		RGB(62, 62, 62));	// 제거할 픽셀의 색상 값
+
+
+	TCHAR	szBuff[50] = L"";
+	swprintf_s(szBuff, L"flip, 프레임,end frame, 줄 번호: %d, %d, %d, %d"
+		, m_bFlip, m_tFrame.iFrameStart, m_tFrame.iFrameEnd, m_tFrame.iMotion);
+	TextOut(hDC, 50, 100, szBuff, lstrlen(szBuff));
 }
 
 void CPlayer::Release()
 {
 }
 
-void CPlayer::Key_Input()
+void CPlayer::Key_Input() //이거 순서 생각 잘 해야됨. (여기 안에다 멤버함수로 분리하기)
 {
 	float	fY(0.f);
 
-	if (GetAsyncKeyState(VK_LEFT))
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::HOLD)
 	{
 		m_tInfo.fX -= m_fSpeed;
-		m_pFrameKey = L"Player_DOWN";
-		//m_pFrameKey = L"Player_LEFT";
-		m_eCurState = WALK;
-
+		m_pFrameKey = L"Player_FLIP";
+		m_bFlip = true;
+		if(!m_bJump) m_eCurState = WALK;
 	}
-
-	else if (GetAsyncKeyState(VK_RIGHT))
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::HOLD)
 	{
 		m_tInfo.fX += m_fSpeed;
-		m_pFrameKey = L"Player_DOWN";
-		//m_pFrameKey = L"Player_RIGHT";
-		m_eCurState = WALK;
+		m_pFrameKey = L"Player_BASE";
+		m_bFlip = false;
+		if (!m_bJump) m_eCurState = WALK;
 	}
-
-	else if (GetAsyncKeyState(VK_UP))
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::UP) == KEY_STATE::HOLD)
 	{
 		m_tInfo.fY -= m_fSpeed;
-		m_pFrameKey = L"Player_DOWN";
-		//m_pFrameKey = L"Player_UP";
 		m_eCurState = WALK;
-
 	}
-
-	else if (GetAsyncKeyState(VK_DOWN))
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::HOLD)
 	{
 		m_tInfo.fY += m_fSpeed;
-		m_pFrameKey = L"Player_DOWN";
 		m_eCurState = WALK;
 	}
-
-	else if (CKeyMgr::Get_Instance()->Key_Up(VK_SPACE))
-	{
-		m_bJump = true;
-	}
-	else
+	else if (m_bJump == false)
 		m_eCurState = IDLE;
 
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::Z) == KEY_STATE::AWAY)
+		m_bJump = true;
 }
 
 void CPlayer::Jump()
@@ -147,8 +132,9 @@ void CPlayer::Jump()
 
 	if (m_bJump)
 	{
+		m_eCurState = JUMP;
 		m_tInfo.fY -= m_fPower * m_fTime - ((9.8f * m_fTime * m_fTime) * 0.5f);
-		m_fTime += 0.2f;
+		m_fTime += 0.1f;
 
 		if (bLineCol && (fY < m_tInfo.fY))
 		{
@@ -166,17 +152,6 @@ void CPlayer::Jump()
 
 void CPlayer::Offset()
 {
-	/*int		iOffSetX = WINCX >> 1;
-
-	float	fScrollX = CScrollMgr::Get_Instance()->Get_ScrollX();
-
-	if ((float)iOffSetX > m_tInfo.fX + fScrollX)
-		CScrollMgr::Get_Instance()->Set_ScrollX(m_fSpeed);
-
-	if ((float)iOffSetX < m_tInfo.fX + fScrollX)
-		CScrollMgr::Get_Instance()->Set_ScrollX(-m_fSpeed);*/
-
-
 	int		iOffSetminX = 100;
 	int		iOffSetmaxX = 700;
 
@@ -207,21 +182,16 @@ void CPlayer::Motion_Change()
 		switch (m_eCurState)
 		{
 		case CPlayer::IDLE:
-			m_tFrame.iFrameStart = 0;
-			m_tFrame.iFrameEnd = 0;
-			m_tFrame.iMotion = 0;
-			m_tFrame.dwSpeed = 200;
-			m_tFrame.dwTime = GetTickCount();
+			Set_Frame(15, 0, 0, 0, 60);
 			break;
 
 		case CPlayer::WALK:
-			m_tFrame.iFrameStart = 0;
-			m_tFrame.iFrameEnd = 5;
-			m_tFrame.iMotion = 1;
-			m_tFrame.dwSpeed = 200;
-			m_tFrame.dwTime = GetTickCount();
+			Set_Frame(15, 1, 8, 0, 60);
 			break;
 
+		case CPlayer::JUMP:
+			Set_Frame(15, 0, 7, 9, 60);
+			break;
 		case CPlayer::ATTACK:
 			m_tFrame.iFrameStart = 0;
 			m_tFrame.iFrameEnd = 5;

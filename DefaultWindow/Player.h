@@ -5,7 +5,7 @@
 class CPlayer :	public CObj
 {
 public:
-	enum STATE { IDLE, WALK, ATTACK, HIT, DEAD, ST_END };
+	enum STATE { IDLE, WALK, JUMP, ATTACK, HIT, DEAD, ST_END };
 
 public:
 	CPlayer();
@@ -30,7 +30,6 @@ private:
 	float				m_fDistance;
 
 	bool				m_bJump;
-
 
 	float				m_fPower;
 	float				m_fTime;

@@ -24,7 +24,7 @@ CMainGame::~CMainGame()
 void CMainGame::Initialize()
 {
 	m_hDC = GetDC(g_hWnd);
-
+	CKeyMgr::CreateSingleTonInst()->init();
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Back.bmp", L"Back");
 
 	CSceneMgr::Get_Instance()->Scene_Change(SC_LOGO);
@@ -33,13 +33,13 @@ void CMainGame::Initialize()
 
 void CMainGame::Update()
 {
+	CKeyMgr::CreateSingleTonInst()->Update();
 	CSceneMgr::Get_Instance()->Update();	
 }
 
 void CMainGame::Late_Update()
 {
 	CScrollMgr::Get_Instance()->Scroll_Lock();
-
 	CSceneMgr::Get_Instance()->Late_Update();
 }
 
@@ -70,7 +70,6 @@ void CMainGame::Release()
 	CTileMgr::Destroy();
 	CBmpMgr::Destroy();
 	CScrollMgr::Destroy();
-	CKeyMgr::Destroy();
 	CLineMgr::Destroy();
 	CSceneMgr::Destroy();
 	CObjMgr::Destroy();

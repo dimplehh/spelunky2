@@ -42,6 +42,7 @@ public:
 protected:
 	void		Update_Rect();
 	void		Move_Frame();
+	void		Set_Frame(int _frameMax, int _frameStart, int _frameEnd, int _motion, int _dwSpeed);
 
 protected:
 	INFO		m_tInfo;
@@ -53,6 +54,7 @@ protected:
 
 	float		m_fSpeed;
 	bool		m_bDead;
+	bool		m_bFlip;
 
 	float		m_fAngle;
 
