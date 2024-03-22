@@ -70,3 +70,14 @@ void CObj::Move_Frame()
 		}
 	}
 }
+
+bool CObj::Check_Move_End()
+{
+	if (m_tFrame.bRoop == false)
+	{
+		if (m_tFrame.iFrameStart == m_tFrame.iFrameEnd)
+			return true;
+		return false;
+	}
+	return false;
+}

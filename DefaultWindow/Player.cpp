@@ -87,14 +87,14 @@ void CPlayer::Key_Input() //이거 순서 생각 잘 해야됨. (여기 안에다 멤버함수로 분
 	{
 		m_pFrameKey = L"Player_FLIP";
 		m_bFlip = true;
-		m_eCurState = WALK;
+		if(!m_bJump) m_eCurState = WALK;
 		m_tInfo.fX -= m_fSpeed;
 	}
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::HOLD)
 	{
 		m_pFrameKey = L"Player_BASE";
 		m_bFlip = false;
-		m_eCurState = WALK;
+		if (!m_bJump) m_eCurState = WALK;
 		m_tInfo.fX += m_fSpeed;
 	}
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::UP) == KEY_STATE::HOLD)
@@ -113,9 +113,8 @@ void CPlayer::Key_Input() //이거 순서 생각 잘 해야됨. (여기 안에다 멤버함수로 분
 	{
 		m_eCurState = STANDUP;
 	}
-	else if (m_bJump == false)
+	else if (m_tFrame.bRoop == true || m_tFrame.bRoop == false && Check_Move_End() == true)
 		m_eCurState = IDLE;
-
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::Z) == KEY_STATE::TAP)
 	{
 		m_bJump = true;
@@ -159,7 +158,7 @@ void CPlayer::Motion_Change() //일단 싹다 세팅해놓기
 
 		case CPlayer::WALK:
 		{
-			Set_Frame(15, 1, 8, 0, true, 100);
+			Set_Frame(15, 1, 8, 0, true, 30);
 			break;
 		}
 		case CPlayer::JUMP:
