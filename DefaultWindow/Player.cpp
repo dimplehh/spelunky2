@@ -62,6 +62,8 @@ void CPlayer::Late_Update()
 {
 	Gravity();
 	CheckFall();
+	CheckAlmostFell();
+	CheckCanHanging();
 	Motion_Change();
 
 	__super::Move_Frame();
@@ -70,29 +72,15 @@ void CPlayer::Late_Update()
 
 void CPlayer::Render(HDC hDC)
 {
-	int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
-	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
-
-	if (m_eCurState == ATTACK)
+	SetRenderImage(hDC);
+	TCHAR	szBuff[80] = L"";
+	swprintf_s(szBuff, L"플레이어 x좌표:  %d", (int)m_tInfo.fX);
+	TextOut(hDC, 50, 10, szBuff, lstrlen(szBuff));
+	if (nullptr != CLineMgr::Get_Instance()->Get_AttachedLine())
 	{
-		if (m_bFlip == false)	m_pFrameKey = L"Player_ATTACK_BASE";
-		else					m_pFrameKey = L"Player_ATTACK_FLIP";
-
-		HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
-		GdiTransparentBlt(hDC, m_tRect.left + iScrollX - 32.f , m_tRect.top + iScrollY, 128, (int)m_tInfo.fCY,
-			hMemDC, m_tFrame.iFrameStart * 128, m_tFrame.iMotion * (int)m_tInfo.fCY, 128, (int)m_tInfo.fCY, RGB(62, 62, 62));
+		swprintf_s(szBuff, L"라인 양 끝 점 좌표:  %d, %d", (int)CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tLPoint.fX, (int)CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tRPoint.fX);
+		TextOut(hDC, 50, 50, szBuff, lstrlen(szBuff));
 	}
-	else
-	{
-		if (m_bFlip == false)	m_pFrameKey = L"Player_BASE";
-		else					m_pFrameKey = L"Player_FLIP";
-		HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
-		GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, (int)m_tInfo.fCX, (int)m_tInfo.fCY,
-			hMemDC, m_tFrame.iFrameStart * (int)m_tInfo.fCX, m_tFrame.iMotion * (int)m_tInfo.fCY, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(62, 62, 62));
-	}
-	TCHAR	szBuff[80] = L""; 
-	swprintf_s(szBuff, L"상자랑붙었냐: %d ", m_bAttachedBox);
-	TextOut(hDC, 50, 50, szBuff, lstrlen(szBuff));
 	swprintf_s(szBuff, L"체력:  %d", m_iHp);
 	TextOut(hDC, 50, 100, szBuff, lstrlen(szBuff));
 	swprintf_s(szBuff, L"상태:  %d ", m_eCurState);
@@ -103,29 +91,6 @@ void CPlayer::Render(HDC hDC)
 
 void CPlayer::Release()
 {
-}
-
-void CPlayer::Key_Input()
-{
-	if (m_eCurState == DIE)	return;
-
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::HOLD)		{						HoldLeft();												}
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::HOLD){						HoldRight();											}
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::UP) == KEY_STATE::HOLD)	{						HoldUp();												}
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::UP) == KEY_STATE::AWAY)	{	if (!m_bLadder)		m_eCurState = LOOKFRONT;								}
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::TAP)	{	if (!m_bLadder)	{	m_eCurState = KNEELDOWN;	m_bKneelDown = true;	}	}
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::HOLD)	{						HoldDown();												}
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::AWAY)	{	if (!m_bLadder)	{	m_eCurState = STANDUP;		m_bKneelDown = false;	}	}
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::A) == KEY_STATE::TAP)		{	m_iHp -= 10;		m_eCurState = ATTACKED;									}
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::HOLD)	{						m_eCurState = ENTER;									}
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::AWAY)	{						m_eCurState = EXIT;										}
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::X) == KEY_STATE::TAP)		{						m_eCurState = ATTACK;									}
-	else if ((m_tFrame.bRoop == true && m_bLadder == false  || ((m_tFrame.bRoop == false) && Check_Move_End() == true) && m_eCurState != FALLING))
-	{	
-		m_eCurState = IDLE;	
-		m_bKneelDown = false;
-	}
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::Z) == KEY_STATE::TAP)			{						TapZ();													}
 }
 
 void CPlayer::HoldLeft()
@@ -267,6 +232,29 @@ void CPlayer::CheckFall()
 	}
 }
 
+void CPlayer::CheckAlmostFell()
+{
+	if (nullptr != CLineMgr::Get_Instance()->Get_AttachedLine())
+	{
+		if ((0 < (int)CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tLPoint.fX - m_tInfo.fX	&& (int)CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tLPoint.fX - m_tInfo.fX < 10)
+		|| ( 0 < m_tInfo.fX - (int)CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tRPoint.fX	&& m_tInfo.fX - (int)CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tRPoint.fX < 10))
+		{
+			if(m_tInfo.fY )
+			if (m_eCurState == IDLE)
+				m_eCurState = ALMOSTFELL;
+		}
+	}
+	else
+	{
+		if (m_eCurState == ALMOSTFELL)
+			m_eCurState = IDLE;
+	}
+}
+
+void CPlayer::CheckCanHanging()
+{
+}
+
 void CPlayer::InLadder()
 {
 	if (CLineMgr::Get_Instance()->Ladder_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
@@ -386,8 +374,56 @@ void CPlayer::Motion_Change()
 		case CPlayer::ENTER:		Set_Frame(0, 5, 5, false, 30, 2, 15);		break;
 		case CPlayer::EXIT:			Set_Frame(6, 11, 5, false, 30,2, 15);		break;
 		case CPlayer::LADDER:		Set_Frame(0, 5, 6, true, 60 , 0, 15);		break;
-		case CPlayer::PUSH:			Set_Frame(6, 11, 6, true, 60, 0, 15);		break;	// 수평선에선 잘됨
+		case CPlayer::PUSH:			Set_Frame(6, 11, 6, true, 60, 0, 15);		break;	// 수평선에선 잘 됨
 		}
 		m_ePreState = m_eCurState;
+	}
+}
+
+void CPlayer::Key_Input()
+{
+	if (m_eCurState == DIE)
+		return;
+
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::HOLD) { HoldLeft(); }
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::HOLD) { HoldRight(); }
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::UP) == KEY_STATE::HOLD) { HoldUp(); }
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::UP) == KEY_STATE::AWAY) { if (!m_bLadder)		m_eCurState = LOOKFRONT; }
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::TAP) { if (!m_bLadder) { m_eCurState = KNEELDOWN;	m_bKneelDown = true; } }
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::HOLD) { HoldDown(); }
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::AWAY) { if (!m_bLadder) { m_eCurState = STANDUP;		m_bKneelDown = false; } }
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::A) == KEY_STATE::TAP) { m_iHp -= 10;		m_eCurState = ATTACKED; }
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::HOLD) { m_eCurState = ENTER; }
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::AWAY) { m_eCurState = EXIT; }
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::X) == KEY_STATE::TAP) { m_eCurState = ATTACK; }
+	else if ((m_tFrame.bRoop == true && m_bLadder == false || ((m_tFrame.bRoop == false) && Check_Move_End() == true) && m_eCurState != FALLING))
+	{
+		m_eCurState = IDLE;
+		m_bKneelDown = false;
+	}
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::Z) == KEY_STATE::TAP) { TapZ(); }
+}
+
+void CPlayer::SetRenderImage(HDC hDC)
+{
+	int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
+	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
+
+	if (m_eCurState == ATTACK)
+	{
+		if (m_bFlip == false)	m_pFrameKey = L"Player_ATTACK_BASE";
+		else					m_pFrameKey = L"Player_ATTACK_FLIP";
+
+		HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
+		GdiTransparentBlt(hDC, m_tRect.left + iScrollX - 32.f, m_tRect.top + iScrollY, 128, (int)m_tInfo.fCY,
+			hMemDC, m_tFrame.iFrameStart * 128, m_tFrame.iMotion * (int)m_tInfo.fCY, 128, (int)m_tInfo.fCY, RGB(62, 62, 62));
+	}
+	else
+	{
+		if (m_bFlip == false)	m_pFrameKey = L"Player_BASE";
+		else					m_pFrameKey = L"Player_FLIP";
+		HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
+		GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, (int)m_tInfo.fCX, (int)m_tInfo.fCY,
+			hMemDC, m_tFrame.iFrameStart * (int)m_tInfo.fCX, m_tFrame.iMotion * (int)m_tInfo.fCY, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(62, 62, 62));
 	}
 }

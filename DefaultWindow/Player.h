@@ -23,14 +23,18 @@ public:
 	void		SetAttachedBox(bool _isAttached) { m_bAttachedBox = _isAttached; }
 
 private:
+	void		SetRenderImage(HDC hDC);
+
 	void		Key_Input();
 	void		Offset();
 	void		Motion_Change();
 	bool		Check_Move_End();
 
 	bool		Die();
-	void		CheckFall();
 	void		Gravity();
+	void		CheckFall();
+	void		CheckAlmostFell();
+	void		CheckCanHanging();
 	void		InLadder();
 
 	void		HoldLeft();
@@ -50,6 +54,7 @@ private:
 	bool		m_bLadder;
 	bool		m_bKneelDown; //엎드린 상태
 	bool		m_bAttachedBox;	//상자와 닿은 상태
+	bool		m_bIsHanging;
 	int			m_iJumpCount;
 
 	float		m_fPower;

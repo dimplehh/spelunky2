@@ -53,8 +53,8 @@ bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool
 	{
 		for (auto& iter : m_LineList)
 		{
-			if ((iter->Get_Info().tLPoint.fX <= fX + (fCX / 2.f)) && (fX + (fCX / 2.f) < iter->Get_Info().tRPoint.fX) ||
-				(iter->Get_Info().tLPoint.fX <= fX - (fCX / 2.f)) && (fX - (fCX / 2.f) < iter->Get_Info().tRPoint.fX) ||
+			if ((iter->Get_Info().tLPoint.fX <= fX - 10) && (fX - 10 < iter->Get_Info().tRPoint.fX) ||
+				(iter->Get_Info().tLPoint.fX <= fX + 10) && (fX + 10 < iter->Get_Info().tRPoint.fX) ||
 				((iter->Get_Info().tLPoint.fX <= fX) && (fX < iter->Get_Info().tRPoint.fX)))
 				// fx 좌 or 우 가 선 사이에 존재하면
 			{
@@ -65,10 +65,10 @@ bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool
 
 				m_fY = Equation_Line(fX, x1, y1, x2, y2);
 
-				if (((fY + (fCY / 3.f)) <= m_fY) && (m_fY <= (fY + (fCY / 2.f))))
-				{    // 하단 부분 충돌 범위 지정 전체 사이즈의 1/3 가량
+				if (((fY + (fCY / 6.f)) <= m_fY) && (m_fY <= (fY + (fCY / 2.f))))
+				{    // 하단 부분 충돌 범위 지정 전체 사이즈의 1/6 가량
 					m_AttachedLine = iter;
-					fY = m_fY - (fCY / 2.f);
+					fY = m_fY - (fCY / 2);
 					return true;
 				}
 			}
@@ -98,7 +98,7 @@ bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY)
 
 			m_fY = Equation_Line(fX, x1, y1, x2, y2);
 
-			if (((fY + (fCY / 3.f)) <= m_fY) && (m_fY <= (fY + (fCY / 2.f))))
+			if (((fY + (fCY / 6.f)) <= m_fY) && (m_fY <= (fY + (fCY / 2.f))))
 			{    // 하단 부분 충돌 범위 지정 전체 사이즈의 1/3 가량
 				m_AttachedLine = iter;
 				fY = m_fY - (fCY / 2.f);
