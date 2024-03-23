@@ -87,8 +87,7 @@ void CObjMgr::Late_Update()
 		}
 	}
 
-	//CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_MONSTER], m_ObjList[OBJ_PLAYER]);
-	//CCollisionMgr::Collision_Sphere(m_ObjList[OBJ_BULLET], m_ObjList[OBJ_MONSTER]);
+	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_BOX], m_ObjList[OBJ_PLAYER]);
 }
 
 void CObjMgr::Render(HDC hDC)
@@ -96,11 +95,6 @@ void CObjMgr::Render(HDC hDC)
 
 	for (size_t i = 0; i < RENDER_END; ++i)
 	{
-		//m_RenderList[i].sort([](CObj* pDst, CObj* pSrc)->bool 
-		//{
-		//	return pDst->Get_Info().fY < pSrc->Get_Info().fY;
-		//});
-
 		for (auto& iter : m_RenderList[i])
 			iter->Render(hDC);
 

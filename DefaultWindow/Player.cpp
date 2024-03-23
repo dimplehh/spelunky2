@@ -14,9 +14,11 @@
 
 CPlayer::CPlayer()
 	: m_fDistance(0.f), m_bJump(false), m_bLadder(false), m_iJumpCount(0), m_iHp(100), m_fPreY(0.f), m_fCurY(0.f),
-	m_fTime(0.f), m_fPower(0.f), m_ePreState(ST_END), m_eCurState(IDLE), m_bKneelDown(false)
+	m_fTime(0.f), m_fPower(0.f), m_ePreState(ST_END), m_eCurState(IDLE), m_bKneelDown(false), m_bAttachedBox(false)
 {
 	ZeroMemory(&m_tPosin, sizeof(POINT));
+
+	m_eMyObjType = OBJECT_TYPE::PLAYER;
 }
 
 
@@ -89,7 +91,7 @@ void CPlayer::Render(HDC hDC)
 			hMemDC, m_tFrame.iFrameStart * (int)m_tInfo.fCX, m_tFrame.iMotion * (int)m_tInfo.fCY, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(62, 62, 62));
 	}
 	TCHAR	szBuff[80] = L""; 
-	swprintf_s(szBuff, L"높이차:  %f", m_fDiffY);
+	swprintf_s(szBuff, L"상자랑붙었냐: %d ", m_bAttachedBox);
 	TextOut(hDC, 50, 50, szBuff, lstrlen(szBuff));
 	swprintf_s(szBuff, L"체력:  %d", m_iHp);
 	TextOut(hDC, 50, 100, szBuff, lstrlen(szBuff));
@@ -97,10 +99,6 @@ void CPlayer::Render(HDC hDC)
 	TextOut(hDC, 50, 150, szBuff, lstrlen(szBuff));
 	swprintf_s(szBuff, L"motion start, motion end:  %d, %d ", m_tFrame.iFrameStart, m_tFrame.iFrameEnd);
 	TextOut(hDC, 50, 200, szBuff, lstrlen(szBuff));
-	swprintf_s(szBuff, L"iFrameMax:  %d", m_tFrame.iFrameMax);
-	TextOut(hDC, 50, 250, szBuff, lstrlen(szBuff));
-	swprintf_s(szBuff, L" fX / m_tRect.left / m_tRect.left + iScrollX: %f, %d, %d", m_tInfo.fX, m_tRect.left, m_tRect.left + iScrollX);
-	TextOut(hDC, 50, 350, szBuff, lstrlen(szBuff));
 }
 
 void CPlayer::Release()
@@ -141,6 +139,11 @@ void CPlayer::HoldLeft()
 			m_eCurState = CRAWL;
 			m_tInfo.fX -= m_fSpeed * 0.25f;
 		}
+		else if (m_bAttachedBox)
+		{
+			m_eCurState = PUSH;
+			m_tInfo.fX -= m_fSpeed * 0.25f;
+		}
 		else
 		{
 			if (!m_bJump && CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
@@ -161,6 +164,11 @@ void CPlayer::HoldRight()
 		if (m_bKneelDown)
 		{
 			m_eCurState = CRAWL;
+			m_tInfo.fX += m_fSpeed * 0.25f;
+		}
+		else if (m_bAttachedBox)
+		{
+			m_eCurState = PUSH;
 			m_tInfo.fX += m_fSpeed * 0.25f;
 		}
 		else
@@ -378,7 +386,7 @@ void CPlayer::Motion_Change()
 		case CPlayer::ENTER:		Set_Frame(0, 5, 5, false, 30, 2, 15);		break;
 		case CPlayer::EXIT:			Set_Frame(6, 11, 5, false, 30,2, 15);		break;
 		case CPlayer::LADDER:		Set_Frame(0, 5, 6, true, 60 , 0, 15);		break;
-		case CPlayer::PUSH:			Set_Frame(6, 11, 3, true, 60, 0, 15);		break;
+		case CPlayer::PUSH:			Set_Frame(6, 11, 6, true, 60, 0, 15);		break;	// 수평선에선 잘됨
 		}
 		m_ePreState = m_eCurState;
 	}

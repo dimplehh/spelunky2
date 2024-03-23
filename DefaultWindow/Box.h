@@ -1,10 +1,10 @@
 #pragma once
 #include "Obj.h"
-class CMonster : public CObj
+class CBox : public CObj
 {
 public:
-	CMonster();
-	virtual ~CMonster();
+	CBox();
+	virtual ~CBox();
 
 public:
 	virtual void Initialize() override;

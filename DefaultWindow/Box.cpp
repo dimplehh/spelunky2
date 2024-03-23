@@ -1,29 +1,28 @@
 #include "stdafx.h"
-#include "Monster.h"
+#include "Box.h"
 #include "BmpMgr.h"
 #include "ScrollMgr.h"
 #include "LineMgr.h"
 
-CMonster::CMonster() : m_fTime(0.f), m_fPower(0.f)
+CBox::CBox() : m_fTime(0.f), m_fPower(0.f)
 {
-	m_eMyObjType = OBJECT_TYPE::MONSTER;
+	m_eMyObjType = OBJECT_TYPE::BOX;
 }
 
-CMonster::~CMonster()
+CBox::~CBox()
 {
 	Release();
 }
 
-void CMonster::Initialize()
+void CBox::Initialize()
 {
 	m_tInfo = { WINCX * 0.5f, WINCY * 0.5f, 50.f, 50.f };
 	m_fSpeed = 3.f;
 
-	m_pFrameKey = L"Monster";
 	m_eRender = RENDER_GAMEOBJECT;
 }
 
-int CMonster::Update()
+int CBox::Update()
 {
 	if (m_bDead)
 		return OBJ_DEAD;
@@ -34,40 +33,24 @@ int CMonster::Update()
 	return OBJ_NOEVENT;
 }
 
-void CMonster::Late_Update()
+void CBox::Late_Update()
 {
 	Gravity();
 }
 
-void CMonster::Render(HDC hDC)
+void CBox::Render(HDC hDC)
 {
 	int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
 	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
 
 	Rectangle(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, m_tRect.right + iScrollX, m_tRect.bottom + iScrollY);
-	//HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
-
-	//int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
-	//int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
-	//
-	//GdiTransparentBlt(hDC, 
-	//	m_tRect.left + iScrollX,
-	//	m_tRect.top + iScrollY,
-	//	(int)m_tInfo.fCX,
-	//	(int)m_tInfo.fCY,
-	//	hMemDC,			
-	//	0,
-	//	0,
-	//	(int)m_tInfo.fCX,
-	//	(int)m_tInfo.fCY,
-	//	RGB(255, 255, 255));	
 }
 
-void CMonster::Release()
+void CBox::Release()
 {
 }
 
-void CMonster::Gravity()
+void CBox::Gravity()
 {
 	if (!CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, false))
 	{						//if 플레이어가 충돌상태가 아니라면 + (점프상태가 아니라면)

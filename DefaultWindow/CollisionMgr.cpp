@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "CollisionMgr.h"
-
+#include "Player.h"
 
 CCollisionMgr::CCollisionMgr()
 {
@@ -21,12 +21,26 @@ void CCollisionMgr::Collision_Rect(list<CObj*> _Dst, list<CObj*> _Src)
 		{
 			if (IntersectRect(&rcRect, &(Dst->Get_Rect()), &(Src->Get_Rect())))
 			{
-				Dst->Set_Dead();
-				Src->Set_Dead();
+				//Dst->SetCollision(true);
+				//Src->SetCollision(true);
+
+				//if (OBJECT_TYPE::PLAYER == Dst->Get_MyObjType())
+				//{
+				//	if (OBJECT_TYPE::MONSTER == Src->Get_MyObjType())
+				//	{
+				//		Dst->SetCollision(true);
+				//		Src->SetCollision(true);
+				//		dynamic_cast<CPlayer*>(Dst)->SetAttachedBox(true);
+				//	}
+				//	/*else
+				//		dynamic_cast<CPlayer*>(Dst)->SetAttachedBox(false);*/
+				//}
+				
 			}
 		}
 	}
 }
+
 
 void CCollisionMgr::Collision_RectEx(list<CObj*> _Dst, list<CObj*> _Src)
 {
@@ -38,21 +52,7 @@ void CCollisionMgr::Collision_RectEx(list<CObj*> _Dst, list<CObj*> _Src)
 		{
 			if (Check_Rect(Dst, Src, &fX, &fY))
 			{
-				if (fX > fY) // 상하 충돌
-				{
-					// 상 충돌
-					if (Dst->Get_Info().fY < Src->Get_Info().fY)
-					{
-						Dst->Set_PosY(-fY);
-					}
-					// 하 충돌
-					else 
-					{
-						Dst->Set_PosY(fY);
-					}
-				}
-
-				else 		// 좌우 충돌
+				if(fX <= fY)		// 좌우 충돌
 				{
 					// 좌 충돌
 					if (Dst->Get_Info().fX < Src->Get_Info().fX)
@@ -65,7 +65,20 @@ void CCollisionMgr::Collision_RectEx(list<CObj*> _Dst, list<CObj*> _Src)
 						Dst->Set_PosX(fX);
 					}
 				}
+				Dst->SetCollision(true);
+				Src->SetCollision(true);
+				if (OBJECT_TYPE::PLAYER == Src->Get_MyObjType())
+				{
+					if (OBJECT_TYPE::BOX == Dst->Get_MyObjType())
+					{
+						Dst->SetCollision(true);
+						Src->SetCollision(true);
+						dynamic_cast<CPlayer*>(Src)->SetAttachedBox(true);
+					}
+				}
 			}
+			else
+				dynamic_cast<CPlayer*>(Src)->SetAttachedBox(false);
 		}
 	}
 

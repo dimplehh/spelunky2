@@ -8,6 +8,7 @@
 #include "TileMgr.h"
 #include "Monster.h"
 #include "LineMgr.h"
+#include "Box.h"
 
 CStage::CStage()
 {
@@ -31,10 +32,10 @@ void CStage::Initialize()
 
 	CObjMgr::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CPlayer>::Create());
 
-	//for (int i = 0; i < 3; ++i)
-	//{
-	//	CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CAbstractFactory<CMonster>::Create(float(rand() % WINCX), float(rand() % WINCY)));
-	//}
+	for (int i = 0; i < 1; ++i)
+	{
+		CObjMgr::Get_Instance()->Add_Object(OBJ_BOX, CAbstractFactory<CBox>::Create(WINCX / 2, WINCY / 2));
+	}
 
 	CTileMgr::Get_Instance()->Load_Tile();
 }

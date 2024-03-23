@@ -30,6 +30,10 @@ public:
 	void			Set_Dead() { m_bDead = true;  }
 	void			Set_Angle(float _fAngle) { m_fAngle = _fAngle; }
 	void			Set_Target(CObj* pTarget) { m_pTarget = pTarget; }
+
+	OBJECT_TYPE		Get_MyObjType() { return m_eMyObjType; }
+
+	void			SetCollision(bool _b) { m_bCollision = _b; }
 	
 	void			Set_FrameKey(TCHAR* pFrameKey) { m_pFrameKey = pFrameKey; }
 public:
@@ -62,8 +66,11 @@ protected:
 
 	float		m_fAngle;
 
+	bool		m_bCollision;
+
 	CObj*		m_pTarget;
-	const TCHAR*		m_pFrameKey = L"";
+	const TCHAR*	m_pFrameKey = L"";
+	OBJECT_TYPE	m_eMyObjType;
 
 };
 

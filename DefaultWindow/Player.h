@@ -18,7 +18,9 @@ public:
 	virtual void Late_Update()override;
 	virtual void Render(HDC hDC) override;
 	virtual void Release() override;
-	void			Update_Rect();
+
+public:
+	void		SetAttachedBox(bool _isAttached) { m_bAttachedBox = _isAttached; }
 
 private:
 	void		Key_Input();
@@ -36,6 +38,7 @@ private:
 	void		HoldUp();
 	void		HoldDown();
 	void		TapZ();
+	
 
 private:
 
@@ -46,6 +49,7 @@ private:
 	bool		m_bJump;
 	bool		m_bLadder;
 	bool		m_bKneelDown; //엎드린 상태
+	bool		m_bAttachedBox;	//상자와 닿은 상태
 	int			m_iJumpCount;
 
 	float		m_fPower;
