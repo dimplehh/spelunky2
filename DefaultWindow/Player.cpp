@@ -10,11 +10,12 @@
 #include "KeyMgr.h"
 #include "ScrollMgr.h"
 #include "BmpMgr.h"
+#include <iostream>
 
 
 CPlayer::CPlayer()
 	: m_fDistance(0.f), m_bJump(false), m_bLadder(false), m_iJumpCount(0), m_iHp(100), m_fPreY(0.f), m_fCurY(0.f),
-	m_fTime(0.f), m_fPower(0.f), m_ePreState(ST_END), m_eCurState(IDLE), m_bKneelDown(false), m_bAttachedBox(false)
+	m_fTime(0.f), m_fPower(0.f), m_ePreState(ST_END), m_eCurState(IDLE), m_bKneelDown(false), m_bAttachedBox(false), m_dwTime(GetTickCount())
 {
 	ZeroMemory(&m_tPosin, sizeof(POINT));
 
@@ -65,28 +66,44 @@ void CPlayer::Late_Update()
 	CheckAlmostFell();
 	CheckCanHanging();
 	Motion_Change();
-
 	__super::Move_Frame();
+#ifdef _DEBUG
 
+	if (m_dwTime + 1000 < GetTickCount())
+	{
+		cout << "플레이어 좌표 : " << m_tInfo.fX << "\t" << m_tInfo.fY << endl;
+		m_dwTime = GetTickCount();
+	}
+#endif
 }
 
 void CPlayer::Render(HDC hDC)
 {
 	SetRenderImage(hDC);
-	TCHAR	szBuff[80] = L"";
-	swprintf_s(szBuff, L"플레이어 x좌표:  %d", (int)m_tInfo.fX);
-	TextOut(hDC, 50, 10, szBuff, lstrlen(szBuff));
-	if (nullptr != CLineMgr::Get_Instance()->Get_AttachedLine())
+}
+
+void CPlayer::SetRenderImage(HDC hDC)
+{
+	int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
+	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
+
+	if (m_eCurState == ATTACK)
 	{
-		swprintf_s(szBuff, L"라인 양 끝 점 좌표:  %d, %d", (int)CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tLPoint.fX, (int)CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tRPoint.fX);
-		TextOut(hDC, 50, 50, szBuff, lstrlen(szBuff));
+		if (m_bFlip == false)	m_pFrameKey = L"Player_ATTACK_BASE";
+		else					m_pFrameKey = L"Player_ATTACK_FLIP";
+
+		HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
+		GdiTransparentBlt(hDC, m_tRect.left + iScrollX - 32.f, m_tRect.top + iScrollY, 128, (int)m_tInfo.fCY,
+			hMemDC, m_tFrame.iFrameStart * 128, m_tFrame.iMotion * (int)m_tInfo.fCY, 128, (int)m_tInfo.fCY, RGB(62, 62, 62));
 	}
-	swprintf_s(szBuff, L"체력:  %d", m_iHp);
-	TextOut(hDC, 50, 100, szBuff, lstrlen(szBuff));
-	swprintf_s(szBuff, L"상태:  %d ", m_eCurState);
-	TextOut(hDC, 50, 150, szBuff, lstrlen(szBuff));
-	swprintf_s(szBuff, L"motion start, motion end:  %d, %d ", m_tFrame.iFrameStart, m_tFrame.iFrameEnd);
-	TextOut(hDC, 50, 200, szBuff, lstrlen(szBuff));
+	else
+	{
+		if (m_bFlip == false)	m_pFrameKey = L"Player_BASE";
+		else					m_pFrameKey = L"Player_FLIP";
+		HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
+		GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, (int)m_tInfo.fCX, (int)m_tInfo.fCY,
+			hMemDC, m_tFrame.iFrameStart * (int)m_tInfo.fCX, m_tFrame.iMotion * (int)m_tInfo.fCY, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(62, 62, 62));
+	}
 }
 
 void CPlayer::Release()
@@ -95,28 +112,27 @@ void CPlayer::Release()
 
 void CPlayer::HoldLeft()
 {
+	if (m_bLadder)
+		return;
 	m_pFrameKey = L"Player_FLIP";
 	m_bFlip = true;
-	if (!m_bLadder)
+	if (m_bKneelDown)
 	{
-		if (m_bKneelDown)
+		m_eCurState = CRAWL;
+		m_tInfo.fX -= m_fSpeed * 0.25f;
+	}
+	else if (m_bAttachedBox)
+	{
+		m_eCurState = PUSH;
+		m_tInfo.fX -= m_fSpeed * 0.25f;
+	}
+	else
+	{
+		if (!m_bJump && CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
 		{
-			m_eCurState = CRAWL;
-			m_tInfo.fX -= m_fSpeed * 0.25f;
+			m_eCurState = WALK;
 		}
-		else if (m_bAttachedBox)
-		{
-			m_eCurState = PUSH;
-			m_tInfo.fX -= m_fSpeed * 0.25f;
-		}
-		else
-		{
-			if (!m_bJump && CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
-			{
-				m_eCurState = WALK;
-			}
-			m_tInfo.fX -= m_fSpeed;
-		}
+		m_tInfo.fX -= m_fSpeed;
 	}
 }
 
@@ -124,26 +140,25 @@ void CPlayer::HoldRight()
 {
 	m_pFrameKey = L"Player_BASE";
 	m_bFlip = false;
-	if (!m_bLadder)
+	if (m_bKneelDown)
 	{
-		if (m_bKneelDown)
+		m_eCurState = CRAWL;
+		m_tInfo.fX += m_fSpeed * 0.25f;
+	}
+	else if (m_bAttachedBox)
+	{
+		m_eCurState = PUSH;
+		m_tInfo.fX += m_fSpeed * 0.25f;
+	}
+	else
+	{
+		if (m_bLadder)
+			return;
+		if (!m_bJump && CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
 		{
-			m_eCurState = CRAWL;
-			m_tInfo.fX += m_fSpeed * 0.25f;
+			m_eCurState = WALK;
 		}
-		else if (m_bAttachedBox)
-		{
-			m_eCurState = PUSH;
-			m_tInfo.fX += m_fSpeed * 0.25f;
-		}
-		else
-		{
-			if (!m_bJump && CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
-			{
-				m_eCurState = WALK;
-			}
-			m_tInfo.fX += m_fSpeed;
-		}
+		m_tInfo.fX += m_fSpeed;
 	}
 }
 
@@ -179,7 +194,7 @@ void CPlayer::TapZ()
 		{
 			if (CLineMgr::Get_Instance()->LastBottom_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
 			{
-				m_tInfo.fY += m_tInfo.fCY / 3.f;
+				m_tInfo.fY += 50;
 			}
 		}
 		if (170.f < m_fAngle && m_fAngle < 270.f)
@@ -375,6 +390,7 @@ void CPlayer::Motion_Change()
 		case CPlayer::EXIT:			Set_Frame(6, 11, 5, false, 30,2, 15);		break;
 		case CPlayer::LADDER:		Set_Frame(0, 5, 6, true, 60 , 0, 15);		break;
 		case CPlayer::PUSH:			Set_Frame(6, 11, 6, true, 60, 0, 15);		break;	// 수평선에선 잘 됨
+		case CPlayer::HANGON:		Set_Frame(8, 11, 3, true, 100, 0, 15);		break;
 		}
 		m_ePreState = m_eCurState;
 	}
@@ -402,28 +418,4 @@ void CPlayer::Key_Input()
 		m_bKneelDown = false;
 	}
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::Z) == KEY_STATE::TAP) { TapZ(); }
-}
-
-void CPlayer::SetRenderImage(HDC hDC)
-{
-	int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
-	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
-
-	if (m_eCurState == ATTACK)
-	{
-		if (m_bFlip == false)	m_pFrameKey = L"Player_ATTACK_BASE";
-		else					m_pFrameKey = L"Player_ATTACK_FLIP";
-
-		HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
-		GdiTransparentBlt(hDC, m_tRect.left + iScrollX - 32.f, m_tRect.top + iScrollY, 128, (int)m_tInfo.fCY,
-			hMemDC, m_tFrame.iFrameStart * 128, m_tFrame.iMotion * (int)m_tInfo.fCY, 128, (int)m_tInfo.fCY, RGB(62, 62, 62));
-	}
-	else
-	{
-		if (m_bFlip == false)	m_pFrameKey = L"Player_BASE";
-		else					m_pFrameKey = L"Player_FLIP";
-		HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
-		GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, (int)m_tInfo.fCX, (int)m_tInfo.fCY,
-			hMemDC, m_tFrame.iFrameStart * (int)m_tInfo.fCX, m_tFrame.iMotion * (int)m_tInfo.fCY, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(62, 62, 62));
-	}
 }

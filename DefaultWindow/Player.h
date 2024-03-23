@@ -68,6 +68,9 @@ private:
 	float		m_fDiffY;
 
 	float		m_fMoveOffset = 0;
+
+private:
+	DWORD				m_dwTime;
 };
 
 

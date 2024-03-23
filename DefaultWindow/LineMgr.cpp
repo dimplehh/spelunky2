@@ -98,7 +98,7 @@ bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY)
 
 			m_fY = Equation_Line(fX, x1, y1, x2, y2);
 
-			if (((fY + (fCY / 6.f)) <= m_fY) && (m_fY <= (fY + (fCY / 2.f))))
+			if (((fY + (fCY / 3.f)) <= m_fY) && (m_fY <= (fY + (fCY / 2.f))))
 			{    // 하단 부분 충돌 범위 지정 전체 사이즈의 1/3 가량
 				m_AttachedLine = iter;
 				fY = m_fY - (fCY / 2.f);
@@ -176,7 +176,8 @@ bool CLineMgr::Ladder_Line(float& fX, float& fY, float& fCX, float& fCY)
 
 void CLineMgr::Initialize()
 {
-	Load_Line();
+	//Load_Line();
+	MyLine();
 }
 
 void CLineMgr::Render(HDC hDC)
@@ -189,6 +190,21 @@ void CLineMgr::Release()
 {
 	for_each(m_LineList.begin(), m_LineList.end(), Safe_Delete<CLine*>);
 	m_LineList.clear();
+}
+
+void CLineMgr::MyLine()
+{
+	LINE	tInfo{ LINEPOINT{100, 700}, LINEPOINT{800, 700} };
+	m_LineList.push_back(new CLine(tInfo)); 
+
+	tInfo = { LINEPOINT{300, 600}, LINEPOINT{600, 600} };
+	m_LineList.push_back(new CLine(tInfo));
+
+	tInfo = { LINEPOINT{300, 500}, LINEPOINT{600, 500} };
+	m_LineList.push_back(new CLine(tInfo));
+
+	tInfo = { LINEPOINT{700, 800}, LINEPOINT{700, 400} };
+	m_LineList.push_back(new CLine(tInfo));
 }
 
 void CLineMgr::Load_Line()

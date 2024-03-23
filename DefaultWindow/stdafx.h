@@ -24,6 +24,12 @@
 #include <map>
 #include <algorithm>
 
+#include <Vfw.h>
+#pragma comment(lib, "vfw32.lib")
+
+#include <iostream>
+#include <io.h>
+
 #ifdef _DEBUG
 
 #define _CRTDBG_MAP_ALLOC

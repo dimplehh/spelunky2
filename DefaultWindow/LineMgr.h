@@ -23,6 +23,7 @@ public:
 	void		Render(HDC hDC);
 	void		Release();
 	void		Load_Line();
+	void		MyLine();
 	void		Change_idx();
 
 public:
