@@ -34,6 +34,8 @@ void CPlayer::Initialize()
 
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_base2.bmp",  L"Player_BASE");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_flip2.bmp", L"Player_FLIP");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_Attack.bmp", L"Player_ATTACK_BASE");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_Attack_Flip.bmp", L"Player_ATTACK_FLIP");
 
 	m_eCurState = IDLE;
 	m_tFrame = { 0, 0, 0, 15, false, 60, GetTickCount(), 0};
@@ -69,10 +71,23 @@ void CPlayer::Render(HDC hDC)
 	int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
 	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
 
-	HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
-	GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top+ iScrollY, (int)m_tInfo.fCX, (int)m_tInfo.fCY, 
-		hMemDC,	m_tFrame.iFrameStart * (int)m_tInfo.fCX, m_tFrame.iMotion * (int)m_tInfo.fCY, (int)m_tInfo.fCX, (int)m_tInfo.fCY,	RGB(62, 62, 62));
+	if (m_eCurState == ATTACK)
+	{
+		if (m_bFlip == false)	m_pFrameKey = L"Player_ATTACK_BASE";
+		else					m_pFrameKey = L"Player_ATTACK_FLIP";
 
+		HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
+		GdiTransparentBlt(hDC, m_tRect.left + iScrollX - 32.f , m_tRect.top + iScrollY, 128, (int)m_tInfo.fCY,
+			hMemDC, m_tFrame.iFrameStart * 128, m_tFrame.iMotion * (int)m_tInfo.fCY, 128, (int)m_tInfo.fCY, RGB(62, 62, 62));
+	}
+	else
+	{
+		if (m_bFlip == false)	m_pFrameKey = L"Player_BASE";
+		else					m_pFrameKey = L"Player_FLIP";
+		HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
+		GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, (int)m_tInfo.fCX, (int)m_tInfo.fCY,
+			hMemDC, m_tFrame.iFrameStart * (int)m_tInfo.fCX, m_tFrame.iMotion * (int)m_tInfo.fCY, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(62, 62, 62));
+	}
 	TCHAR	szBuff[80] = L""; 
 	swprintf_s(szBuff, L"³ôÀÌÂ÷:  %f", m_fDiffY);
 	TextOut(hDC, 50, 50, szBuff, lstrlen(szBuff));
@@ -82,6 +97,10 @@ void CPlayer::Render(HDC hDC)
 	TextOut(hDC, 50, 150, szBuff, lstrlen(szBuff));
 	swprintf_s(szBuff, L"motion start, motion end:  %d, %d ", m_tFrame.iFrameStart, m_tFrame.iFrameEnd);
 	TextOut(hDC, 50, 200, szBuff, lstrlen(szBuff));
+	swprintf_s(szBuff, L"iFrameMax:  %d", m_tFrame.iFrameMax);
+	TextOut(hDC, 50, 250, szBuff, lstrlen(szBuff));
+	swprintf_s(szBuff, L" fX / m_tRect.left / m_tRect.left + iScrollX: %f, %d, %d", m_tInfo.fX, m_tRect.left, m_tRect.left + iScrollX);
+	TextOut(hDC, 50, 350, szBuff, lstrlen(szBuff));
 }
 
 void CPlayer::Release()
@@ -90,67 +109,25 @@ void CPlayer::Release()
 
 void CPlayer::Key_Input()
 {
-	if (m_eCurState == DIE)
-		return;
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::HOLD)
-	{
-		HoldLeft();
-	}
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::HOLD)
-	{
-		HoldRight();
-	}
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::UP) == KEY_STATE::HOLD)
-	{
-		HoldUp();
-	}
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::UP) == KEY_STATE::AWAY)
-	{
-		if (!m_bLadder)	
-			m_eCurState = LOOKFRONT;
-	}
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::TAP)
-	{
-		if (!m_bLadder)
-		{
-			m_eCurState = KNEELDOWN;
-			m_bKneelDown = true;
-		}
-	}
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::HOLD)
-	{
-		HoldDown();
-	}
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::AWAY)
-	{
-		if (!m_bLadder)
-		{
-			m_eCurState = STANDUP;
-			m_bKneelDown = false;
-		}
-	}
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::A) == KEY_STATE::TAP)
-	{
-		m_iHp -= 10;
-		m_eCurState = ATTACKED;
-	}
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::HOLD)
-	{
-		m_eCurState = ENTER;
-	}
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::AWAY)
-	{
-		m_eCurState = EXIT;
-	}
+	if (m_eCurState == DIE)	return;
+
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::HOLD)		{						HoldLeft();												}
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::HOLD){						HoldRight();											}
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::UP) == KEY_STATE::HOLD)	{						HoldUp();												}
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::UP) == KEY_STATE::AWAY)	{	if (!m_bLadder)		m_eCurState = LOOKFRONT;								}
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::TAP)	{	if (!m_bLadder)	{	m_eCurState = KNEELDOWN;	m_bKneelDown = true;	}	}
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::HOLD)	{						HoldDown();												}
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::AWAY)	{	if (!m_bLadder)	{	m_eCurState = STANDUP;		m_bKneelDown = false;	}	}
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::A) == KEY_STATE::TAP)		{	m_iHp -= 10;		m_eCurState = ATTACKED;									}
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::HOLD)	{						m_eCurState = ENTER;									}
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::AWAY)	{						m_eCurState = EXIT;										}
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::X) == KEY_STATE::TAP)		{						m_eCurState = ATTACK;									}
 	else if ((m_tFrame.bRoop == true && m_bLadder == false  || ((m_tFrame.bRoop == false) && Check_Move_End() == true) && m_eCurState != FALLING))
-	{
-		m_eCurState = IDLE;
+	{	
+		m_eCurState = IDLE;	
 		m_bKneelDown = false;
 	}
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::Z) == KEY_STATE::TAP)
-	{
-		TapZ();
-	}
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::Z) == KEY_STATE::TAP)			{						TapZ();													}
 }
 
 void CPlayer::HoldLeft()
@@ -264,8 +241,6 @@ bool CPlayer::Die()
 
 void CPlayer::CheckFall()
 {
-	//if (m_bJump == true)
-	//	return; 
 	m_fCurY = CLineMgr::Get_Instance()->GetY();
 	if (m_fPreY != m_fCurY)
 	{
@@ -383,28 +358,27 @@ void CPlayer::Motion_Change()
 	if (m_ePreState != m_eCurState)
 	{
 		m_iRepeatCount = 0;
-
 		switch (m_eCurState)
 		{
-		case CPlayer::IDLE:			Set_Frame(0, 0, 0, false, 60, 0);	break;
-		case CPlayer::WALK:			Set_Frame(1, 8, 0, true, 30);		break;
-		case CPlayer::JUMP:			Set_Frame(0, 11, 9, false, 15);		break;
-		case CPlayer::FALLING:		Set_Frame(0, 11, 9, false, 15);		break;
-		case CPlayer::DIZZY:		Set_Frame(0, 11, 13, false, 60, 3);	break;
-		case CPlayer::DIE:			Set_Frame(9, 9, 0, false, 60);		break;
-		case CPlayer::LOOKUP:		Set_Frame(0, 3, 8, false, 60, 0);	break;
-		case CPlayer::LOOKFRONT:	Set_Frame(3, 6, 8, false, 60);		break;
-		case CPlayer::KNEELDOWN:	Set_Frame(0, 2, 1, false, 60);		break;
-		case CPlayer::KNEELSTAY:	Set_Frame(2, 2, 1, false, 60);		break;
-		case CPlayer::CRAWL:		Set_Frame(5, 11, 1, true, 20);		break;
-		case CPlayer::STANDUP:		Set_Frame(2, 4, 1, false, 60);		break;
-		case CPlayer::ATTACKED:		Set_Frame(0, 11, 13, false, 60, 3);	break;
-		case CPlayer::ALMOSTFELL:	Set_Frame(0, 7, 3, true, 60);		break;
-		case CPlayer::ATTACK:		Set_Frame(0, 10, 4, false, 60);		break;
-		case CPlayer::ENTER:		Set_Frame(0, 5, 5, false, 30, 2);	break;
-		case CPlayer::EXIT:			Set_Frame(6, 11, 5, false, 30,2);	break;
-		case CPlayer::LADDER:		Set_Frame(0, 5, 6, true, 60);		break;
-		case CPlayer::PUSH:			Set_Frame(6, 11, 3, true, 60);		break;
+		case CPlayer::IDLE:			Set_Frame(0, 0, 0, false, 60, 0, 15);		break;
+		case CPlayer::WALK:			Set_Frame(1, 8, 0, true, 30, 0, 15);		break;
+		case CPlayer::JUMP:			Set_Frame(0, 11, 9, false, 15, 1, 15);		break;
+		case CPlayer::FALLING:		Set_Frame(0, 11, 9, false, 15, 1, 15);		break;
+		case CPlayer::DIZZY:		Set_Frame(0, 11, 13, false, 60, 3, 15);		break;
+		case CPlayer::DIE:			Set_Frame(9, 9, 0, false, 60, 1, 15);		break;
+		case CPlayer::LOOKUP:		Set_Frame(0, 3, 8, false, 60, 0, 15);		break;
+		case CPlayer::LOOKFRONT:	Set_Frame(3, 6, 8, false, 60, 1, 15);		break;
+		case CPlayer::KNEELDOWN:	Set_Frame(0, 2, 1, false, 60, 1, 15);		break;
+		case CPlayer::KNEELSTAY:	Set_Frame(2, 2, 1, false, 60,1, 15);		break;
+		case CPlayer::CRAWL:		Set_Frame(5, 11, 1, true, 20, 0, 15);		break;
+		case CPlayer::STANDUP:		Set_Frame(2, 4, 1, false, 60, 1, 15);		break;
+		case CPlayer::ATTACKED:		Set_Frame(0, 11, 13, false, 60, 3, 15);		break;
+		case CPlayer::ALMOSTFELL:	Set_Frame(0, 7, 3, true, 60, 0, 15);		break;
+		case CPlayer::ATTACK:		Set_Frame(0, 7, 0, false, 60, 1, 7);		break;
+		case CPlayer::ENTER:		Set_Frame(0, 5, 5, false, 30, 2, 15);		break;
+		case CPlayer::EXIT:			Set_Frame(6, 11, 5, false, 30,2, 15);		break;
+		case CPlayer::LADDER:		Set_Frame(0, 5, 6, true, 60 , 0, 15);		break;
+		case CPlayer::PUSH:			Set_Frame(6, 11, 3, true, 60, 0, 15);		break;
 		}
 		m_ePreState = m_eCurState;
 	}

@@ -44,6 +44,7 @@ protected:
 	void		Move_Frame();
 	void		Set_Frame(int _frameStart, int _frameEnd, int _motion, bool _roop, int _dwSpeed);
 	void		Set_Frame(int _frameStart, int _frameEnd, int _motion, bool _roop, int _dwSpeed, int _repeat);
+	void		Set_Frame(int _frameStart, int _frameEnd, int _motion, bool _roop, int _dwSpeed, int _repeat, int _frameMax);
 
 protected:
 	INFO		m_tInfo;
