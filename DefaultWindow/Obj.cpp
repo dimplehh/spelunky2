@@ -98,12 +98,29 @@ void CObj::Move_Frame()
 			if (m_tFrame.iFrameStart <= m_tFrame.iFrameEnd)
 			{
 				if (m_tFrame.bRoop == false)
-					m_tFrame.iFrameStart = m_tFrame.iFrameEnd;
-				else if (m_tFrame.bRoop == true || m_iRepeatCount < m_tFrame.iRepeat)
+				{
+					if (m_iRepeatCount >= m_tFrame.iRepeat)
+					{
+						m_tFrame.iFrameStart = m_tFrame.iFrameEnd;
+						m_iRepeatCount = m_tFrame.iRepeat;
+					}
+					else
+					{
+						m_tFrame.iFrameStart = m_iFirstFrameStart;
+						m_iRepeatCount++;
+					}
+				}
+				else if (m_tFrame.bRoop == true)
 				{
 					m_tFrame.iFrameStart = m_iFirstFrameStart;
-					m_iRepeatCount++;
 				}
+				//if (m_tFrame.bRoop == false)
+				//	m_tFrame.iFrameStart = m_tFrame.iFrameEnd;
+				//else if (m_tFrame.bRoop == true || m_iRepeatCount < m_tFrame.iRepeat)
+				//{
+				//	m_tFrame.iFrameStart = m_iFirstFrameStart;
+				//	m_iRepeatCount++;
+				//}
 			}
 		}
 	}

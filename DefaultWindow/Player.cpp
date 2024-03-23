@@ -78,8 +78,10 @@ void CPlayer::Render(HDC hDC)
 	TextOut(hDC, 50, 50, szBuff, lstrlen(szBuff));
 	swprintf_s(szBuff, L"체력:  %d", m_iHp);
 	TextOut(hDC, 50, 100, szBuff, lstrlen(szBuff));
-	swprintf_s(szBuff, L"m_iRepeat, m_iRepeatCount:  %d, %d",m_tFrame.iRepeat, m_iRepeatCount);
+	swprintf_s(szBuff, L"상태:  %d ", m_eCurState);
 	TextOut(hDC, 50, 150, szBuff, lstrlen(szBuff));
+	swprintf_s(szBuff, L"motion start, motion end:  %d, %d ", m_tFrame.iFrameStart, m_tFrame.iFrameEnd);
+	TextOut(hDC, 50, 200, szBuff, lstrlen(szBuff));
 }
 
 void CPlayer::Release()
@@ -127,8 +129,11 @@ void CPlayer::Key_Input()
 			m_bKneelDown = false;
 		}
 	}
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::P) == KEY_STATE::HOLD)
-		m_iHp--;
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::A) == KEY_STATE::TAP)
+	{
+		m_iHp -= 10;
+		m_eCurState = ATTACKED;
+	}
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::HOLD)
 	{
 		m_eCurState = ENTER;
@@ -137,8 +142,7 @@ void CPlayer::Key_Input()
 	{
 		m_eCurState = EXIT;
 	}
-	else if (m_tFrame.bRoop == true && m_bLadder == false 
-		|| m_tFrame.bRoop == false && Check_Move_End() == true /*&& (m_bKneelDown == false || m_eCurState == STANDUP)*/)
+	else if ((m_tFrame.bRoop == true && m_bLadder == false  || ((m_tFrame.bRoop == false) && Check_Move_End() == true) && m_eCurState != FALLING))
 	{
 		m_eCurState = IDLE;
 		m_bKneelDown = false;
@@ -162,8 +166,10 @@ void CPlayer::HoldLeft()
 		}
 		else
 		{
-			if (!m_bJump)
+			if (!m_bJump && CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
+			{
 				m_eCurState = WALK;
+			}
 			m_tInfo.fX -= m_fSpeed;
 		}
 	}
@@ -182,8 +188,10 @@ void CPlayer::HoldRight()
 		}
 		else
 		{
-			if (!m_bJump)
+			if (!m_bJump && CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
+			{
 				m_eCurState = WALK;
+			}
 			m_tInfo.fX += m_fSpeed;
 		}
 	}
@@ -256,16 +264,23 @@ bool CPlayer::Die()
 
 void CPlayer::CheckFall()
 {
+	//if (m_bJump == true)
+	//	return; 
 	m_fCurY = CLineMgr::Get_Instance()->GetY();
 	if (m_fPreY != m_fCurY)
 	{
 		m_fDiffY = m_fCurY - m_fPreY;
-		if (m_fDiffY > 130.f)
+		if (m_fDiffY > 200.f)
 		{
 			m_iHp -= 10;
-			m_eCurState = DIZZY;
+			m_eCurState = FALLING;
 		}
 		m_fPreY = m_fCurY;
+	}
+	else
+	{
+		if(CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump) && m_eCurState == FALLING)
+			m_eCurState = DIZZY;
 	}
 }
 
@@ -374,6 +389,7 @@ void CPlayer::Motion_Change()
 		case CPlayer::IDLE:			Set_Frame(0, 0, 0, false, 60, 0);	break;
 		case CPlayer::WALK:			Set_Frame(1, 8, 0, true, 30);		break;
 		case CPlayer::JUMP:			Set_Frame(0, 11, 9, false, 15);		break;
+		case CPlayer::FALLING:		Set_Frame(0, 11, 9, false, 15);		break;
 		case CPlayer::DIZZY:		Set_Frame(0, 11, 13, false, 60, 3);	break;
 		case CPlayer::DIE:			Set_Frame(9, 9, 0, false, 60);		break;
 		case CPlayer::LOOKUP:		Set_Frame(0, 3, 8, false, 60, 0);	break;
@@ -382,7 +398,7 @@ void CPlayer::Motion_Change()
 		case CPlayer::KNEELSTAY:	Set_Frame(2, 2, 1, false, 60);		break;
 		case CPlayer::CRAWL:		Set_Frame(5, 11, 1, true, 20);		break;
 		case CPlayer::STANDUP:		Set_Frame(2, 4, 1, false, 60);		break;
-		case CPlayer::ATTACKED:		Set_Frame(0, 3, 2, false, 60);		break;
+		case CPlayer::ATTACKED:		Set_Frame(0, 11, 13, false, 60, 3);	break;
 		case CPlayer::ALMOSTFELL:	Set_Frame(0, 7, 3, true, 60);		break;
 		case CPlayer::ATTACK:		Set_Frame(0, 10, 4, false, 60);		break;
 		case CPlayer::ENTER:		Set_Frame(0, 5, 5, false, 30, 2);	break;
