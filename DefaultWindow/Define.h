@@ -87,7 +87,7 @@ typedef struct tagFrame
 	bool	bRoop;
 	DWORD	dwSpeed;
 	DWORD	dwTime;
-
+	int		iRepeat = 1;
 }FRAME;
 
 

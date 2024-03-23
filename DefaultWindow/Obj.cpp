@@ -2,7 +2,7 @@
 #include "Obj.h"
 
 
-CObj::CObj() : m_fSpeed(0.f), m_eDir(DIR_END),m_bFlip(false),
+CObj::CObj() : m_fSpeed(0.f), m_eDir(DIR_END),m_bFlip(false), m_iRepeatCount(0),
 m_bDead(false), m_fAngle(0.f), m_eRender(RENDER_END)
 {
 	ZeroMemory(&m_tInfo, sizeof(INFO));
@@ -42,6 +42,27 @@ void CObj::Set_Frame(int _frameStart, int _frameEnd, int _motion, bool _roop, in
 	m_tFrame.dwTime = GetTickCount();
 }
 
+void CObj::Set_Frame(int _frameStart, int _frameEnd, int _motion, bool _roop, int _dwSpeed, int _repeat)
+{
+	if (m_bFlip == false)
+	{
+		m_tFrame.iFrameStart = _frameStart;
+		m_tFrame.iFrameEnd = _frameEnd;
+	}
+	else
+	{
+		m_tFrame.iFrameStart = m_tFrame.iFrameMax - _frameStart;
+		m_tFrame.iFrameEnd = m_tFrame.iFrameMax - _frameEnd;
+	}
+	m_iFirstFrameStart = m_tFrame.iFrameStart;
+
+	m_tFrame.iMotion = _motion;
+	m_tFrame.bRoop = _roop;
+	m_tFrame.dwSpeed = _dwSpeed;
+	m_tFrame.dwTime = GetTickCount();
+	m_tFrame.iRepeat = _repeat;
+}
+
 void CObj::Move_Frame()
 {
 	if (m_tFrame.dwTime + m_tFrame.dwSpeed < GetTickCount())
@@ -53,9 +74,22 @@ void CObj::Move_Frame()
 			if (m_tFrame.iFrameStart >= m_tFrame.iFrameEnd)
 			{
 				if (m_tFrame.bRoop == false)
-					m_tFrame.iFrameStart = m_tFrame.iFrameEnd;
-				else
+				{
+					if (m_iRepeatCount >= m_tFrame.iRepeat)
+					{
+						m_tFrame.iFrameStart = m_tFrame.iFrameEnd;
+						m_iRepeatCount = m_tFrame.iRepeat;
+					}
+					else
+					{
+						m_tFrame.iFrameStart = m_iFirstFrameStart;
+						m_iRepeatCount++;
+					}
+				}
+				else if (m_tFrame.bRoop == true)
+				{
 					m_tFrame.iFrameStart = m_iFirstFrameStart;
+				}
 			}
 		}
 		else
@@ -65,20 +99,12 @@ void CObj::Move_Frame()
 			{
 				if (m_tFrame.bRoop == false)
 					m_tFrame.iFrameStart = m_tFrame.iFrameEnd;
-				else
+				else if (m_tFrame.bRoop == true || m_iRepeatCount < m_tFrame.iRepeat)
+				{
 					m_tFrame.iFrameStart = m_iFirstFrameStart;
+					m_iRepeatCount++;
+				}
 			}
 		}
 	}
-}
-
-bool CObj::Check_Move_End()
-{
-	if (m_tFrame.bRoop == false)
-	{
-		if (m_tFrame.iFrameStart == m_tFrame.iFrameEnd)
-			return true;
-		return false;
-	}
-	return false;
 }

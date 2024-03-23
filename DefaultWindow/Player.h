@@ -23,10 +23,18 @@ private:
 	void		Key_Input();
 	void		Offset();
 	void		Motion_Change();
+	bool		Check_Move_End();
 
 	bool		Die();
+	void		CheckFall();
 	void		Gravity();
 	void		InLadder();
+
+	void		HoldLeft();
+	void		HoldRight();
+	void		HoldUp();
+	void		HoldDown();
+	void		TapZ();
 
 private:
 
@@ -44,6 +52,10 @@ private:
 
 	STATE		m_ePreState;
 	STATE		m_eCurState;
+
+	float		m_fPreY;
+	float		m_fCurY;
+	float		m_fDiffY;
 
 	float		m_fMoveOffset = 0;
 };

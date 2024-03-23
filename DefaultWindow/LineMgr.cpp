@@ -4,8 +4,9 @@
 
 CLineMgr*	CLineMgr::m_pInstance = nullptr;
 
-CLineMgr::CLineMgr()
+CLineMgr::CLineMgr(): m_fY(0)
 {
+	m_AttachedLine = nullptr;
 }
 
 CLineMgr::~CLineMgr()
@@ -18,28 +19,23 @@ bool CLineMgr::Collision_Line(float & fX, float * pY)
 	if (m_LineList.empty())
 		return false;
 
-	CLine*		pTargetLine = nullptr;
+	m_AttachedLine = nullptr;
 
 	for (auto& iter : m_LineList)
 	{
-		if (fX >= iter->Get_Info().tLPoint.fX &&
-			fX < iter->Get_Info().tRPoint.fX)
+		if (fX >= iter->Get_Info().tLPoint.fX && fX < iter->Get_Info().tRPoint.fX)
 		{
-			pTargetLine = iter;
 			m_AttachedLine = iter;
 		}
 	}
 
-	if (!pTargetLine)
+	if (!m_AttachedLine)
 		return false;
 
-	//Y - y1 = ((y2 - y1) / (x2 - x1)) * (X - x1)
-	// Y = ((y2 - y1) / (x2 - x1)) * (X - x1) + y1
-
-	float x1 = pTargetLine->Get_Info().tLPoint.fX;
-	float y1 = pTargetLine->Get_Info().tLPoint.fY;
-	float x2 = pTargetLine->Get_Info().tRPoint.fX;
-	float y2 = pTargetLine->Get_Info().tRPoint.fY;
+	float x1 = m_AttachedLine->Get_Info().tLPoint.fX;
+	float y1 = m_AttachedLine->Get_Info().tLPoint.fY;
+	float x2 = m_AttachedLine->Get_Info().tRPoint.fX;
+	float y2 = m_AttachedLine->Get_Info().tRPoint.fY;
 
 	*pY = ((y2 - y1) / (x2 - x1)) * (fX - x1) + y1;
 
@@ -51,7 +47,7 @@ bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool
 	if (m_LineList.empty())							// 맵에 선이 없다면 
 		return false;								// 충돌 x
 
-	CLine* pTargetLine = nullptr;
+	m_AttachedLine = nullptr;
 
 	if (!_Jumping)
 	{
@@ -67,20 +63,19 @@ bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool
 				float x2 = iter->Get_Info().tRPoint.fX;
 				float y2 = iter->Get_Info().tRPoint.fY;
 
-				float Liney = Equation_Line(fX, x1, y1, x2, y2);
+				m_fY = Equation_Line(fX, x1, y1, x2, y2);
 
-				if (((fY + (fCY / 3.f)) <= Liney) && (Liney <= (fY + (fCY / 2.f))))
+				if (((fY + (fCY / 3.f)) <= m_fY) && (m_fY <= (fY + (fCY / 2.f))))
 				{    // 하단 부분 충돌 범위 지정 전체 사이즈의 1/3 가량
-					pTargetLine = iter;
 					m_AttachedLine = iter;
-					fY = Liney - (fCY / 2.f);
+					fY = m_fY - (fCY / 2.f);
 					return true;
 				}
 			}
 		}
 	}
 
-	if (!pTargetLine)
+	if (!m_AttachedLine)
 		return false;
 }
 
@@ -89,7 +84,7 @@ bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY)
 	if (m_LineList.empty())							// 맵에 선이 없다면 
 		return false;								// 충돌 x
 
-	CLine* pTargetLine = nullptr;
+	m_AttachedLine = nullptr;
 
 	for (auto& iter : m_LineList)
 	{
@@ -100,18 +95,19 @@ bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY)
 			float y1 = iter->Get_Info().tLPoint.fY;
 			float x2 = iter->Get_Info().tRPoint.fX;
 			float y2 = iter->Get_Info().tRPoint.fY;
-			float Liney = Equation_Line(fX, x1, y1, x2, y2);
-			if (((fY + (fCY / 3.f)) <= Liney) && (Liney <= (fY + (fCY / 2.f))))
+
+			m_fY = Equation_Line(fX, x1, y1, x2, y2);
+
+			if (((fY + (fCY / 3.f)) <= m_fY) && (m_fY <= (fY + (fCY / 2.f))))
 			{    // 하단 부분 충돌 범위 지정 전체 사이즈의 1/3 가량
-				pTargetLine = iter;
 				m_AttachedLine = iter;
-				fY = Liney - (fCY / 2.f);
+				fY = m_fY - (fCY / 2.f);
 				return true;
 			}
 		}
 	}
 
-	if (!pTargetLine)
+	if (!m_AttachedLine)
 		return false;
 }
 
@@ -134,8 +130,8 @@ bool CLineMgr::LastBottom_Line(float& fX, float& fY, float& fCX, float& fCY)
 			float y1 = iter->Get_Info().tLPoint.fY;
 			float x2 = iter->Get_Info().tRPoint.fX;
 			float y2 = iter->Get_Info().tRPoint.fY;
-			float Liney = Equation_Line(fX, x1, y1, x2, y2);
-			if (fY + (fCY / 2.f) < Liney)
+			m_fY = Equation_Line(fX, x1, y1, x2, y2);
+			if (fY + (fCY / 2.f) < m_fY)
 			{
 				return true;
 			}
@@ -160,6 +156,14 @@ bool CLineMgr::Ladder_Line(float& fX, float& fY, float& fCX, float& fCY)
 					(iter->Get_Info().tLPoint.fY >= fY + (fCY / 2.f)) && (fY + (fCY / 2.f) > iter->Get_Info().tRPoint.fY))
 				{  //- 플레이어 fy 가 y1 ~y2 사이에 존재하면 true
 					fX = iter->Get_Info().tLPoint.fX;
+
+					float x1 = iter->Get_Info().tLPoint.fX;
+					float y1 = iter->Get_Info().tLPoint.fY;
+					float x2 = iter->Get_Info().tRPoint.fX;
+					float y2 = iter->Get_Info().tRPoint.fY;
+
+					m_fY = Equation_Line(fX, x1, y1, x2, y2);
+
 					return true;
 				}
 			}

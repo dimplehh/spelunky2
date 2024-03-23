@@ -15,7 +15,8 @@ public:
 	float		Equation_Line(float& fX, float _x1, float _y1, float _x2, float _y2);
 	bool		LastBottom_Line(float& fX, float& fY, float& fCX, float& fCY);
 	bool		Ladder_Line(float& fX, float& fY, float& fCX, float& fCY);
-	CLine* Get_AttachedLine() { return m_AttachedLine; };
+	CLine*		Get_AttachedLine() { return m_AttachedLine; };
+	float		GetY() { return m_fY; };
 
 public:
 	void		Initialize();
@@ -45,6 +46,7 @@ private:
 	static CLineMgr*		m_pInstance;
 	list<CLine*>			m_LineList;
 	CLine*					m_AttachedLine;
+	float					m_fY;
 	int						m_iIdx = 1;
 };
 
