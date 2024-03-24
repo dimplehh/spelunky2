@@ -85,19 +85,19 @@ void CTileMgr::SetDecoLand(HDC hDC, int _iScrollX, int _iScrollY)
 
 		if (!m_vecTile.empty())
 		{
-			if (2 < _x && m_vecTile[_index]->Get_Option() == 1 && m_vecTile[_index - 1]->Get_Option() == 0) //¿ÞÂÊ º®
+			if (2 < _x && m_vecTile[_index]->Get_DrawID() == 1 && m_vecTile[_index - 1]->Get_DrawID() == 0) //¿ÞÂÊ º®
 			{
 				GdiTransparentBlt(hDC, iterInfo.fX - iterInfo.fCX / 2 - 32 + _iScrollX, iterInfo.fY + _iScrollY - 32, 64, 64, hMemDC, 0, 0, 64, 64, RGB(58, 58, 58));
 			}
-			if (_x < TILEX - 1 && m_vecTile[_index]->Get_Option() == 1 && m_vecTile[_index + 1]->Get_Option() == 0) //¿À¸¥ÂÊ º®
+			if (_x < TILEX - 1 && m_vecTile[_index]->Get_DrawID() == 1 && m_vecTile[_index + 1]->Get_DrawID() == 0) //¿À¸¥ÂÊ º®
 			{
 				GdiTransparentBlt(hDC, iterInfo.fX + iterInfo.fCX / 2 - 32 + _iScrollX, iterInfo.fY + _iScrollY - 32, 64, 64, hMemDC, 64, 0, 64, 64, RGB(58, 58, 58));
 			}
-			if (1 < _y && m_vecTile[_index]->Get_Option() == 1 && m_vecTile[_index - TILEX]->Get_Option() == 0) //¹â´Â ¶¥
+			if (1 < _y && m_vecTile[_index]->Get_DrawID() == 1 && m_vecTile[_index - TILEX]->Get_DrawID() == 0) //¹â´Â ¶¥
 			{
 				GdiTransparentBlt(hDC, iterInfo.fX - 32 + _iScrollX, iterInfo.fY - iterInfo.fCY / 2 - 32 + _iScrollY, 64, 64, hMemDC, 128, 0, 64, 64, RGB(58, 58, 58));
 			}
-			if (_y < TILEY - 2 && m_vecTile[_index]->Get_Option() == 1 && m_vecTile[_index + TILEX]->Get_Option() == 0) // ¾Æ·¡¶¥
+			if (_y < TILEY - 2 && m_vecTile[_index]->Get_DrawID() == 1 && m_vecTile[_index + TILEX]->Get_DrawID() == 0) // ¾Æ·¡¶¥
 			{
 				GdiTransparentBlt(hDC, iterInfo.fX - 32 + _iScrollX, iterInfo.fY + iterInfo.fCY / 2 - 32 + _iScrollY, 64, 64, hMemDC, 192, 0, 64, 64, RGB(58, 58, 58));
 			}

@@ -23,7 +23,7 @@ CStage::~CStage()
 void CStage::Initialize()
 {
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Ground.bmp", L"Ground");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Tile3.bmp", L"Tile");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette.bmp", L"Tile");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/Monster.bmp", L"Monster");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/DecoLand.bmp", L"DecoLand");
 
