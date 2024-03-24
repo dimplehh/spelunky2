@@ -21,6 +21,7 @@ struct tKeyInfo
 enum class KEY
 {
 	LBUTTON,
+	RBUTTON,
 
 	LEFT,
 	RIGHT,
@@ -28,7 +29,7 @@ enum class KEY
 	DOWN,
 
 	Q, W, E, R,
-	Y, U, I, P,
+	Y, I, P,
 	A, S, D, F, G,
 	Z, X, C, V, B,
 

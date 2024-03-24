@@ -122,16 +122,8 @@ void CTileMgr::Picking_Tile(POINT ptMouse, int iDrawID, int iOption)
 	if (0 > iIndex || (size_t)iIndex >= m_vecTile.size())
 		return;
 
-	if (dynamic_cast<CTile*>(m_vecTile[iIndex])->Get_DrawID() == 0)
-	{
-		dynamic_cast<CTile*>(m_vecTile[iIndex])->Set_DrawID(iDrawID);
-		dynamic_cast<CTile*>(m_vecTile[iIndex])->Set_Option(iOption);
-	}
-	else
-	{
-		dynamic_cast<CTile*>(m_vecTile[iIndex])->Set_DrawID(0);
-		dynamic_cast<CTile*>(m_vecTile[iIndex])->Set_Option(0);
-	}
+	dynamic_cast<CTile*>(m_vecTile[iIndex])->Set_DrawID(iDrawID);
+	dynamic_cast<CTile*>(m_vecTile[iIndex])->Set_Option(iOption);
 }
 
 void CTileMgr::Save_Tile()

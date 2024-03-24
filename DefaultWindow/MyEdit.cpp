@@ -18,7 +18,7 @@ CMyEdit::~CMyEdit()
 void CMyEdit::Initialize()
 {
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Ground.bmp", L"Ground");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Tile2.bmp", L"Tile");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette.bmp", L"Tile");
 	CTileMgr::Get_Instance()->Initialize();
 }
 
@@ -74,12 +74,24 @@ void CMyEdit::Key_Input()
 		pt.x -= (long)CScrollMgr::Get_Instance()->Get_ScrollX();
 		pt.y -= (long)CScrollMgr::Get_Instance()->Get_ScrollY();
 
-		CTileMgr::Get_Instance()->Picking_Tile(pt, 1, 1);
+		CTileMgr::Get_Instance()->Picking_Tile(pt, m_iIndex, 1);
 	}
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::D) == KEY_STATE::TAP)
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RBUTTON) == KEY_STATE::TAP)
 	{
+		GetCursorPos(&pt);
+		ScreenToClient(g_hWnd, &pt);
+
+		pt.x -= (long)CScrollMgr::Get_Instance()->Get_ScrollX();
+		pt.y -= (long)CScrollMgr::Get_Instance()->Get_ScrollY();
+
 		CTileMgr::Get_Instance()->Picking_Tile(pt, 0, 0);
 	}
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::Q) == KEY_STATE::TAP)
+		--m_iIndex;
+
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::TAP)
+		++m_iIndex;
+
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::F1) == KEY_STATE::TAP)
 		CTileMgr::Get_Instance()->Save_Tile();
 

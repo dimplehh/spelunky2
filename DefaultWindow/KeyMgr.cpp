@@ -4,13 +4,14 @@
 int g_arrVK[(UINT)KEY::END] =
 {
 	VK_LBUTTON,
+	VK_RBUTTON,
 	VK_LEFT,
 	VK_RIGHT,
 	VK_UP,
 	VK_DOWN,
 
 	'Q','W','E','R',
-	'Y','U','I','P',
+	'Y','I','P',
 	'A','S','D','F','G',
 	'Z','X','C','V','B',
 

@@ -18,5 +18,6 @@ public:
 private:
 	void	Key_Input();
 	POINT	pt{};
+	int		m_iIndex = 1;
 };
 
