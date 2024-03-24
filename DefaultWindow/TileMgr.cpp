@@ -25,7 +25,7 @@ void CTileMgr::Initialize()
 			float fY = TILECY / 2.f + (TILECY * i);
 
 			CObj*	pObj = CAbstractFactory<CTile>::Create(fX, fY);
-			m_vecTile.push_back(pObj);
+			m_vecTile.push_back(dynamic_cast<CTile*>(pObj));
 		}
 	}
 }
@@ -65,18 +65,18 @@ void CTileMgr::Render(HDC hDC)	//ÄÃ¸µ
 			m_vecTile[iIndex]->Render(hDC);
 		}
 	}
-	for (int i = 0; i < TILEY; i++)
-	{
-		for (int j = 0; j < TILEX; j++)
-		{
-			int		iIndex = i * TILEX + j;
-			if (0 > iIndex || m_vecTile.size() <= (size_t)iIndex)
-				continue;
-			TCHAR	szBuff[32] = L"";
-			swprintf_s(szBuff, L"(%d, %d)", i, j);
-			TextOut(hDC, m_vecTile[iIndex]->Get_Info().fX + iScrollX - 16.f, m_vecTile[iIndex]->Get_Info().fY + iScrollY, szBuff, lstrlen(szBuff));
-		}
-	}
+	//for (int i = 0; i < TILEY; i++)
+	//{
+	//	for (int j = 0; j < TILEX; j++)
+	//	{
+	//		int		iIndex = i * TILEX + j;
+	//		if (0 > iIndex || m_vecTile.size() <= (size_t)iIndex)
+	//			continue;
+	//		TCHAR	szBuff[32] = L"";
+	//		swprintf_s(szBuff, L"(%d, %d)", i, j);
+	//		TextOut(hDC, m_vecTile[iIndex]->Get_Info().fX + iScrollX - 16.f, m_vecTile[iIndex]->Get_Info().fY + iScrollY, szBuff, lstrlen(szBuff));
+	//	}
+	//}
 }
 
 void CTileMgr::Release()
@@ -178,7 +178,7 @@ void CTileMgr::Load_Tile()
 		dynamic_cast<CTile*>(pObj)->Set_DrawID(iDrawID);
 		dynamic_cast<CTile*>(pObj)->Set_Option(iOption);
 
-		m_vecTile.push_back(pObj);
+		m_vecTile.push_back(dynamic_cast<CTile*>(pObj));
 	}
 
 	CloseHandle(hFile);

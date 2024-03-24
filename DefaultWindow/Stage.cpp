@@ -22,10 +22,6 @@ CStage::~CStage()
 
 void CStage::Initialize()
 {
-	
-
-	CLineMgr::Get_Instance()->Initialize();
-
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Ground.bmp", L"Ground");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Tile2.bmp", L"Tile");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/Monster.bmp", L"Monster");
@@ -38,20 +34,21 @@ void CStage::Initialize()
 	}
 
 	CTileMgr::Get_Instance()->Load_Tile();
+	CLineMgr::Get_Instance()->Initialize();
 }
 
 int CStage::Update()
 {
-	CObjMgr::Get_Instance()->Update();
 	CTileMgr::Get_Instance()->Update();
+	CObjMgr::Get_Instance()->Update();
 
 	return 0;
 }
 
 void CStage::Late_Update()
 {
-	CObjMgr::Get_Instance()->Late_Update();
 	CTileMgr::Get_Instance()->Late_Update();
+	CObjMgr::Get_Instance()->Late_Update();
 }
 
 void CStage::Render(HDC hDC)

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "LineMgr.h"
+#include "TileMgr.h"
 #include <string>
 
 CLineMgr*	CLineMgr::m_pInstance = nullptr;
@@ -7,6 +8,7 @@ CLineMgr*	CLineMgr::m_pInstance = nullptr;
 CLineMgr::CLineMgr(): m_fY(0)
 {
 	m_AttachedLine = nullptr;
+	m_pVecTile = nullptr;
 }
 
 CLineMgr::~CLineMgr()
@@ -16,6 +18,7 @@ CLineMgr::~CLineMgr()
 
 void CLineMgr::Initialize()
 {
+	m_pVecTile = CTileMgr::Get_Instance()->Get_VecTile();
 	//Load_Line();
 	MyLine();
 }
@@ -34,23 +37,36 @@ void CLineMgr::Release()
 
 void CLineMgr::MyLine()
 {
-	LINE	tInfo{ LINEPOINT{100, 700}, LINEPOINT{800, 700} };
-	m_LineList.push_back(new CLine(tInfo)); 
+	LINE	tInfo{};
+	INFO	iterInfo{};
 
-	tInfo = { LINEPOINT{300, 600}, LINEPOINT{600, 600} };
-	m_LineList.push_back(new CLine(tInfo));
+	if (nullptr != m_pVecTile)
+	{
+		for (auto iter = m_pVecTile->begin(); iter != m_pVecTile->end(); ++iter)
+		{
+			iterInfo = dynamic_cast<CTile*>(*iter)->Get_Info();
+			tInfo = { LINEPOINT{iterInfo.fX - iterInfo.fCX / 2, iterInfo.fY + iterInfo.fCY / 2},
+				LINEPOINT{iterInfo.fX + iterInfo.fCX / 2, iterInfo.fY + iterInfo.fCY / 2}};
+			m_LineList.push_back(new CLine(tInfo));
+		}
+	}
+	//LINE	tInfo{ LINEPOINT{100, 700}, LINEPOINT{800, 700} };
+	//m_LineList.push_back(new CLine(tInfo)); 
 
-	tInfo = { LINEPOINT{300, 500}, LINEPOINT{600, 500} };
-	m_LineList.push_back(new CLine(tInfo));
+	//tInfo = { LINEPOINT{300, 600}, LINEPOINT{600, 600} };
+	//m_LineList.push_back(new CLine(tInfo));
 
-	tInfo = { LINEPOINT{700, 800}, LINEPOINT{700, 400} };
-	m_LineList.push_back(new CLine(tInfo));
+	//tInfo = { LINEPOINT{300, 500}, LINEPOINT{600, 500} };
+	//m_LineList.push_back(new CLine(tInfo));
 
-	tInfo = { LINEPOINT{800, 600}, LINEPOINT{800, 595} };
-	m_LineList.push_back(new CLine(tInfo));
+	//tInfo = { LINEPOINT{700, 800}, LINEPOINT{700, 400} };
+	//m_LineList.push_back(new CLine(tInfo));
 
-	tInfo = { LINEPOINT{128, 1600}, LINEPOINT{4032, 1600} };
-	m_LineList.push_back(new CLine(tInfo));
+	//tInfo = { LINEPOINT{800, 600}, LINEPOINT{800, 595} };
+	//m_LineList.push_back(new CLine(tInfo));
+
+	//tInfo = { LINEPOINT{128, 1536}, LINEPOINT{4032, 1536} };
+	//m_LineList.push_back(new CLine(tInfo));
 }
 
 void CLineMgr::Load_Line()

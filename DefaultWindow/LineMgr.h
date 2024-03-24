@@ -2,6 +2,8 @@
 
 #include "Line.h"
 
+class CTile;
+
 class CLineMgr
 {
 private:
@@ -50,5 +52,6 @@ private:
 	CLine*					m_AttachedLine;
 	float					m_fY;
 	int						m_iIdx = 1;
+	vector<CTile*>*			m_pVecTile;
 };
 

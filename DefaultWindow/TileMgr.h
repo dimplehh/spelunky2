@@ -16,7 +16,8 @@ public:
 	void		Release();
 
 public:
-	void		Picking_Tile(POINT ptMouse, int iDrawID, int iOption);
+	void			Picking_Tile(POINT ptMouse, int iDrawID, int iOption);
+	vector<CTile*>* Get_VecTile() { return &m_vecTile; };
 
 	void		Save_Tile();
 	void		Load_Tile();
@@ -41,6 +42,6 @@ public:
 
 private:
 	static CTileMgr*		m_pInstance;
-	vector<CObj*>			m_vecTile;
+	vector<CTile*>			m_vecTile;
 };
 
