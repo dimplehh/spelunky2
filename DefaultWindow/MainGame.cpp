@@ -38,7 +38,7 @@ void CMainGame::Initialize()
 
 	m_hDC = GetDC(g_hWnd);
 	CKeyMgr::CreateSingleTonInst()->init();
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Back.bmp", L"Back");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Ground.bmp", L"Back");
 
 	CSceneMgr::Get_Instance()->Scene_Change(SC_LOGO);
 
@@ -75,7 +75,7 @@ void CMainGame::Render()
 
 	CSceneMgr::Get_Instance()->Render(hBackDC);	
 
-	BitBlt(m_hDC, 0, 0, WINCX, WINCY, hBackDC, 0, 0, SRCCOPY);	
+	BitBlt(m_hDC, 0, 0, WINCX , WINCY, hBackDC, 0, 0, SRCCOPY);	
 }
 
 void CMainGame::Release()

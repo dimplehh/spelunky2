@@ -48,6 +48,9 @@ void CLineMgr::MyLine()
 
 	tInfo = { LINEPOINT{800, 600}, LINEPOINT{800, 595} };
 	m_LineList.push_back(new CLine(tInfo));
+
+	tInfo = { LINEPOINT{128, 1600}, LINEPOINT{4032, 1600} };
+	m_LineList.push_back(new CLine(tInfo));
 }
 
 void CLineMgr::Load_Line()
