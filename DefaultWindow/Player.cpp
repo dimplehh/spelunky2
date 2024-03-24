@@ -29,16 +29,17 @@ CPlayer::~CPlayer()
 
 void CPlayer::Initialize()
 {
-	m_tInfo		= { WINCX / 2.f, WINCY / 2.f, 64.f, 64.f };
+	m_tInfo		= { TILECX * 20 , TILECY * 2, 64.f, 64.f };
 	m_fSpeed	= 5.f;
 	m_fDistance = 100.f;
 	m_fPower = 6.f;
+
+	// CScrollMgr::Get_Instance()->Set_ScrollXY(0 , 0); 일단 보류
 
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_base2.bmp",  L"Player_BASE");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_flip2.bmp", L"Player_FLIP");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_Attack.bmp", L"Player_ATTACK_BASE");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_Attack_Flip.bmp", L"Player_ATTACK_FLIP");
-
 	m_eCurState = IDLE;
 	m_tFrame = { 0, 0, 0, 15, false, 60, GetTickCount(), 0};
 	m_pFrameKey = L"Player_BASE";

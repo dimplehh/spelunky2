@@ -14,6 +14,7 @@ public:
 
 	void			Set_ScrollX(float _fX) { m_fScrollX += _fX; }
 	void			Set_ScrollY(float _fY) { m_fScrollY += _fY; }
+	void			Set_ScrollXY(float _fX, float _fY) { m_fScrollX = _fX; m_fScrollY = _fY; }
 
 	void			Scroll_Lock();
 

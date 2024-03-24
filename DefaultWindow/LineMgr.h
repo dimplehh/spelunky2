@@ -25,8 +25,7 @@ public:
 	void		Initialize();
 	void		Render(HDC hDC);
 	void		Release();
-	void		Load_Line();
-	void		MyLine();
+	void		SetLine();
 	void		Change_idx();
 
 public:
