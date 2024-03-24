@@ -17,5 +17,6 @@ public:
 
 private:
 	void	Key_Input();
+	POINT	pt{};
 };
 

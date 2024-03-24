@@ -42,10 +42,10 @@ void CTileMgr::Late_Update()
 		pTile->Late_Update();
 }
 
-void CTileMgr::Render(HDC hDC)
+void CTileMgr::Render(HDC hDC)	//ÄÃ¸µ
 {
-	/*for (auto& pTile : m_vecTile)
-		pTile->Render(hDC);*/
+	int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
+	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
 
 	int	iCullX = abs((int)CScrollMgr::Get_Instance()->Get_ScrollX() / TILECX);
 	int	iCullY = abs((int)CScrollMgr::Get_Instance()->Get_ScrollY() / TILECY);
@@ -59,14 +59,24 @@ void CTileMgr::Render(HDC hDC)
 		{
 			int		iIndex = i * TILEX + j;
 
-			if(0 > iIndex || m_vecTile.size() <= (size_t)iIndex)
+			if (0 > iIndex || m_vecTile.size() <= (size_t)iIndex)
 				continue;
 
 			m_vecTile[iIndex]->Render(hDC);
 		}
 	}
-
-
+	for (int i = 0; i < TILEY; i++)
+	{
+		for (int j = 0; j < TILEX; j++)
+		{
+			int		iIndex = i * TILEX + j;
+			if (0 > iIndex || m_vecTile.size() <= (size_t)iIndex)
+				continue;
+			TCHAR	szBuff[32] = L"";
+			swprintf_s(szBuff, L"(%d, %d)", i, j);
+			TextOut(hDC, m_vecTile[iIndex]->Get_Info().fX + iScrollX - 16.f, m_vecTile[iIndex]->Get_Info().fY + iScrollY, szBuff, lstrlen(szBuff));
+		}
+	}
 }
 
 void CTileMgr::Release()
@@ -86,8 +96,16 @@ void CTileMgr::Picking_Tile(POINT ptMouse, int iDrawID, int iOption)
 	if (0 > iIndex || (size_t)iIndex >= m_vecTile.size())
 		return;
 
-	dynamic_cast<CTile*>(m_vecTile[iIndex])->Set_DrawID(iDrawID);
-	dynamic_cast<CTile*>(m_vecTile[iIndex])->Set_Option(iOption);
+	if (dynamic_cast<CTile*>(m_vecTile[iIndex])->Get_DrawID() == 0)
+	{
+		dynamic_cast<CTile*>(m_vecTile[iIndex])->Set_DrawID(iDrawID);
+		dynamic_cast<CTile*>(m_vecTile[iIndex])->Set_Option(iOption);
+	}
+	else
+	{
+		dynamic_cast<CTile*>(m_vecTile[iIndex])->Set_DrawID(0);
+		dynamic_cast<CTile*>(m_vecTile[iIndex])->Set_Option(0);
+	}
 }
 
 void CTileMgr::Save_Tile()

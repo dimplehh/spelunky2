@@ -17,7 +17,7 @@ extern	HWND		g_hWnd;
 #define			TILECX		64
 #define			TILECY		64
 
-#define			TILEX		65
+#define			TILEX		64
 #define			TILEY		26
 
 #define SINGLE(type)\

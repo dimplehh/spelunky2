@@ -41,17 +41,9 @@ void CTile::Render(HDC hDC)
 	int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
 	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
 
-	BitBlt(hDC, 
-		m_tRect.left + iScrollX,
-		m_tRect.top + iScrollY,
-		TILECX, 
-		TILECY,
-		hMemDC, 
-		TILECX * m_iDrawID, 
-		0, 
-		SRCCOPY);
 
-
+	GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, TILECX, TILECY,
+		hMemDC, TILECX * m_iDrawID, 0, TILECX, TILECY, RGB(255, 255, 255));
 }
 
 void CTile::Release()

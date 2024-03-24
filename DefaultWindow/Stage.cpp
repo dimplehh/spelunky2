@@ -27,7 +27,7 @@ void CStage::Initialize()
 	CLineMgr::Get_Instance()->Initialize();
 
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Ground.bmp", L"Ground");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Tile.bmp", L"Tile");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Tile2.bmp", L"Tile");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/Monster.bmp", L"Monster");
 
 	CObjMgr::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CPlayer>::Create());
@@ -37,13 +37,13 @@ void CStage::Initialize()
 		CObjMgr::Get_Instance()->Add_Object(OBJ_BOX, CAbstractFactory<CBox>::Create(WINCX / 2, WINCY / 2));
 	}
 
-	//CTileMgr::Get_Instance()->Load_Tile();
+	CTileMgr::Get_Instance()->Load_Tile();
 }
 
 int CStage::Update()
 {
 	CObjMgr::Get_Instance()->Update();
-	//CTileMgr::Get_Instance()->Update();
+	CTileMgr::Get_Instance()->Update();
 
 	return 0;
 }
@@ -51,7 +51,7 @@ int CStage::Update()
 void CStage::Late_Update()
 {
 	CObjMgr::Get_Instance()->Late_Update();
-	//CTileMgr::Get_Instance()->Late_Update();
+	CTileMgr::Get_Instance()->Late_Update();
 }
 
 void CStage::Render(HDC hDC)
@@ -63,7 +63,7 @@ void CStage::Render(HDC hDC)
 
 	BitBlt(hDC, iScrollX, iScrollY, TILECX * TILEX, TILECY * TILEY, hGroundDC, 0, 0, SRCCOPY);
 
-	//CTileMgr::Get_Instance()->Render(hDC);
+	CTileMgr::Get_Instance()->Render(hDC);
 	CObjMgr::Get_Instance()->Render(hDC);
 
 	CLineMgr::Get_Instance()->Render(hDC);
