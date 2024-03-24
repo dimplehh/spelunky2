@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "LineMgr.h"
 #include "TileMgr.h"
-#include "BmpMgr.h"
-#include "ScrollMgr.h"
 #include <string>
 
 CLineMgr*	CLineMgr::m_pInstance = nullptr;
@@ -20,32 +18,20 @@ CLineMgr::~CLineMgr()
 
 void CLineMgr::Initialize()
 {
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/DecoLand.bmp", L"DecoLand");
 	m_pVecTile = CTileMgr::Get_Instance()->Get_VecTile();
 	SetLine();
-}
-
-void CLineMgr::Render(HDC hDC)
-{
-	int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
-	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
-
-	for (auto& iter : m_LineList)
-		iter->Render(hDC);
-
-	// 여기다가 상하좌우 감싸주는 애들 렌더하기
-	//SetDecoLand();	// 나중에 맵 위에 꾸며주는 애들 다 넣는 클래스 따로 만들어서 거기서 이 역할 수행하도록 고치기
-	HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"DecoLand");
-	GdiTransparentBlt(hDC, 0 , 0, 64, 64,
-		hMemDC, 0 * 64, 0 * 64, 64, 64, RGB(58, 58, 58));
-	GdiTransparentBlt(hDC, 0, 64, 64, 64,
-		hMemDC, 0 * 64, 0 * 64, 64, 64, RGB(58, 58, 58));
 }
 
 void CLineMgr::Release()
 {
 	for_each(m_LineList.begin(), m_LineList.end(), Safe_Delete<CLine*>);
 	m_LineList.clear();
+}
+
+void CLineMgr::Render(HDC hDC)
+{
+	for (auto& iter : m_LineList)
+		iter->Render(hDC);
 }
 
 void CLineMgr::SetLine()
@@ -59,7 +45,7 @@ void CLineMgr::SetLine()
 		{
 			int _y = _index / TILEX;
 			int _x = _index % TILEX;
-			iterInfo = (*m_pVecTile)[_index]->Get_Info();	//이와 같은 조건으로 땅 덮어주는 애도 렌더링할 때 구현해야할 것  + iterInfo기준으로 선이 어디에 존재하는지에 따라 다르게 판별되게 해야함
+			iterInfo = (*m_pVecTile)[_index]->Get_Info();
 			if (2 < _x && (*m_pVecTile)[_index]->Get_Option() == 1 && (*m_pVecTile)[_index - 1]->Get_Option() == 0) //왼쪽 벽
 			{
 				tInfo = { LINEPOINT{iterInfo.fX - iterInfo.fCX / 2, iterInfo.fY - iterInfo.fCY / 2},

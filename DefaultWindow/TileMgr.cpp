@@ -2,6 +2,7 @@
 #include "TileMgr.h"
 #include "AbstractFactory.h"
 #include "ScrollMgr.h"
+#include "BmpMgr.h"
 
 CTileMgr*		CTileMgr::m_pInstance = nullptr;
 
@@ -63,6 +64,43 @@ void CTileMgr::Render(HDC hDC)	//ÄÃ¸µ
 				continue;
 
 			m_vecTile[iIndex]->Render(hDC);
+		}
+	}
+
+	SetDecoLand(hDC, iScrollX, iScrollY);
+}
+
+void CTileMgr::SetDecoLand(HDC hDC, int _iScrollX, int _iScrollY)
+{
+	HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"DecoLand");
+
+	LINE	tInfo{};
+	INFO	iterInfo{};
+
+	for (int _index = 0; _index < m_vecTile.size(); _index++)
+	{
+		int _y = _index / TILEX;
+		int _x = _index % TILEX;
+		iterInfo = m_vecTile[_index]->Get_Info();
+
+		if (!m_vecTile.empty())
+		{
+			if (2 < _x && m_vecTile[_index]->Get_Option() == 1 && m_vecTile[_index - 1]->Get_Option() == 0) //¿ÞÂÊ º®
+			{
+				GdiTransparentBlt(hDC, iterInfo.fX - iterInfo.fCX / 2 - 32 + _iScrollX, iterInfo.fY + _iScrollY - 32, 64, 64, hMemDC, 0, 0, 64, 64, RGB(58, 58, 58));
+			}
+			if (_x < TILEX - 1 && m_vecTile[_index]->Get_Option() == 1 && m_vecTile[_index + 1]->Get_Option() == 0) //¿À¸¥ÂÊ º®
+			{
+				GdiTransparentBlt(hDC, iterInfo.fX + iterInfo.fCX / 2 - 32 + _iScrollX, iterInfo.fY + _iScrollY - 32, 64, 64, hMemDC, 64, 0, 64, 64, RGB(58, 58, 58));
+			}
+			if (1 < _y && m_vecTile[_index]->Get_Option() == 1 && m_vecTile[_index - TILEX]->Get_Option() == 0) //¹â´Â ¶¥
+			{
+				GdiTransparentBlt(hDC, iterInfo.fX - 32 + _iScrollX, iterInfo.fY - iterInfo.fCY / 2 - 32 + _iScrollY, 64, 64, hMemDC, 128, 0, 64, 64, RGB(58, 58, 58));
+			}
+			if (_y < TILEY - 2 && m_vecTile[_index]->Get_Option() == 1 && m_vecTile[_index + TILEX]->Get_Option() == 0) // ¾Æ·¡¶¥
+			{
+				GdiTransparentBlt(hDC, iterInfo.fX - 32 + _iScrollX, iterInfo.fY + iterInfo.fCY / 2 - 32 + _iScrollY, 64, 64, hMemDC, 192, 0, 64, 64, RGB(58, 58, 58));
+			}
 		}
 	}
 }

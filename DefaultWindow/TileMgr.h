@@ -18,6 +18,7 @@ public:
 public:
 	void			Picking_Tile(POINT ptMouse, int iDrawID, int iOption);
 	vector<CTile*>* Get_VecTile() { return &m_vecTile; };
+	void			SetDecoLand(HDC hDC, int _iScrollX, int _iScroll);
 
 	void		Save_Tile();
 	void		Load_Tile();
