@@ -14,11 +14,10 @@
 
 
 CPlayer::CPlayer()
-	: m_fDistance(0.f), m_bJump(false), m_bLadder(false), m_iJumpCount(0), m_iHp(100), m_fPreY(0.f), m_fCurY(0.f),
+	: m_fDistance(0.f), m_bJump(false), m_bLadder(false), m_iJumpCount(0), m_iHp(100), m_fPreY(0.f), m_fCurY(0.f), m_bCanHang(false), m_fDiffY(0.f),
 	m_fTime(0.f), m_fPower(0.f), m_ePreState(ST_END), m_eCurState(IDLE), m_bKneelDown(false), m_bAttachedBox(false), m_dwTime(GetTickCount())
 {
-	ZeroMemory(&m_tPosin, sizeof(POINT));
-
+	//ZeroMemory(&m_tPosin, sizeof(POINT));
 	m_eMyObjType = OBJECT_TYPE::PLAYER;
 }
 
@@ -51,27 +50,26 @@ int CPlayer::Update()
 {
 	Die();
 	Key_Input();
-
-	Offset();
-
 	__super::Update_Rect();
-
+	Offset();
 	return OBJ_NOEVENT;
 }
 
-void CPlayer::Late_Update()
+void CPlayer::Late_Update()	//어떤걸 Late_Update, 어떤걸 Update에 넣어야할지 잘 생각해야 할듯
 {
 	Gravity();
-	CheckFall();
-	CheckAlmostFell();
-	CheckCanHanging();
+	FallDamage();
+	AlmostFell();
+	CanHanging();
 	Motion_Change();
 	__super::Move_Frame();
+
 #ifdef _DEBUG
 
 	if (m_dwTime + 1000 < GetTickCount())
 	{
 		cout << "플레이어 좌표 : " << m_tInfo.fX << "\t" << m_tInfo.fY << endl;
+		cout << "canhang :" << m_bCanHang << endl;
 		m_dwTime = GetTickCount();
 	}
 #endif
@@ -112,7 +110,7 @@ void CPlayer::Release()
 
 void CPlayer::HoldLeft()
 {
-	if (m_bLadder)
+	if (m_bLadder || m_bCanHang)
 		return;
 	m_pFrameKey = L"Player_FLIP";
 	m_bFlip = true;
@@ -138,6 +136,8 @@ void CPlayer::HoldLeft()
 
 void CPlayer::HoldRight()
 {
+	if (m_bCanHang)
+		return;
 	m_pFrameKey = L"Player_BASE";
 	m_bFlip = false;
 	if (m_bKneelDown)
@@ -164,6 +164,8 @@ void CPlayer::HoldRight()
 
 void CPlayer::HoldUp()
 {
+	if (m_bCanHang)
+		return;
 	InLadder();
 	if (m_bLadder)
 	{
@@ -176,6 +178,8 @@ void CPlayer::HoldUp()
 
 void CPlayer::HoldDown()
 {
+	if (m_bCanHang)
+		return;
 	InLadder();
 	if (m_bLadder)
 	{
@@ -197,7 +201,7 @@ void CPlayer::TapZ()
 				m_tInfo.fY += 50;
 			}
 		}
-		if (170.f < m_fAngle && m_fAngle < 270.f)
+		if (170.f < m_fAngle && m_fAngle < 270.f)	// 이건 뭐지..?
 			m_fAngle += 10.f;
 		else
 			m_fAngle -= 10.f;
@@ -211,6 +215,7 @@ void CPlayer::TapZ()
 			m_fTime = 0.f;
 			m_fPower = 10.f;
 			m_bLadder = false;
+			m_bCanHang = false;
 			m_iJumpCount++;
 		}
 	}
@@ -227,7 +232,7 @@ bool CPlayer::Die()
 	return false;
 }
 
-void CPlayer::CheckFall()
+void CPlayer::FallDamage()
 {
 	m_fCurY = CLineMgr::Get_Instance()->GetY();
 	if (m_fPreY != m_fCurY)
@@ -247,7 +252,7 @@ void CPlayer::CheckFall()
 	}
 }
 
-void CPlayer::CheckAlmostFell()
+void CPlayer::AlmostFell()
 {
 	if (nullptr != CLineMgr::Get_Instance()->Get_AttachedLine())
 	{
@@ -266,10 +271,6 @@ void CPlayer::CheckAlmostFell()
 	}
 }
 
-void CPlayer::CheckCanHanging()
-{
-}
-
 void CPlayer::InLadder()
 {
 	if (CLineMgr::Get_Instance()->Ladder_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
@@ -279,6 +280,24 @@ void CPlayer::InLadder()
 	}
 	else
 		m_bLadder = false;
+}
+
+void CPlayer::CanHanging()
+{	// 점프상태였었는지 판단해야함
+	if (CLineMgr::Get_Instance()->Can_Hang_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
+	{
+		if (m_bJump)
+		{
+			m_iJumpCount = 0;
+			m_bCanHang = true;
+			m_eCurState = HANGON;
+		}
+	}
+	else
+	{
+		m_bCanHang = false;
+		//m_eCurState = IDLE;
+	}
 }
 
 bool CPlayer::Check_Move_End()
@@ -337,7 +356,7 @@ void CPlayer::Gravity()	//숫자 의미 판단, 더 정리 필요 -> Obj로 나중에 빼야될듯
 {
 	for (int i = 0; i < 2; i++)
 	{
-		if (!m_bLadder && !CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
+		if (!m_bLadder && !m_bCanHang && !CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
 		{
 			m_fTime += 0.1f;
 
@@ -389,7 +408,7 @@ void CPlayer::Motion_Change()
 		case CPlayer::ENTER:		Set_Frame(0, 5, 5, false, 30, 2, 15);		break;
 		case CPlayer::EXIT:			Set_Frame(6, 11, 5, false, 30,2, 15);		break;
 		case CPlayer::LADDER:		Set_Frame(0, 5, 6, true, 60 , 0, 15);		break;
-		case CPlayer::PUSH:			Set_Frame(6, 11, 6, true, 60, 0, 15);		break;	// 수평선에선 잘 됨
+		case CPlayer::PUSH:			Set_Frame(6, 11, 6, true, 60, 0, 15);		break;	// 상자가 덜덜거리지 않는 구간 - offset에 변화가 없는 구간, 차후 수정 필요
 		case CPlayer::HANGON:		Set_Frame(8, 11, 3, true, 100, 0, 15);		break;
 		}
 		m_ePreState = m_eCurState;

@@ -14,7 +14,75 @@ CLineMgr::~CLineMgr()
 	Release();
 }
 
-bool CLineMgr::Collision_Line(float & fX, float * pY)
+void CLineMgr::Initialize()
+{
+	//Load_Line();
+	MyLine();
+}
+
+void CLineMgr::Render(HDC hDC)
+{
+	for (auto& iter : m_LineList)
+		iter->Render(hDC);
+}
+
+void CLineMgr::Release()
+{
+	for_each(m_LineList.begin(), m_LineList.end(), Safe_Delete<CLine*>);
+	m_LineList.clear();
+}
+
+void CLineMgr::MyLine()
+{
+	LINE	tInfo{ LINEPOINT{100, 700}, LINEPOINT{800, 700} };
+	m_LineList.push_back(new CLine(tInfo)); 
+
+	tInfo = { LINEPOINT{300, 600}, LINEPOINT{600, 600} };
+	m_LineList.push_back(new CLine(tInfo));
+
+	tInfo = { LINEPOINT{300, 500}, LINEPOINT{600, 500} };
+	m_LineList.push_back(new CLine(tInfo));
+
+	tInfo = { LINEPOINT{700, 800}, LINEPOINT{700, 400} };
+	m_LineList.push_back(new CLine(tInfo));
+
+	tInfo = { LINEPOINT{800, 600}, LINEPOINT{800, 595} };
+	m_LineList.push_back(new CLine(tInfo));
+}
+
+void CLineMgr::Load_Line()
+{
+	//	wstring fileStr = L"../Data/Line" + to_wstring(m_iIdx) + L".dat";
+	HANDLE hFile = CreateFile(L"../Data/Line3.dat",	GENERIC_READ,NULL,NULL,OPEN_EXISTING,	FILE_ATTRIBUTE_NORMAL, NULL);
+
+	if (INVALID_HANDLE_VALUE == hFile)
+	{
+		MessageBox(g_hWnd, _T("Load File"), L"Fail", MB_OK);
+		return;
+	}
+
+	DWORD	dwByte(0);	// 예외 처리 변수
+	LINE	tInfo{};
+
+	while (true)
+	{
+		ReadFile(hFile, &tInfo, sizeof(LINE), &dwByte, nullptr);
+		if (0 == dwByte)
+			break;
+		m_LineList.push_back(new CLine(tInfo));
+	}
+	CloseHandle(hFile);
+	MessageBox(g_hWnd, _T("Load 완료"), L"성공", MB_OK);
+}
+
+void CLineMgr::Change_idx()
+{
+	m_iIdx++;
+	Release();
+	Load_Line();
+}
+
+bool CLineMgr::Collision_Line(float& fX, float* pY)	// 이 아래것드 다 코드좀 깔끔하게 수정하자
 {
 	if (m_LineList.empty())
 		return false;
@@ -144,11 +212,11 @@ bool CLineMgr::LastBottom_Line(float& fX, float& fY, float& fCX, float& fCY)
 bool CLineMgr::Ladder_Line(float& fX, float& fY, float& fCX, float& fCY)
 {
 	if (m_LineList.empty())							// 맵에 선이 없다면 
-		return false;								// 줄타기 false
-
+		return false;								//  false
 	for (auto& iter : m_LineList)
 	{
-		if ((iter->Get_Info().tLPoint.fX - iter->Get_Info().tRPoint.fX) < 5.f)
+		if (iter->Get_Info().tLPoint.fX == iter->Get_Info().tRPoint.fX
+			&& abs(iter->Get_Info().tLPoint.fY - iter->Get_Info().tRPoint.fY) > 50)
 		{      //- 선 x1 == x2 이고
 			if ((fX - (fCX / 2.f) < iter->Get_Info().tLPoint.fX) && (iter->Get_Info().tLPoint.fX < fX + (fCX / 2.f)))
 			{
@@ -169,83 +237,36 @@ bool CLineMgr::Ladder_Line(float& fX, float& fY, float& fCX, float& fCY)
 			}
 		}
 	}
-
 	return false;
 }
 
-
-void CLineMgr::Initialize()
+bool CLineMgr::Can_Hang_Line(float& fX, float& fY, float& fCX, float& fCY)
 {
-	//Load_Line();
-	MyLine();
-}
-
-void CLineMgr::Render(HDC hDC)
-{
+	if (m_LineList.empty())							// 맵에 선이 없다면 
+		return false;								//  false
 	for (auto& iter : m_LineList)
-		iter->Render(hDC);
-}
-
-void CLineMgr::Release()
-{
-	for_each(m_LineList.begin(), m_LineList.end(), Safe_Delete<CLine*>);
-	m_LineList.clear();
-}
-
-void CLineMgr::MyLine()
-{
-	LINE	tInfo{ LINEPOINT{100, 700}, LINEPOINT{800, 700} };
-	m_LineList.push_back(new CLine(tInfo)); 
-
-	tInfo = { LINEPOINT{300, 600}, LINEPOINT{600, 600} };
-	m_LineList.push_back(new CLine(tInfo));
-
-	tInfo = { LINEPOINT{300, 500}, LINEPOINT{600, 500} };
-	m_LineList.push_back(new CLine(tInfo));
-
-	tInfo = { LINEPOINT{700, 800}, LINEPOINT{700, 400} };
-	m_LineList.push_back(new CLine(tInfo));
-}
-
-void CLineMgr::Load_Line()
-{
-	//	wstring fileStr = L"../Data/Line" + to_wstring(m_iIdx) + L".dat";
-	HANDLE hFile = CreateFile(L"../Data/Line3.dat",		// 파일 경로(이름을 포함)
-		GENERIC_READ,			// 파일 접근 모드(GENERIC_READ : 읽기 전용)
-		NULL,					// 공유 방식, 파일이 열려 있는 상태에서 다른 프로세서에서 오픈하고자 할 때 허용할 지에 대한 여부(NULL인 경우 공유하지 않음)
-		NULL,					// 보안 모드(NULL인 경우 기본 보안 상태)
-		OPEN_EXISTING,			// 생성 방식(CREATE_ALWAYS : 파일이 없으면 생성, 있으면 덮어쓰기), (OPEN_EXISTING : 파일이 있을 때만 열기)
-		FILE_ATTRIBUTE_NORMAL,  // 파일 속성(아무런 특수 속성이 없는 파일 생성)
-		NULL);					// 생성될 파일의 속성을 제공할 템플릿 파일(우리는 사용 안하기 때문에 NULL)
-
-
-	if (INVALID_HANDLE_VALUE == hFile)
 	{
-		MessageBox(g_hWnd, _T("Load File"), L"Fail", MB_OK);
-		return;
+		if (iter->Get_Info().tLPoint.fX == iter->Get_Info().tRPoint.fX
+			&& abs(iter->Get_Info().tLPoint.fY - iter->Get_Info().tRPoint.fY) <= 5)
+		{      //- 선 x1 == x2 이고
+			if ((fX - (fCX / 2.f) < iter->Get_Info().tLPoint.fX) && (iter->Get_Info().tLPoint.fX < fX + (fCX / 2.f)))
+			{
+				if ((iter->Get_Info().tLPoint.fY >= fY - (fCY / 2.f)) && (fY - (fCY / 2.f) > iter->Get_Info().tRPoint.fY) ||
+					(iter->Get_Info().tLPoint.fY >= fY + (fCY / 2.f)) && (fY + (fCY / 2.f) > iter->Get_Info().tRPoint.fY))
+				{
+					fX = iter->Get_Info().tLPoint.fX;
+
+					float x1 = iter->Get_Info().tLPoint.fX;
+					float y1 = iter->Get_Info().tLPoint.fY;
+					float x2 = iter->Get_Info().tRPoint.fX;
+					float y2 = iter->Get_Info().tRPoint.fY;
+
+					m_fY = Equation_Line(fX, x1, y1, x2, y2);
+
+					return true;
+				}
+			}
+		}
 	}
-
-	DWORD	dwByte(0);	// 예외 처리 변수
-	LINE	tInfo{};
-
-	while (true)
-	{
-		ReadFile(hFile, &tInfo, sizeof(LINE), &dwByte, nullptr);
-
-		if (0 == dwByte)
-			break;
-
-		m_LineList.push_back(new CLine(tInfo));
-	}
-
-	CloseHandle(hFile);
-
-	MessageBox(g_hWnd, _T("Load 완료"), L"성공", MB_OK);
-}
-
-void CLineMgr::Change_idx()
-{
-	m_iIdx++;
-	Release();
-	Load_Line();
+	return false;
 }

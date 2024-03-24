@@ -32,9 +32,9 @@ private:
 
 	bool		Die();
 	void		Gravity();
-	void		CheckFall();
-	void		CheckAlmostFell();
-	void		CheckCanHanging();
+	void		FallDamage();
+	void		AlmostFell();
+	void		CanHanging();
 	void		InLadder();
 
 	void		HoldLeft();
@@ -46,15 +46,15 @@ private:
 
 private:
 
-	POINT		m_tPosin;
+	// POINT		m_tPosin; // 나중에 총 구현할때 사용할 수 있을듯
 	float		m_fDistance;
 	int			m_iHp;
 
 	bool		m_bJump;
 	bool		m_bLadder;
+	bool		m_bCanHang;
 	bool		m_bKneelDown; //엎드린 상태
 	bool		m_bAttachedBox;	//상자와 닿은 상태
-	bool		m_bIsHanging;
 	int			m_iJumpCount;
 
 	float		m_fPower;
