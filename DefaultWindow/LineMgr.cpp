@@ -5,7 +5,7 @@
 
 CLineMgr*	CLineMgr::m_pInstance = nullptr;
 
-CLineMgr::CLineMgr(): m_fY(0)
+CLineMgr::CLineMgr(): m_fX(0), m_fY(0)
 {
 	m_AttachedLine = nullptr;
 	m_pVecTile = nullptr;
@@ -63,25 +63,36 @@ bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool
 		return false;
 }
 
-bool CLineMgr::Collision_Vertical_Line(float& fX, float& fY, float& fCX, float& fCY)	//벽충돌
+int		CLineMgr::Collision_Vertical_Line(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping)	//벽충돌
 {
 	if (m_LineList.empty())
-		return false;
+		return 0;
 
 	m_AttachedLine = nullptr;
 
 	for (auto& iter : m_LineList)
 	{
-		if ((iter->Get_Info().tLPoint.fX - fCX / 2 - 10 < fX && fX < iter->Get_Info().tLPoint.fX + fCX / 2 + 10)
-			&& (iter->Get_Info().tLPoint.fY - fCY / 2 - 10 < fY && fY < iter->Get_Info().tRPoint.fY + fCY / 2 + 10)
-			&& iter->Get_LineType() == CLine::LEFTWALL)
+		if ((iter->Get_Info().tLPoint.fX - 10 < fX && fX < iter->Get_Info().tLPoint.fX + 10)
+			&& (iter->Get_Info().tLPoint.fY < fY && fY < iter->Get_Info().tRPoint.fY))
 		{
-			m_AttachedLine = iter;
-			return true;
+			m_fX = iter->Get_Info().tLPoint.fX;
+
+			if (iter->Get_LineType() == CLine::LEFTWALL)
+			{
+				m_AttachedLine = iter;
+				fX = m_fX - 10;
+				return -1;
+			}
+			else if (iter->Get_LineType() == CLine::RIGHTWALL)
+			{
+				m_AttachedLine = iter;
+				fX = m_fX + 10;
+				return 1;
+			}
 		}
 	}
 	if (!m_AttachedLine)
-		return false;
+		return 0;
 }
 
 bool CLineMgr::LastBottom_Line(float& fX, float& fY, float& fCX, float& fCY)

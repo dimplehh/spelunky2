@@ -12,7 +12,7 @@ private:
 
 public:
 	bool		Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping);
-	bool		Collision_Vertical_Line(float& fX, float& fY, float& fCX, float& fCY);
+	int			Collision_Vertical_Line(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping); // 반환값으로 왼쪽벽, 오른쪽벽, 충돌  x 구분
 
 	bool		LastBottom_Line(float& fX, float& fY, float& fCX, float& fCY);
 	bool		Ladder_Line(float& fX, float& fY, float& fCX, float& fCY);
@@ -49,6 +49,7 @@ private:
 	static CLineMgr*		m_pInstance;
 	list<CLine*>			m_LineList;
 	CLine*					m_AttachedLine;
+	float					m_fX;
 	float					m_fY;
 	int						m_iIdx = 1;
 	vector<CTile*>*			m_pVecTile;

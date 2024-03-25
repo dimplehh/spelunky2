@@ -62,22 +62,17 @@ void CPlayer::Late_Update()	//어떤걸 Late_Update, 어떤걸 Update에 넣어야할지 잘 
 	FallDamage();
 	CanHanging();
 	Motion_Change();
-	if (CLineMgr::Get_Instance()->Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
-		m_bWall = true;
-	else
-		m_bWall = false;
-
-
+	m_iWall = CLineMgr::Get_Instance()->Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump);
 	__super::Move_Frame();
 
-#ifdef _DEBUG
-
-	if (m_dwTime + 1000 < GetTickCount())
-	{
-		cout << m_bWall << endl;
-		m_dwTime = GetTickCount();
-	}
-#endif
+//#ifdef _DEBUG
+//
+//	if (m_dwTime + 1000 < GetTickCount())
+//	{
+//		cout << m_iWall << endl;
+//		m_dwTime = GetTickCount();
+//	}
+//#endif
 }
 
 void CPlayer::Render(HDC hDC)
@@ -136,9 +131,6 @@ void CPlayer::HoldLeft()
 			m_eCurState = WALK;
 		}
 		m_tInfo.fX -= m_fSpeed;
-
-		//if(!CLineMgr::Get_Instance()->Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
-		//	m_tInfo.fX -= m_fSpeed;
 	}
 }
 
@@ -167,8 +159,6 @@ void CPlayer::HoldRight()
 			m_eCurState = WALK;
 		}
 		m_tInfo.fX += m_fSpeed;
-		//if (!CLineMgr::Get_Instance()->Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
-		//	m_tInfo.fX += m_fSpeed;
 	}
 }
 
@@ -322,9 +312,9 @@ void CPlayer::Offset()
 	{
 		if (Check_Move_End() == true)
 		{
-			if (m_fMoveOffset < 15.f)
+			if (m_fMoveOffset < 10.f)
 			{
-				m_fMoveOffset += 0.8f;
+				m_fMoveOffset += 0.3f;
 				if(m_eCurState == LOOKUP)
 					CScrollMgr::Get_Instance()->Set_ScrollY(m_fMoveOffset);
 				else if (m_eCurState == KNEELSTAY)
