@@ -30,7 +30,7 @@ CPlayer::~CPlayer()
 
 void CPlayer::Initialize()
 {
-	m_tInfo		= { TILECX * 20 , TILECY * 2, 64.f, 64.f };
+	m_tInfo		= { TILECX * 21 , TILECY * 2, 64.f, 64.f };
 	m_fSpeed	= 5.f;
 	m_fDistance = 100.f;
 	m_fPower = 2.f;
@@ -241,7 +241,7 @@ void CPlayer::FallDamage()
 	{
 		m_eCurState = FALLING;
 	}
-	else if (m_fDiffY >= TILECY * 4 && m_eCurState == FALLING)
+	else if (m_fDiffY >= TILECY * 4)
 	{
 		m_iHp -= 10;
 		m_eCurState = DIZZY;
@@ -255,7 +255,6 @@ void CPlayer::AlmostFell()
 		if ((0 < (int)CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tLPoint.fX - m_tInfo.fX	&& (int)CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tLPoint.fX - m_tInfo.fX < 10)
 		|| ( 0 < m_tInfo.fX - (int)CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tRPoint.fX	&& m_tInfo.fX - (int)CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tRPoint.fX < 10))
 		{
-			if(m_tInfo.fY )
 			if (m_eCurState == IDLE)
 				m_eCurState = ALMOSTFELL;
 		}
@@ -437,7 +436,7 @@ void CPlayer::Key_Input()
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::HOLD) { m_eCurState = ENTER; }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::AWAY) { m_eCurState = EXIT; }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::X) == KEY_STATE::TAP) { m_eCurState = ATTACK; }
-	else if ((m_tFrame.bRoop == true && m_bLadder == false || ((m_tFrame.bRoop == false) && Check_Move_End() == true) && m_eCurState != FALLING))
+	else if ((m_tFrame.bRoop == true && m_bLadder == false || ((m_tFrame.bRoop == false) && Check_Move_End() == true)))
 	{
 		m_eCurState = IDLE;
 		m_bKneelDown = false;
