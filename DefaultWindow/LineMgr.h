@@ -19,7 +19,8 @@ public:
 	bool		Ladder_Line(float& fX, float& fY, float& fCX, float& fCY);
 	bool		Can_Hang_Line(float& fX, float& fY, float& fCX, float& fCY);
 
-	CLine*		Get_AttachedLine() { return m_AttachedLine; };	//이제 굳이 GetY는 필요가 없음.. 어차피 모든 선의 y는 똑같아서.
+	CLine*		Get_AttachedLine() { return m_AttachedLine; };
+	float		Get_fY() { return m_fY; }
 
 public:
 	void		Initialize();

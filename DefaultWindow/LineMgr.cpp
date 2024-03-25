@@ -48,10 +48,10 @@ bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool
 			if (iter->Get_Info().tLPoint.fY == iter->Get_Info().tRPoint.fY && iter->Get_Info().tLPoint.fX <= fX + fCX / 6 && fX - fCX / 6 < iter->Get_Info().tRPoint.fX
 				&& fY >= iter->Get_Info().tLPoint.fY - fCY / 2)
 			{
-				m_fY = iter->Get_Info().tLPoint.fY;
+				m_fY = iter->Get_Info().tLPoint.fY;										//이거 있어야 함
 
-				if (((fY + (fCY / 6.f)) <= m_fY) && (m_fY <= (fY + (fCY / 2.f))))
-				{    // 하단 부분 충돌 범위 지정 전체 사이즈의 1/6 가량
+				if (((fY + (fCY / 6.f)) <= m_fY) && (m_fY <= (fY + (fCY / 2.f))))		// 하단 부분 충돌 범위 지정 전체 사이즈의 1/6 가량
+				{
 					m_AttachedLine = iter;
 					fY = m_fY - (fCY / 2);
 					return true;
@@ -70,16 +70,13 @@ bool CLineMgr::Collision_Vertical_Line(float& fX, float& fY, float& fCX, float& 
 
 	m_AttachedLine = nullptr;
 
-	if (!_Jumping) //이건 왜필요한거지..?
+	for (auto& iter : m_LineList)
 	{
-		for (auto& iter : m_LineList)
+		if (iter->Get_Info().tLPoint.fX == iter->Get_Info().tRPoint.fX
+			&& (iter->Get_Info().tLPoint.fX >= fX - fCX / 3.f || iter->Get_Info().tLPoint.fX + fCX / 3.f))
 		{
-			if (iter->Get_Info().tLPoint.fX == iter->Get_Info().tRPoint.fX 
-				&& (iter->Get_Info().tLPoint.fX >= fX - fCX / 3.f || iter->Get_Info().tLPoint.fX + fCX / 3.f))
-			{
-				m_AttachedLine = iter;
-				return true;
-			}
+			m_AttachedLine = iter;
+			return true;
 		}
 	}
 	if (!m_AttachedLine)

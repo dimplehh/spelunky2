@@ -15,7 +15,7 @@
 
 
 CPlayer::CPlayer()
-	: m_fDistance(0.f), m_bJump(false), m_bLadder(false), m_iJumpCount(0), m_iHp(100), m_fCurY(0.f), m_bCanHang(false), m_fDiffY(0.f),
+	: m_fDistance(0.f), m_bJump(false), m_bLadder(false), m_iJumpCount(0), m_iHp(100), m_fPreY(0.f), m_fCurY(0.f), m_bCanHang(false), m_fDiffY(0.f),
 	m_fTime(0.f), m_fPower(0.f), m_ePreState(ST_END), m_eCurState(IDLE), m_bKneelDown(false), m_bAttachedBox(false), m_dwTime(GetTickCount())
 {
 	//ZeroMemory(&m_tPosin, sizeof(POINT));	// 나중에 총구구현에 쓸 수 있어 남겨놓음
@@ -34,7 +34,6 @@ void CPlayer::Initialize()
 	m_fSpeed	= 5.f;
 	m_fDistance = 100.f;
 	m_fPower = 2.f;
-	m_fPreY = TILECY * 1;
 
 	// CScrollMgr::Get_Instance()->Set_ScrollXY(0 , 0); 일단 보류
 
@@ -61,19 +60,19 @@ int CPlayer::Update()
 void CPlayer::Late_Update()	//어떤걸 Late_Update, 어떤걸 Update에 넣어야할지 잘 생각해야 할듯
 {
 	Gravity();
-	FallDamage();
 	AlmostFell();
+	FallDamage();
 	CanHanging();
 	Motion_Change();
 	__super::Move_Frame();
 
 #ifdef _DEBUG
 
-	if (m_dwTime + 1000 < GetTickCount())
+	if (m_dwTime + 10 < GetTickCount())
 	{
-		cout << "플레이어 x 좌표 : " << m_tInfo.fX << endl;
-		cout << "scroll X, scroll Y : " << CScrollMgr::Get_Instance()->Get_ScrollX() << "/" <<  CScrollMgr::Get_Instance()->Get_ScrollY() << endl;
-		m_dwTime = GetTickCount();
+		//cout << "플레이어 체력: " << m_iHp << endl;
+		if(m_fDiffY != 0)
+			cout << "m_fDiffY: " << m_fDiffY << endl;
 	}
 #endif
 }
@@ -238,32 +237,15 @@ bool CPlayer::Die()
 
 void CPlayer::FallDamage()
 {
-	//m_fCurY = CLineMgr::Get_Instance()->GetY();
-	
-	//if (m_fPreY == 1536 || m_fCurY == 1536)
-	//{
-	//	m_fPreY = m_tInfo.fY;
-	//	m_fCurY = m_tInfo.fY;
-	//}
-
-	//if (m_fPreY != m_fCurY)
-	//{
-	//	testCurY = m_fCurY;
-	//	testPreY = m_fPreY;
-
-	//	m_fDiffY = m_fCurY - m_fPreY;
-	//	if (m_fDiffY > 2000.f)
-	//	{
-	//		m_iHp -= 10;
-	//		m_eCurState = FALLING;
-	//	}
-	//	m_fPreY = m_fCurY;
-	//}
-	//else
-	//{
-	//	if(CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump) && m_eCurState == FALLING)
-	//		m_eCurState = DIZZY;
-	//}
+	if (m_bJump == false && !CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
+	{
+		m_eCurState = FALLING;
+	}
+	else if (m_fDiffY >= TILECY * 4 && m_eCurState == FALLING)
+	{
+		m_iHp -= 10;
+		m_eCurState = DIZZY;
+	}
 }
 
 void CPlayer::AlmostFell()
@@ -296,8 +278,8 @@ void CPlayer::InLadder()
 		m_bLadder = false;
 }
 
-void CPlayer::CanHanging()
-{	// 점프상태였었는지 판단해야함
+void CPlayer::CanHanging()	// 점프상태였었는지 판단해야함
+{
 	if (CLineMgr::Get_Instance()->Can_Hang_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
 	{
 		if (m_bJump)
@@ -365,7 +347,7 @@ void CPlayer::Offset()
 	}
 }
 
-void CPlayer::Gravity()	//숫자 의미 판단, 더 정리 필요 -> Obj로 나중에 빼야될듯
+void CPlayer::Gravity()	//숫자 의미 판단, 더 정리 필요 -> Obj로 나중에 빼야될듯		//중력 함수에서 FALLING이 구현되어야 할듯
 {
 	for (int i = 0; i < 2; i++)
 	{
@@ -391,6 +373,17 @@ void CPlayer::Gravity()	//숫자 의미 판단, 더 정리 필요 -> Obj로 나중에 빼야될듯
 		{
 			m_fPower = 0.f;
 			m_iJumpCount = 0;
+			m_fCurY = CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tLPoint.fY;
+			if (m_fPreY != m_fCurY)
+			{
+				m_fDiffY = -(m_fPreY - m_fCurY);
+				m_fPreY = m_fCurY;
+			}
+			else
+			{
+				m_fDiffY = 0;
+			}
+
 			return;
 		}
 	}

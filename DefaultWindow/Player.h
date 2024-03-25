@@ -63,12 +63,9 @@ private:
 	STATE		m_ePreState;
 	STATE		m_eCurState;
 
-	float		m_fPreY;
-	float		m_fCurY;
-	float		m_fDiffY;
-
-	float		testCurY = 0;
-	float		testPreY = 0;
+	float		m_fPreY = 0;
+	float		m_fCurY = 0;
+	float		m_fDiffY = 0;
 
 	float		m_fMoveOffset = 0;
 
