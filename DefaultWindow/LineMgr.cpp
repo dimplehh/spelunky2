@@ -34,7 +34,7 @@ void CLineMgr::Render(HDC hDC)
 		iter->Render(hDC);
 }
 
-bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping) //이게 수평선
+bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping) //바닥충돌 - 상향점프까지
 {
 	if (m_LineList.empty())							// 맵에 선이 없다면 
 		return false;								// 충돌 x
@@ -135,6 +135,27 @@ bool CLineMgr::LastBottom_Line(float& fX, float& fY, float& fCX, float& fCY)
 	return false;
 }
 
+bool CLineMgr::Check_Almost_Fell_Line(float& fX, float& fY, float& fCX, float& fCY)
+{
+	if (m_LineList.empty())
+		return false;
+
+	m_AttachedLine = nullptr;
+
+	for (auto& iter : m_LineList)
+	{
+		if((iter->Get_Info().tLPoint.fX - 10 < fX && fX < iter->Get_Info().tLPoint.fX + 10)
+		&& (fY < iter->Get_Info().tLPoint.fY + fCY / 2 && iter->Get_Info().tLPoint.fY - fCY - 10 < fY)
+		&& (iter->Get_LineType() == CLine::LEFTWALL || iter->Get_LineType() == CLine::RIGHTWALL))		//벽 위에 서있는 경우
+		{
+				m_AttachedLine = iter;
+				return true;
+		}
+	}
+	if (!m_AttachedLine)
+		return false;
+}
+
 //줄타기 전용 선 판단 함수
 bool CLineMgr::Ladder_Line(float& fX, float& fY, float& fCX, float& fCY)
 {
@@ -167,7 +188,7 @@ bool CLineMgr::Ladder_Line(float& fX, float& fY, float& fCX, float& fCY)
 	return false;
 }
 
-bool CLineMgr::Can_Hang_Line(float& fX, float& fY, float& fCX, float& fCY)
+bool CLineMgr::Can_Hang_Line(float& fX, float& fY, float& fCX, float& fCY)	// 매달릴 수 있는지 판단하는 코드
 {
 	if (m_LineList.empty())							// 맵에 선이 없다면 
 		return false;								//  false

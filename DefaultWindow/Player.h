@@ -69,7 +69,7 @@ private:
 
 	float		m_fMoveOffset = 0;
 
-	bool		m_bCeiling = false;
+	bool		m_bAlmostFell = false;
 
 private:
 	DWORD				m_dwTime;

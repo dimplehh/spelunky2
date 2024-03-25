@@ -17,6 +17,7 @@ public:
 
 	bool		LastBottom_Line(float& fX, float& fY, float& fCX, float& fCY);
 	bool		Ladder_Line(float& fX, float& fY, float& fCX, float& fCY);
+	bool		Check_Almost_Fell_Line(float& fX, float& fY, float& fCX, float& fCY);
 	bool		Can_Hang_Line(float& fX, float& fY, float& fCX, float& fCY);
 
 	CLine*		Get_AttachedLine() { return m_AttachedLine; };

@@ -57,19 +57,19 @@ int CPlayer::Update()
 
 void CPlayer::Late_Update()	//어떤걸 Late_Update, 어떤걸 Update에 넣어야할지 잘 생각해야 할듯
 {
+	m_bJump = !CLineMgr::Get_Instance()->Collision_Line_Ceiling(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump); //천장체킹
 	Gravity();
-	AlmostFell();
 	FallDamage();
 	CanHanging();
+	AlmostFell();
 	Motion_Change();
-	m_bJump = !CLineMgr::Get_Instance()->Collision_Line_Ceiling(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump);
 	__super::Move_Frame();
 
 #ifdef _DEBUG
 
 	if (m_dwTime + 1000 < GetTickCount())
 	{
-		cout << m_bCeiling << endl;
+		cout << m_eCurState << endl;
 		m_dwTime = GetTickCount();
 	}
 #endif
@@ -245,19 +245,15 @@ void CPlayer::FallDamage()
 
 void CPlayer::AlmostFell()
 {
-	if (nullptr != CLineMgr::Get_Instance()->Get_AttachedLine())
+	if (CLineMgr::Get_Instance()->Check_Almost_Fell_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
 	{
-		if ((0 < (int)CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tLPoint.fX - m_tInfo.fX	&& (int)CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tLPoint.fX - m_tInfo.fX < 10)
-		|| ( 0 < m_tInfo.fX - (int)CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tRPoint.fX	&& m_tInfo.fX - (int)CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tRPoint.fX < 10))
-		{
-			if (m_eCurState == IDLE)
-				m_eCurState = ALMOSTFELL;
-		}
+		m_bAlmostFell = true;
+		if (m_eCurState == IDLE)
+			m_eCurState = ALMOSTFELL;
 	}
 	else
 	{
-		if (m_eCurState == ALMOSTFELL)
-			m_eCurState = IDLE;
+		m_bAlmostFell = false;
 	}
 }
 
