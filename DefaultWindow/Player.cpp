@@ -62,17 +62,17 @@ void CPlayer::Late_Update()	//어떤걸 Late_Update, 어떤걸 Update에 넣어야할지 잘 
 	FallDamage();
 	CanHanging();
 	Motion_Change();
-	m_iWall = CLineMgr::Get_Instance()->Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump);
+	m_bJump = !CLineMgr::Get_Instance()->Collision_Line_Ceiling(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump);
 	__super::Move_Frame();
 
-//#ifdef _DEBUG
-//
-//	if (m_dwTime + 1000 < GetTickCount())
-//	{
-//		cout << m_iWall << endl;
-//		m_dwTime = GetTickCount();
-//	}
-//#endif
+#ifdef _DEBUG
+
+	if (m_dwTime + 1000 < GetTickCount())
+	{
+		cout << m_bCeiling << endl;
+		m_dwTime = GetTickCount();
+	}
+#endif
 }
 
 void CPlayer::Render(HDC hDC)
@@ -110,7 +110,7 @@ void CPlayer::Release()
 
 void CPlayer::HoldLeft()
 {
-	if (m_bLadder || m_bCanHang)
+	if (m_bLadder || m_bCanHang || m_eCurState == ATTACK)
 		return;
 	m_pFrameKey = L"Player_FLIP";
 	m_bFlip = true;
@@ -126,6 +126,7 @@ void CPlayer::HoldLeft()
 	}
 	else
 	{
+		CLineMgr::Get_Instance()->Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY);
 		if (!m_bJump && CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
 		{
 			m_eCurState = WALK;
@@ -136,7 +137,7 @@ void CPlayer::HoldLeft()
 
 void CPlayer::HoldRight()
 {
-	if (m_bCanHang)
+	if (m_bCanHang || m_eCurState == ATTACK)
 		return;
 	m_pFrameKey = L"Player_BASE";
 	m_bFlip = false;
@@ -154,6 +155,7 @@ void CPlayer::HoldRight()
 	{
 		if (m_bLadder)
 			return;
+		CLineMgr::Get_Instance()->Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY);
 		if (!m_bJump && CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
 		{
 			m_eCurState = WALK;
@@ -428,11 +430,11 @@ void CPlayer::Key_Input()
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::A) == KEY_STATE::TAP) { m_iHp -= 10;		m_eCurState = ATTACKED; }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::HOLD) { m_eCurState = ENTER; }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::AWAY) { m_eCurState = EXIT; }
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::X) == KEY_STATE::TAP) { m_eCurState = ATTACK; }
 	else if ((m_tFrame.bRoop == true && m_bLadder == false || ((m_tFrame.bRoop == false) && Check_Move_End() == true)))
 	{
 		m_eCurState = IDLE;
 		m_bKneelDown = false;
 	}
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::X) == KEY_STATE::TAP) { m_eCurState = ATTACK; }
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::Z) == KEY_STATE::TAP) { TapZ(); }
 }

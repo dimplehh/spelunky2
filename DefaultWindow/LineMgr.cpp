@@ -45,10 +45,11 @@ bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool
 	{
 		for (auto& iter : m_LineList)
 		{
-			if (iter->Get_Info().tLPoint.fY == iter->Get_Info().tRPoint.fY && iter->Get_Info().tLPoint.fX <= fX + fCX / 6 && fX - fCX / 6 < iter->Get_Info().tRPoint.fX
+			if (iter->Get_LineType() == CLine::FLOOR
+				&& iter->Get_Info().tLPoint.fX <= fX + fCX / 6 && fX - fCX / 6 < iter->Get_Info().tRPoint.fX
 				&& fY >= iter->Get_Info().tLPoint.fY - fCY / 2)
 			{
-				m_fY = iter->Get_Info().tLPoint.fY;										//이거 있어야 함
+				m_fY = iter->Get_Info().tLPoint.fY;										//플레이어 위치를 변경시켜주는 부분
 
 				if (((fY + (fCY / 6.f)) <= m_fY) && (m_fY <= (fY + (fCY / 2.f))))		// 하단 부분 충돌 범위 지정 전체 사이즈의 1/6 가량
 				{
@@ -63,7 +64,29 @@ bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool
 		return false;
 }
 
-int		CLineMgr::Collision_Vertical_Line(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping)	//벽충돌
+bool CLineMgr::Collision_Line_Ceiling(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping)	//천장 충돌
+{
+	if (m_LineList.empty())
+		return 0;
+
+	m_AttachedLine = nullptr;
+	for (auto& iter : m_LineList)
+	{
+		if ((iter->Get_Info().tLPoint.fX < fX && fX < iter->Get_Info().tRPoint.fX)
+			&& (iter->Get_Info().tLPoint.fY - 10 < fY - fCY / 2 && fY - fCY / 2 < iter->Get_Info().tLPoint.fY + 10)
+			&& iter->Get_LineType() == CLine::CEILING)
+		{
+			m_fY = iter->Get_Info().tLPoint.fY;
+			m_AttachedLine = iter;
+			fY = m_fY + fCY / 2;
+			return true;
+		}
+	}
+	if (!m_AttachedLine)
+		return 0;
+}
+
+int		CLineMgr::Collision_Vertical_Line(float& fX, float& fY, float& fCX, float& fCY)	//벽충돌
 {
 	if (m_LineList.empty())
 		return 0;
@@ -94,6 +117,7 @@ int		CLineMgr::Collision_Vertical_Line(float& fX, float& fY, float& fCX, float& 
 	if (!m_AttachedLine)
 		return 0;
 }
+
 
 bool CLineMgr::LastBottom_Line(float& fX, float& fY, float& fCX, float& fCY)
 {
@@ -177,9 +201,13 @@ bool CLineMgr::Can_Hang_Line(float& fX, float& fY, float& fCX, float& fCY)
 void CLineMgr::SetLine()
 {
 	m_LineList.push_back(new CLine({ LINEPOINT{2 * TILEX, TILECY * 1}, LINEPOINT{TILECX * (TILEX - 2), TILECY * 1} }));							// 천장
+	m_LineList.back()->Set_LineType(CLine::CEILING);
 	m_LineList.push_back(new CLine({ LINEPOINT{2 * TILEX, TILECY * (TILEY - 2)}, LINEPOINT{TILECX * (TILEX - 2), TILECY * (TILEY - 2)} }));		// 바닥
+	m_LineList.back()->Set_LineType(CLine::FLOOR);
 	m_LineList.push_back(new CLine({ LINEPOINT{2 * TILEX, TILECY * 1}, LINEPOINT{2 * TILEX, TILECY * (TILEY - 2)} }));							// 왼쪽 벽
+	m_LineList.back()->Set_LineType(CLine::LEFTWALL);
 	m_LineList.push_back(new CLine({ LINEPOINT{TILECX * (TILEX - 2), TILECY * 1}, LINEPOINT{TILECX * (TILEX - 2), TILECY * (TILEY - 2)} }));	// 오른쪽 벽
+	m_LineList.back()->Set_LineType(CLine::RIGHTWALL);
 
 	LINE	tInfo{};
 	INFO	iterInfo{};

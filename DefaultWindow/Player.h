@@ -69,7 +69,7 @@ private:
 
 	float		m_fMoveOffset = 0;
 
-	int			m_iWall = 0;
+	bool		m_bCeiling = false;
 
 private:
 	DWORD				m_dwTime;
