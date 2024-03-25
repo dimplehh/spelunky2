@@ -63,17 +63,18 @@ bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool
 		return false;
 }
 
-bool CLineMgr::Collision_Vertical_Line(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping)
+bool CLineMgr::Collision_Vertical_Line(float& fX, float& fY, float& fCX, float& fCY)	//벽충돌
 {
-	if (m_LineList.empty())							// 맵에 선이 없다면 
-		return false;								// 충돌 x
+	if (m_LineList.empty())
+		return false;
 
 	m_AttachedLine = nullptr;
 
 	for (auto& iter : m_LineList)
 	{
-		if (iter->Get_Info().tLPoint.fX == iter->Get_Info().tRPoint.fX
-			&& (iter->Get_Info().tLPoint.fX >= fX - fCX / 3.f || iter->Get_Info().tLPoint.fX + fCX / 3.f))
+		if ((iter->Get_Info().tLPoint.fX - fCX / 2 - 10 < fX && fX < iter->Get_Info().tLPoint.fX + fCX / 2 + 10)
+			&& (iter->Get_Info().tLPoint.fY - fCY / 2 - 10 < fY && fY < iter->Get_Info().tRPoint.fY + fCY / 2 + 10)
+			&& iter->Get_LineType() == CLine::LEFTWALL)
 		{
 			m_AttachedLine = iter;
 			return true;
@@ -183,21 +184,25 @@ void CLineMgr::SetLine()
 			{
 				m_LineList.push_back(new CLine({ LINEPOINT{iterInfo.fX - iterInfo.fCX / 2, iterInfo.fY - iterInfo.fCY / 2}, 
 					LINEPOINT{iterInfo.fX - iterInfo.fCX / 2, iterInfo.fY + iterInfo.fCY / 2} }));
+				m_LineList.back()->Set_LineType(CLine::LEFTWALL);
 			}
 			if (_x < TILEX - 1 && (*m_pVecTile)[_index]->Get_Option() >= 1 && (*m_pVecTile)[_index + 1]->Get_Option() == 0) //오른쪽 벽
 			{
 				m_LineList.push_back(new CLine({ LINEPOINT{iterInfo.fX + iterInfo.fCX / 2, iterInfo.fY - iterInfo.fCY / 2},
 					LINEPOINT{iterInfo.fX + iterInfo.fCX / 2, iterInfo.fY + iterInfo.fCY / 2} }));
+				m_LineList.back()->Set_LineType(CLine::RIGHTWALL);
 			}
 			if (2 < _y && (*m_pVecTile)[_index]->Get_Option() >= 1 && (*m_pVecTile)[_index - TILEX]->Get_Option() == 0) //밟는 땅
 			{
 				m_LineList.push_back(new CLine({ LINEPOINT{iterInfo.fX - iterInfo.fCX / 2, iterInfo.fY - iterInfo.fCY / 2},
 					LINEPOINT{iterInfo.fX + iterInfo.fCX / 2, iterInfo.fY - iterInfo.fCY / 2} }));
+				m_LineList.back()->Set_LineType(CLine::FLOOR);
 			}
-			if (_y < TILEY - 2 && (*m_pVecTile)[_index]->Get_Option() >= 1 && (*m_pVecTile)[_index + TILEX]->Get_Option() == 0) // 아래땅
+			if (_y < TILEY - 2 && (*m_pVecTile)[_index]->Get_Option() >= 1 && (*m_pVecTile)[_index + TILEX]->Get_Option() == 0) // 천장
 			{
 				m_LineList.push_back(new CLine({ LINEPOINT{iterInfo.fX - iterInfo.fCX / 2, iterInfo.fY + iterInfo.fCY / 2},
 					LINEPOINT{iterInfo.fX + iterInfo.fCX / 2, iterInfo.fY + iterInfo.fCY / 2} }));
+				m_LineList.back()->Set_LineType(CLine::CEILING);
 			}
 		}
 	}

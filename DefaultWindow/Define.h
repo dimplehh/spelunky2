@@ -47,9 +47,9 @@ enum class OBJECT_TYPE
 	END
 };
 
-enum DIRECTION 
+enum DIRECTION
 {
-	LEFT, 
+	LEFT,
 	RIGHT,
 	UP,
 	DOWN,
@@ -82,10 +82,9 @@ typedef struct tagLine
 {
 	LINEPOINT		tLPoint;
 	LINEPOINT		tRPoint;
-
 	tagLine() { ZeroMemory(this, sizeof(tagLine)); }
 	tagLine(LINEPOINT& _tLPoint, LINEPOINT& _tRPoint)
-		: tLPoint(_tLPoint), tRPoint(_tRPoint) {}
+		: tLPoint(_tLPoint), tRPoint(_tRPoint){}
 
 }LINE;
 

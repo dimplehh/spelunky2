@@ -35,8 +35,6 @@ void CPlayer::Initialize()
 	m_fDistance = 100.f;
 	m_fPower = 2.f;
 
-	// CScrollMgr::Get_Instance()->Set_ScrollXY(0 , 0); 일단 보류
-
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_base2.bmp",  L"Player_BASE");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_flip2.bmp", L"Player_FLIP");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_Attack.bmp", L"Player_ATTACK_BASE");
@@ -64,15 +62,20 @@ void CPlayer::Late_Update()	//어떤걸 Late_Update, 어떤걸 Update에 넣어야할지 잘 
 	FallDamage();
 	CanHanging();
 	Motion_Change();
+	if (CLineMgr::Get_Instance()->Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
+		m_bWall = true;
+	else
+		m_bWall = false;
+
+
 	__super::Move_Frame();
 
 #ifdef _DEBUG
 
-	if (m_dwTime + 10 < GetTickCount())
+	if (m_dwTime + 1000 < GetTickCount())
 	{
-		//cout << "플레이어 체력: " << m_iHp << endl;
-		if(m_fDiffY != 0)
-			cout << "m_fDiffY: " << m_fDiffY << endl;
+		cout << m_bWall << endl;
+		m_dwTime = GetTickCount();
 	}
 #endif
 }
@@ -134,7 +137,7 @@ void CPlayer::HoldLeft()
 		}
 		m_tInfo.fX -= m_fSpeed;
 
-		//if(!CLineMgr::Get_Instance()->Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
+		//if(!CLineMgr::Get_Instance()->Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
 		//	m_tInfo.fX -= m_fSpeed;
 	}
 }
@@ -164,8 +167,8 @@ void CPlayer::HoldRight()
 			m_eCurState = WALK;
 		}
 		m_tInfo.fX += m_fSpeed;
-		//if (!CLineMgr::Get_Instance()->Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
-		//	m_tInfo.fX -= m_fSpeed;
+		//if (!CLineMgr::Get_Instance()->Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
+		//	m_tInfo.fX += m_fSpeed;
 	}
 }
 
@@ -346,7 +349,7 @@ void CPlayer::Offset()
 	}
 }
 
-void CPlayer::Gravity()	//숫자 의미 판단, 더 정리 필요 -> Obj로 나중에 빼야될듯		//중력 함수에서 FALLING이 구현되어야 할듯
+void CPlayer::Gravity()	//숫자 의미 판단, 더 정리 필요 -> Obj로 나중에 빼야될듯	
 {
 	for (int i = 0; i < 2; i++)
 	{

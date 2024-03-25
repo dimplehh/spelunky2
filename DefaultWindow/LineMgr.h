@@ -12,10 +12,9 @@ private:
 
 public:
 	bool		Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping);
-	bool		Collision_Horizon_Line(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping);
-	bool		Collision_Vertical_Line(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping);
+	bool		Collision_Vertical_Line(float& fX, float& fY, float& fCX, float& fCY);
 
-	bool		LastBottom_Line(float& fX, float& fY, float& fCX, float& fCY);	// 이제 이거 필요없을듯
+	bool		LastBottom_Line(float& fX, float& fY, float& fCX, float& fCY);
 	bool		Ladder_Line(float& fX, float& fY, float& fCX, float& fCY);
 	bool		Can_Hang_Line(float& fX, float& fY, float& fCX, float& fCY);
 

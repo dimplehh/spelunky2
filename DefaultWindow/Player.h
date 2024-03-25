@@ -69,6 +69,8 @@ private:
 
 	float		m_fMoveOffset = 0;
 
+	bool		m_bWall = false;
+
 private:
 	DWORD				m_dwTime;
 };
