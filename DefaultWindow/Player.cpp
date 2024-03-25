@@ -10,6 +10,7 @@
 #include "KeyMgr.h"
 #include "ScrollMgr.h"
 #include "BmpMgr.h"
+#include "Define.h"
 #include <iostream>
 
 
@@ -70,9 +71,8 @@ void CPlayer::Late_Update()	//어떤걸 Late_Update, 어떤걸 Update에 넣어야할지 잘 
 
 	if (m_dwTime + 1000 < GetTickCount())
 	{
-		cout << "플레이어 체력 : " << m_iHp << endl;
-		cout << "m_fCurY, " << m_fCurY << endl;
-		//cout << "scroll X : " << CScrollMgr::Get_Instance()->Get_ScrollX() << endl;
+		cout << "플레이어 x 좌표 : " << m_tInfo.fX << endl;
+		cout << "scroll X, scroll Y : " << CScrollMgr::Get_Instance()->Get_ScrollX() << "/" <<  CScrollMgr::Get_Instance()->Get_ScrollY() << endl;
 		m_dwTime = GetTickCount();
 	}
 #endif
@@ -325,11 +325,11 @@ bool CPlayer::Check_Move_End()
 
 void CPlayer::Offset()
 {
-	int		iOffSetminX = 390;
-	int		iOffSetmaxX = 410;
+	int		iOffSetminX = WINCX / 2 - TILECX / 2;
+	int		iOffSetmaxX = WINCX / 2 + TILECX / 2;
 
-	int		iOffSetminY = 290;
-	int		iOffSetmaxY = 310;
+	int		iOffSetminY = WINCY / 2 - TILECY / 2;
+	int		iOffSetmaxY = WINCY / 2 + TILECY / 2;
 
 	float	fScrollX = CScrollMgr::Get_Instance()->Get_ScrollX();
 	float	fScrollY = CScrollMgr::Get_Instance()->Get_ScrollY();

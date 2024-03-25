@@ -86,8 +86,14 @@ void CCollisionMgr::Collision_RectEx(list<CObj*> _Dst, list<CObj*> _Src)
 
 bool CCollisionMgr::Check_Rect(CObj * pDst, CObj * pSrc, float * pX, float * pY)
 {
+	float srcRealX;
 
-	float	fWidth  = abs(pDst->Get_Info().fX - pSrc->Get_Info().fX);
+	if(pDst->Get_Info().fX < pSrc->Get_Info().fX)
+		srcRealX = pSrc->Get_Info().fX + 20;
+	else
+		srcRealX = pSrc->Get_Info().fX - 20;
+
+	float	fWidth  = abs(pDst->Get_Info().fX - srcRealX);
 	float	fHeight = abs(pDst->Get_Info().fY - pSrc->Get_Info().fY);
 
 	float	fRadiusX = (pDst->Get_Info().fCX + pSrc->Get_Info().fCX) * 0.5f;

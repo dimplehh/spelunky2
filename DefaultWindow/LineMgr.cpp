@@ -34,19 +34,19 @@ void CLineMgr::Render(HDC hDC)
 		iter->Render(hDC);
 }
 
-bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping)
+bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping) //이게 수평선
 {
 	if (m_LineList.empty())							// 맵에 선이 없다면 
 		return false;								// 충돌 x
 
 	m_AttachedLine = nullptr;
 
-	if (!_Jumping)
+	if (!_Jumping) //점프 상태가 아닐 때만 지면과의 충돌판정하라는 뜻
 	{
 		for (auto& iter : m_LineList)
 		{
-			if (iter->Get_Info().tLPoint.fY == iter->Get_Info().tRPoint.fY
-				&& (iter->Get_Info().tLPoint.fX <= fX) && (fX < iter->Get_Info().tRPoint.fX)) //수평선이면
+			if (iter->Get_Info().tLPoint.fY == iter->Get_Info().tRPoint.fY && iter->Get_Info().tLPoint.fX <= fX + fCX / 6 && fX - fCX / 6 < iter->Get_Info().tRPoint.fX
+				&& fY >= iter->Get_Info().tLPoint.fY - fCY / 2)
 			{
 				m_fY = iter->Get_Info().tLPoint.fY;
 
@@ -56,29 +56,6 @@ bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool
 					fY = m_fY - (fCY / 2);
 					return true;
 				}
-			}
-		}
-	}
-	if (!m_AttachedLine)
-		return false;
-}
-
-bool CLineMgr::Collision_Horizon_Line(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping)
-{
-	if (m_LineList.empty())							// 맵에 선이 없다면 
-		return false;								// 충돌 x
-
-	m_AttachedLine = nullptr;
-
-	if (!_Jumping) //이건 왜필요한거지..? (상향점프 용인듯..?)
-	{
-		for (auto& iter : m_LineList)
-		{
-			if (iter->Get_Info().tLPoint.fY == iter->Get_Info().tRPoint.fY && iter->Get_Info().tLPoint.fX <= fX + fCX / 4 && fX - fCX / 4 < iter->Get_Info().tRPoint.fX
-				&& fY >= iter->Get_Info().tLPoint.fY - fCY / 2)
-			{
-				m_AttachedLine = iter;
-				return true;
 			}
 		}
 	}

@@ -25,6 +25,7 @@ void CStage::Initialize()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Ground.bmp", L"Ground");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette.bmp", L"Tile");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette2.bmp", L"Tile2");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Box.bmp", L"Box");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/Monster.bmp", L"Monster");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/DecoLand.bmp", L"DecoLand");
 
@@ -32,11 +33,12 @@ void CStage::Initialize()
 
 	for (int i = 0; i < 1; ++i)
 	{
-		CObjMgr::Get_Instance()->Add_Object(OBJ_BOX, CAbstractFactory<CBox>::Create(WINCX / 2, WINCY / 2));
+		CObjMgr::Get_Instance()->Add_Object(OBJ_BOX, CAbstractFactory<CBox>::Create(TILECX * 20, TILECY * 2));
 	}
 
 	CTileMgr::Get_Instance()->Load_Tile();
 	CLineMgr::Get_Instance()->Initialize();
+	CScrollMgr::Get_Instance()->Set_ScrollXY(WINCX / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX, WINCY - -CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY);
 }
 
 int CStage::Update()
