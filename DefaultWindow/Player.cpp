@@ -14,10 +14,10 @@
 
 
 CPlayer::CPlayer()
-	: m_fDistance(0.f), m_bJump(false), m_bLadder(false), m_iJumpCount(0), m_iHp(100), m_fPreY(0.f), m_fCurY(0.f), m_bCanHang(false), m_fDiffY(0.f),
+	: m_fDistance(0.f), m_bJump(false), m_bLadder(false), m_iJumpCount(0), m_iHp(100), m_fCurY(0.f), m_bCanHang(false), m_fDiffY(0.f),
 	m_fTime(0.f), m_fPower(0.f), m_ePreState(ST_END), m_eCurState(IDLE), m_bKneelDown(false), m_bAttachedBox(false), m_dwTime(GetTickCount())
 {
-	//ZeroMemory(&m_tPosin, sizeof(POINT));
+	//ZeroMemory(&m_tPosin, sizeof(POINT));	// 나중에 총구구현에 쓸 수 있어 남겨놓음
 	m_eMyObjType = OBJECT_TYPE::PLAYER;
 }
 
@@ -33,6 +33,7 @@ void CPlayer::Initialize()
 	m_fSpeed	= 5.f;
 	m_fDistance = 100.f;
 	m_fPower = 2.f;
+	m_fPreY = TILECY * 1;
 
 	// CScrollMgr::Get_Instance()->Set_ScrollXY(0 , 0); 일단 보류
 
@@ -65,15 +66,16 @@ void CPlayer::Late_Update()	//어떤걸 Late_Update, 어떤걸 Update에 넣어야할지 잘 
 	Motion_Change();
 	__super::Move_Frame();
 
-//#ifdef _DEBUG
-//
-//	if (m_dwTime + 1000 < GetTickCount())
-//	{
-//		cout << "플레이어 좌표 : " << m_tInfo.fX << "\t" << m_tInfo.fY << endl;
-//		cout << "canhang :" << m_bCanHang << endl;
-//		m_dwTime = GetTickCount();
-//	}
-//#endif
+#ifdef _DEBUG
+
+	if (m_dwTime + 1000 < GetTickCount())
+	{
+		cout << "플레이어 체력 : " << m_iHp << endl;
+		cout << "m_fCurY, " << m_fCurY << endl;
+		//cout << "scroll X : " << CScrollMgr::Get_Instance()->Get_ScrollX() << endl;
+		m_dwTime = GetTickCount();
+	}
+#endif
 }
 
 void CPlayer::Render(HDC hDC)
@@ -202,10 +204,6 @@ void CPlayer::TapZ()
 				m_tInfo.fY += 50;
 			}
 		}
-		if (170.f < m_fAngle && m_fAngle < 270.f)	// 이건 뭐지..?
-			m_fAngle += 10.f;
-		else
-			m_fAngle -= 10.f;
 	}
 	else
 	{
@@ -236,21 +234,31 @@ bool CPlayer::Die()
 void CPlayer::FallDamage()
 {
 	m_fCurY = CLineMgr::Get_Instance()->GetY();
-	if (m_fPreY != m_fCurY)
-	{
-		m_fDiffY = m_fCurY - m_fPreY;
-		if (m_fDiffY > 200.f)
-		{
-			m_iHp -= 10;
-			m_eCurState = FALLING;
-		}
-		m_fPreY = m_fCurY;
-	}
-	else
-	{
-		if(CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump) && m_eCurState == FALLING)
-			m_eCurState = DIZZY;
-	}
+	
+	//if (m_fPreY == 1536 || m_fCurY == 1536)
+	//{
+	//	m_fPreY = m_tInfo.fY;
+	//	m_fCurY = m_tInfo.fY;
+	//}
+
+	//if (m_fPreY != m_fCurY)
+	//{
+	//	testCurY = m_fCurY;
+	//	testPreY = m_fPreY;
+
+	//	m_fDiffY = m_fCurY - m_fPreY;
+	//	if (m_fDiffY > 2000.f)
+	//	{
+	//		m_iHp -= 10;
+	//		m_eCurState = FALLING;
+	//	}
+	//	m_fPreY = m_fCurY;
+	//}
+	//else
+	//{
+	//	if(CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump) && m_eCurState == FALLING)
+	//		m_eCurState = DIZZY;
+	//}
 }
 
 void CPlayer::AlmostFell()
@@ -297,7 +305,6 @@ void CPlayer::CanHanging()
 	else
 	{
 		m_bCanHang = false;
-		//m_eCurState = IDLE;
 	}
 }
 

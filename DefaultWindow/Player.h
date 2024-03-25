@@ -67,6 +67,9 @@ private:
 	float		m_fCurY;
 	float		m_fDiffY;
 
+	float		testCurY = 0;
+	float		testPreY = 0;
+
 	float		m_fMoveOffset = 0;
 
 private:
