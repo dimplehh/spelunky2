@@ -19,5 +19,7 @@ private:
 	void	Key_Input();
 	POINT	pt{};
 	int		m_iIndex = 1;
+	int		m_iOption = 0;
+	const TCHAR* m_pFrameKey = L"Tile";
 };
 

@@ -19,6 +19,7 @@ void CMyEdit::Initialize()
 {
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Ground.bmp", L"Ground");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette.bmp", L"Tile");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette2.bmp", L"Tile2");
 	CTileMgr::Get_Instance()->Initialize();
 }
 
@@ -74,7 +75,7 @@ void CMyEdit::Key_Input()
 		pt.x -= (long)CScrollMgr::Get_Instance()->Get_ScrollX();
 		pt.y -= (long)CScrollMgr::Get_Instance()->Get_ScrollY();
 
-		CTileMgr::Get_Instance()->Picking_Tile(pt, m_iIndex, 1);
+		CTileMgr::Get_Instance()->Picking_Tile(pt, m_iIndex, m_iOption, m_pFrameKey);
 	}
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RBUTTON) == KEY_STATE::TAP)
 	{
@@ -84,14 +85,30 @@ void CMyEdit::Key_Input()
 		pt.x -= (long)CScrollMgr::Get_Instance()->Get_ScrollX();
 		pt.y -= (long)CScrollMgr::Get_Instance()->Get_ScrollY();
 
-		CTileMgr::Get_Instance()->Picking_Tile(pt, 0, 0);
+		CTileMgr::Get_Instance()->Picking_Tile(pt, 0, 0, m_pFrameKey);
 	}
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::Q) == KEY_STATE::TAP)
+	{
 		--m_iIndex;
+		m_iOption = 1;
+	}
 
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::TAP)
+	{
 		++m_iIndex;
+		m_iOption = 1;
+	}
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::A) == KEY_STATE::TAP)
+	{
+		--m_iIndex;
+		m_iOption = 2;
+	}
 
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::D) == KEY_STATE::TAP)
+	{
+		++m_iIndex;
+		m_iOption = 2;
+	}
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::F1) == KEY_STATE::TAP)
 		CTileMgr::Get_Instance()->Save_Tile();
 

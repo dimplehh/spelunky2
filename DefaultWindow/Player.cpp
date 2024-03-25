@@ -29,10 +29,10 @@ CPlayer::~CPlayer()
 
 void CPlayer::Initialize()
 {
-	m_tInfo		= { TILECX * 20 , TILECY * 2, 64.f, 64.f };
+	m_tInfo		= { TILECX * 20 , TILECY * 1, 64.f, 64.f };
 	m_fSpeed	= 5.f;
 	m_fDistance = 100.f;
-	m_fPower = 6.f;
+	m_fPower = 2.f;
 
 	// CScrollMgr::Get_Instance()->Set_ScrollXY(0 , 0); 일단 보류
 
@@ -359,7 +359,7 @@ void CPlayer::Gravity()	//숫자 의미 판단, 더 정리 필요 -> Obj로 나중에 빼야될듯
 	{
 		if (!m_bLadder && !m_bCanHang && !CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
 		{
-			m_fTime += 0.1f;
+			m_fTime += 0.15f;
 
 			float fGravity = m_fPower * m_fTime - ((4.9f * m_fTime * m_fTime) * 0.5f);
 

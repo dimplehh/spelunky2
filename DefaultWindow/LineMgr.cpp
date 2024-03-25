@@ -46,27 +46,30 @@ void CLineMgr::SetLine()
 			int _y = _index / TILEX;
 			int _x = _index % TILEX;
 			iterInfo = (*m_pVecTile)[_index]->Get_Info();
-			if (2 < _x && (*m_pVecTile)[_index]->Get_Option() == 1 && (*m_pVecTile)[_index - 1]->Get_Option() == 0) //¿ÞÂÊ º®
+			if (2 < _x && (*m_pVecTile)[_index]->Get_Option() >= 1 && (*m_pVecTile)[_index - 1]->Get_Option() == 0) //¿ÞÂÊ º®
 			{
 				tInfo = { LINEPOINT{iterInfo.fX - iterInfo.fCX / 2, iterInfo.fY - iterInfo.fCY / 2},
 					LINEPOINT{iterInfo.fX - iterInfo.fCX / 2, iterInfo.fY + iterInfo.fCY / 2} };
+				m_LineList.push_back(new CLine(tInfo));
 			}
-			if (_x < TILEX - 1 && (*m_pVecTile)[_index]->Get_Option() == 1 && (*m_pVecTile)[_index + 1]->Get_Option() == 0) //¿À¸¥ÂÊ º®
+			if (_x < TILEX - 1 && (*m_pVecTile)[_index]->Get_Option() >= 1 && (*m_pVecTile)[_index + 1]->Get_Option() == 0) //¿À¸¥ÂÊ º®
 			{
 				tInfo = { LINEPOINT{iterInfo.fX + iterInfo.fCX / 2, iterInfo.fY - iterInfo.fCY / 2},
 					LINEPOINT{iterInfo.fX + iterInfo.fCX / 2, iterInfo.fY + iterInfo.fCY / 2} };
+				m_LineList.push_back(new CLine(tInfo));
 			}
-			if (2 < _y && (*m_pVecTile)[_index]->Get_Option() == 1 && (*m_pVecTile)[_index - TILEX]->Get_Option() == 0) //¹â´Â ¶¥
+			if (2 < _y && (*m_pVecTile)[_index]->Get_Option() >= 1 && (*m_pVecTile)[_index - TILEX]->Get_Option() == 0) //¹â´Â ¶¥
 			{
 				tInfo = { LINEPOINT{iterInfo.fX - iterInfo.fCX / 2, iterInfo.fY - iterInfo.fCY / 2},
 					LINEPOINT{iterInfo.fX + iterInfo.fCX / 2, iterInfo.fY - iterInfo.fCY / 2} };
+				m_LineList.push_back(new CLine(tInfo));
 			}
-			if (_y < TILEY - 2 && (*m_pVecTile)[_index]->Get_Option() == 1 && (*m_pVecTile)[_index + TILEX]->Get_Option() == 0) // ¾Æ·¡¶¥
+			if (_y < TILEY - 2 && (*m_pVecTile)[_index]->Get_Option() >= 1 && (*m_pVecTile)[_index + TILEX]->Get_Option() == 0) // ¾Æ·¡¶¥
 			{
 				tInfo = { LINEPOINT{iterInfo.fX - iterInfo.fCX / 2, iterInfo.fY + iterInfo.fCY / 2},
 					LINEPOINT{iterInfo.fX + iterInfo.fCX / 2, iterInfo.fY + iterInfo.fCY / 2} };
+				m_LineList.push_back(new CLine(tInfo));
 			}
-			m_LineList.push_back(new CLine(tInfo));
 		}
 	}
 }

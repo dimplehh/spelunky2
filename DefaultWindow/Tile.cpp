@@ -36,6 +36,9 @@ void CTile::Late_Update()
 
 void CTile::Render(HDC hDC)
 {
+	if (m_iOption == 1) m_pFrameKey = L"Tile";
+	else if (m_iOption == 2) m_pFrameKey = L"Tile2";
+
 	HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
 
 	int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
