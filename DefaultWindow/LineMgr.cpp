@@ -63,6 +63,52 @@ bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool
 		return false;
 }
 
+bool CLineMgr::Collision_Horizon_Line(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping)
+{
+	if (m_LineList.empty())							// 맵에 선이 없다면 
+		return false;								// 충돌 x
+
+	m_AttachedLine = nullptr;
+
+	if (!_Jumping) //이건 왜필요한거지..? (상향점프 용인듯..?)
+	{
+		for (auto& iter : m_LineList)
+		{
+			if (iter->Get_Info().tLPoint.fY == iter->Get_Info().tRPoint.fY && iter->Get_Info().tLPoint.fX <= fX + fCX / 4 && fX - fCX / 4 < iter->Get_Info().tRPoint.fX
+				&& fY >= iter->Get_Info().tLPoint.fY - fCY / 2)
+			{
+				m_AttachedLine = iter;
+				return true;
+			}
+		}
+	}
+	if (!m_AttachedLine)
+		return false;
+}
+
+bool CLineMgr::Collision_Vertical_Line(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping)
+{
+	if (m_LineList.empty())							// 맵에 선이 없다면 
+		return false;								// 충돌 x
+
+	m_AttachedLine = nullptr;
+
+	if (!_Jumping) //이건 왜필요한거지..?
+	{
+		for (auto& iter : m_LineList)
+		{
+			if (iter->Get_Info().tLPoint.fX == iter->Get_Info().tRPoint.fX 
+				&& (iter->Get_Info().tLPoint.fX >= fX - fCX / 3.f || iter->Get_Info().tLPoint.fX + fCX / 3.f))
+			{
+				m_AttachedLine = iter;
+				return true;
+			}
+		}
+	}
+	if (!m_AttachedLine)
+		return false;
+}
+
 bool CLineMgr::LastBottom_Line(float& fX, float& fY, float& fCX, float& fCY)
 {
 	if (m_LineList.empty())							// 맵에 선이 없다면 
@@ -70,18 +116,10 @@ bool CLineMgr::LastBottom_Line(float& fX, float& fY, float& fCX, float& fCY)
 
 	for (auto& iter : m_LineList)
 	{
-		if ((iter->Get_Info().tLPoint.fX <= fX - (fCX / 2.f)) && (fX - (fCX / 2.f) < iter->Get_Info().tRPoint.fX) ||
-			(iter->Get_Info().tLPoint.fX <= fX + (fCX / 2.f)) && (fX + (fCX / 2.f) < iter->Get_Info().tRPoint.fX))
+		if (iter->Get_Info().tLPoint.fY == iter->Get_Info().tRPoint.fY && (iter->Get_Info().tLPoint.fX <= fX) && (fX < iter->Get_Info().tRPoint.fX) 
+			&& iter->Get_Info().tRPoint.fX - iter->Get_Info().tRPoint.fX > 1000)
 		{
-			//float x1 = iter->Get_Info().tLPoint.fX;
-			//float y1 = iter->Get_Info().tLPoint.fY;
-			//float x2 = iter->Get_Info().tRPoint.fX;
-			//float y2 = iter->Get_Info().tRPoint.fY;
-			//m_fY = Equation_Line(fX, x1, y1, x2, y2);
-			//if (fY + (fCY / 2.f) < m_fY)
-			//{
-			//	return true;
-			//}
+			return true;
 		}
 	}
 	return false;
@@ -95,7 +133,7 @@ bool CLineMgr::Ladder_Line(float& fX, float& fY, float& fCX, float& fCY)
 	for (auto& iter : m_LineList)
 	{
 		if (iter->Get_Info().tLPoint.fX == iter->Get_Info().tRPoint.fX
-			&& abs(iter->Get_Info().tLPoint.fY - iter->Get_Info().tRPoint.fY) > 50)
+			&& abs(iter->Get_Info().tLPoint.fY - iter->Get_Info().tRPoint.fY) > 100)
 		{      //- 선 x1 == x2 이고
 			if ((fX - (fCX / 2.f) < iter->Get_Info().tLPoint.fX) && (iter->Get_Info().tLPoint.fX < fX + (fCX / 2.f)))
 			{

@@ -29,7 +29,7 @@ CPlayer::~CPlayer()
 
 void CPlayer::Initialize()
 {
-	m_tInfo		= { TILECX * 20 , TILECY * 1, 64.f, 64.f };
+	m_tInfo		= { TILECX * 20 , TILECY * 2, 64.f, 64.f };
 	m_fSpeed	= 5.f;
 	m_fDistance = 100.f;
 	m_fPower = 2.f;
@@ -134,6 +134,9 @@ void CPlayer::HoldLeft()
 			m_eCurState = WALK;
 		}
 		m_tInfo.fX -= m_fSpeed;
+
+		//if(!CLineMgr::Get_Instance()->Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
+		//	m_tInfo.fX -= m_fSpeed;
 	}
 }
 
@@ -162,6 +165,8 @@ void CPlayer::HoldRight()
 			m_eCurState = WALK;
 		}
 		m_tInfo.fX += m_fSpeed;
+		//if (!CLineMgr::Get_Instance()->Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
+		//	m_tInfo.fX -= m_fSpeed;
 	}
 }
 
@@ -199,7 +204,7 @@ void CPlayer::TapZ()
 	{
 		if (CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
 		{
-			if (CLineMgr::Get_Instance()->LastBottom_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
+			if (!CLineMgr::Get_Instance()->LastBottom_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
 			{
 				m_tInfo.fY += 50;
 			}
@@ -233,7 +238,7 @@ bool CPlayer::Die()
 
 void CPlayer::FallDamage()
 {
-	m_fCurY = CLineMgr::Get_Instance()->GetY();
+	//m_fCurY = CLineMgr::Get_Instance()->GetY();
 	
 	//if (m_fPreY == 1536 || m_fCurY == 1536)
 	//{

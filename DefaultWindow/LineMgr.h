@@ -11,15 +11,15 @@ private:
 	~CLineMgr();
 
 public:
-	bool		Collision_Line(float& fX, float* pY);
 	bool		Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping);
-	bool		Collision_Line(float& fX, float& fY, float& fCX, float& fCY);
-	float		Equation_Line(float& fX, float _x1, float _y1, float _x2, float _y2);
-	bool		LastBottom_Line(float& fX, float& fY, float& fCX, float& fCY);
+	bool		Collision_Horizon_Line(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping);
+	bool		Collision_Vertical_Line(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping);
+
+	bool		LastBottom_Line(float& fX, float& fY, float& fCX, float& fCY);	// 이제 이거 필요없을듯
 	bool		Ladder_Line(float& fX, float& fY, float& fCX, float& fCY);
 	bool		Can_Hang_Line(float& fX, float& fY, float& fCX, float& fCY);
-	CLine*		Get_AttachedLine() { return m_AttachedLine; };
-	float		GetY() { return m_fY; };
+
+	CLine*		Get_AttachedLine() { return m_AttachedLine; };	//이제 굳이 GetY는 필요가 없음.. 어차피 모든 선의 y는 똑같아서.
 
 public:
 	void		Initialize();
