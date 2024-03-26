@@ -194,9 +194,8 @@ bool CLineMgr::Ladder_Line(float& fX, float& fY, float& fCX, float& fCY)
 		return false;								//  false
 	for (auto& iter : m_LineList)
 	{
-		if (iter->Get_Info().tLPoint.fX == iter->Get_Info().tRPoint.fX
-			&& abs(iter->Get_Info().tLPoint.fY - iter->Get_Info().tRPoint.fY) > 100)
-		{      //- 선 x1 == x2 이고
+		if (iter->Get_LineType() == CLine::LADDER)
+		{
 			if ((fX - (fCX / 2.f) < iter->Get_Info().tLPoint.fX) && (iter->Get_Info().tLPoint.fX < fX + (fCX / 2.f)))
 			{
 				if ((iter->Get_Info().tLPoint.fY >= fY - (fCY / 2.f)) && (fY - (fCY / 2.f) > iter->Get_Info().tRPoint.fY) ||
@@ -219,16 +218,24 @@ bool CLineMgr::Ladder_Line(float& fX, float& fY, float& fCX, float& fCY)
 	return false;
 }
 
+float CLineMgr::Equation_Line(float& fX, float _x1, float _y1, float _x2, float _y2)
+{
+	return ((_y2 - _y1) / (_x2 - _x1)) * (fX - _x1) + _y1;
+}
+
 void CLineMgr::SetLine()
 {
-	m_LineList.push_back(new CLine({ LINEPOINT{2 * TILEX, TILECY * 1}, LINEPOINT{TILECX * (TILEX - 2), TILECY * 1} }));							// 천장
+	m_LineList.push_back(new CLine({ LINEPOINT{2 * TILECX, 1 * TILECY}, LINEPOINT{(TILEX - 2) * TILECX, 1 * TILECY} }));							// 천장
 	m_LineList.back()->Set_LineType(CLine::CEILING);
-	m_LineList.push_back(new CLine({ LINEPOINT{2 * TILEX, TILECY * (TILEY - 2)}, LINEPOINT{TILECX * (TILEX - 2), TILECY * (TILEY - 2)} }));		// 바닥
+	m_LineList.push_back(new CLine({ LINEPOINT{2 * TILECX, (TILEY - 2) * TILECY}, LINEPOINT{(TILEX - 2) * TILECX, (TILEY - 2) * TILECY} }));		// 바닥
 	m_LineList.back()->Set_LineType(CLine::FLOOR);
-	m_LineList.push_back(new CLine({ LINEPOINT{2 * TILEX, TILECY * 1}, LINEPOINT{2 * TILEX, TILECY * (TILEY - 2)} }));							// 왼쪽 벽
+	m_LineList.push_back(new CLine({ LINEPOINT{2 * TILECX, 1 * TILECY}, LINEPOINT{2 * TILECX, (TILEY - 2) * TILECY} }));							// 왼쪽 벽
 	m_LineList.back()->Set_LineType(CLine::LEFTWALL);
-	m_LineList.push_back(new CLine({ LINEPOINT{TILECX * (TILEX - 2), TILECY * 1}, LINEPOINT{TILECX * (TILEX - 2), TILECY * (TILEY - 2)} }));	// 오른쪽 벽
+	m_LineList.push_back(new CLine({ LINEPOINT{(TILEX - 2) * TILECX, 1 * TILECY}, LINEPOINT{(TILEX - 2) * TILECX, (TILEY - 2) * TILECY} }));	// 오른쪽 벽
 	m_LineList.back()->Set_LineType(CLine::RIGHTWALL);
+
+	m_LineList.push_back(new CLine({ LINEPOINT{22 * TILECX, 6 * TILECY}, LINEPOINT{22 * TILECX, 4 * TILECY} }));									// 사다리
+	m_LineList.back()->Set_LineType(CLine::LADDER);
 
 	LINE	tInfo{};
 	INFO	iterInfo{};
