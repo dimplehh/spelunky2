@@ -25,6 +25,8 @@ public:
 	bool		Check_Almost_Fell(float& fX, float& fY, float& fCX, float& fCY);
 	bool		Can_Hang_Line(float fPointX, float fPointY, float& fX, float& fY, float& fCX, float& fCY, bool bJumping);
 
+	void		Set_Box_Line(float fX, float fY);
+
 	CLine*		Get_AttachedLine() { return m_AttachedLine; };
 	float		Get_fY() { return m_fY; }
 
@@ -56,10 +58,13 @@ public:
 private:
 	static CLineMgr*		m_pInstance;
 	list<CLine*>			m_LineList;
+	list<CLine*>			m_BoxLineList;
+
 	CLine*					m_AttachedLine;
 	float					m_fX;
 	float					m_fY;
 	int						m_iIdx = 1;
+
 	vector<CTile*>*			m_pVecTile;
 };
 

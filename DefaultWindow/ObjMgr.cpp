@@ -88,6 +88,7 @@ void CObjMgr::Late_Update()
 		}
 	}
 
+	//이게 최선일까 싶은 부분의 코드임,,
 	for (auto iter : m_ObjList[OBJ_BOX])
 	{
 		CCollisionMgr::Collision_RectEx(iter, m_ObjList[OBJ_PLAYER].front());

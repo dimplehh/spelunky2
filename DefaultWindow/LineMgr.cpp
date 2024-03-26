@@ -27,14 +27,25 @@ void CLineMgr::Initialize()
 
 void CLineMgr::Release()
 {
+	for_each(m_BoxLineList.begin(), m_BoxLineList.end(), Safe_Delete<CLine*>);
+	m_BoxLineList.clear();
+
 	for_each(m_LineList.begin(), m_LineList.end(), Safe_Delete<CLine*>);
 	m_LineList.clear();
 }
 
 void CLineMgr::Render(HDC hDC)
 {
+	for (auto& iter : m_BoxLineList)
+		iter->Render(hDC);
+
 	for (auto& iter : m_LineList)
 		iter->Render(hDC);
+}
+
+void CLineMgr::Set_Box_Line(float fX, float fY)
+{
+	m_BoxLineList.push_back(CLineFactory::Create(LINEPOINT{ fX - TILECX * 0.5f , fY}, LINEPOINT{ fX + TILECX * 0.5f, fY}, CLine::FLOOR));
 }
 
 bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping) //바닥충돌 - 상향점프까지
@@ -46,6 +57,23 @@ bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool
 
 	if (!_Jumping) //점프 상태가 아닐 때만 지면과의 충돌판정하라는 뜻
 	{
+		for (auto& iter : m_BoxLineList)
+		{
+			if ((iter->Get_LineType() == CLine::FLOOR || iter->Get_LineType() == CLine::BOARD)
+				&& iter->Get_Info().tLPoint.fX <= fX + fCX / 6 && fX - fCX / 6 < iter->Get_Info().tRPoint.fX
+				&& fY >= iter->Get_Info().tLPoint.fY - fCY / 2)
+			{
+				m_fY = iter->Get_Info().tLPoint.fY;	
+
+				if (((fY + (fCY / 6.f)) <= m_fY) && (m_fY <= (fY + (fCY / 2.f))))
+				{
+					m_AttachedLine = iter;
+					fY = m_fY - (fCY / 2);
+					return true;
+				}
+			}
+		}
+
 		for (auto& iter : m_LineList)
 		{
 			if ((iter->Get_LineType() == CLine::FLOOR || iter->Get_LineType() == CLine::BOARD)
