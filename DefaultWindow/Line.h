@@ -14,6 +14,7 @@ public:
 
 public:
 	const LINE&		Get_Info() const { return m_tInfo; }
+	void			Set_Info(LINE newInfo) { m_tInfo = newInfo; }
 	LINETYPE		Get_LineType() { return m_tLineType; }
 	void			Set_LineType(LINETYPE _lineType) { m_tLineType = _lineType; }
 
