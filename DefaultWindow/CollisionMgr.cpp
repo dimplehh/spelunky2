@@ -82,9 +82,9 @@ bool CCollisionMgr::Check_Rect(CObj * pDst, CObj * pSrc, float * pX, float * pY)
 	float srcRealX;
 
 	if(pDst->Get_Info().fX < pSrc->Get_Info().fX)
-		srcRealX = pSrc->Get_Info().fX + 20;
+		srcRealX = pSrc->Get_Info().fX + 15;
 	else
-		srcRealX = pSrc->Get_Info().fX - 20;
+		srcRealX = pSrc->Get_Info().fX - 15;
 
 	float	fWidth  = abs(pDst->Get_Info().fX - srcRealX);
 	float	fHeight = abs(pDst->Get_Info().fY - pSrc->Get_Info().fY);

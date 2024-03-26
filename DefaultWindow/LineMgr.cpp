@@ -160,22 +160,25 @@ bool CLineMgr::Box_Collision_Vertical_Line(float& fX, float& fY, float& fCX, flo
 
 	for (auto& iter : m_LineList)
 	{
-		if ((iter->Get_Info().tLPoint.fX - 10 < fX +fCX / 2 && fX + fCX / 2 < iter->Get_Info().tLPoint.fX + 10)
-			&& (iter->Get_Info().tLPoint.fY < fY && fY < iter->Get_Info().tRPoint.fY)
+		if ((iter->Get_Info().tLPoint.fY - fCY / 2 < fY && fY < iter->Get_Info().tRPoint.fY + fCY / 2)
+			&& (iter->Get_Info().tLPoint.fX - 1 <= fX + fCX / 2 && fX + fCX / 2 < iter->Get_Info().tLPoint.fX + 1)
 			&& (iter->Get_LineType() == CLine::LEFTWALL))
 		{
-			return true;
+			m_fX = iter->Get_Info().tLPoint.fX;
+			m_AttachedLine = iter;
+			fX = m_fX - fCX / 2 - 4;
+			CObjMgr::Get_Instance()->Get_Player()->Set_Pos(fX - fCX / 2 - 16, fY);
+			dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetAttachedBox(false);
 		}
 		else if ((iter->Get_Info().tLPoint.fY - fCY / 2 < fY && fY < iter->Get_Info().tRPoint.fY + fCY / 2)
-			&& (iter->Get_Info().tLPoint.fX - 5 <= fX - fCX / 2 && fX - fCX / 2 < iter->Get_Info().tLPoint.fX + 5)
+			&& (iter->Get_Info().tLPoint.fX - 1 <= fX - fCX / 2 && fX - fCX / 2 < iter->Get_Info().tLPoint.fX + 1)
 			&& (iter->Get_LineType() == CLine::RIGHTWALL))
 		{
 			m_fX = iter->Get_Info().tLPoint.fX;
 			m_AttachedLine = iter;
-			fX = m_fX + fCX / 2 + 6;
-			CObjMgr::Get_Instance()->Get_Player()->Set_Pos(fX + fCX / 2 + 17, fY);
+			fX = m_fX + fCX / 2 + 4;
+			CObjMgr::Get_Instance()->Get_Player()->Set_Pos(fX + fCX / 2 + 16, fY);
 			dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetAttachedBox(false);
-			
 			return true;
 		}
 	}

@@ -64,14 +64,14 @@ void CPlayer::Late_Update()	//어떤걸 Late_Update, 어떤걸 Update에 넣어야할지 잘 
 	Motion_Change();
 	__super::Move_Frame();
 
-#ifdef _DEBUG
-
-	if (m_dwTime + 100 < GetTickCount())
-	{
-		cout << m_eCurState << endl;
-		m_dwTime = GetTickCount();
-	}
-#endif
+//#ifdef _DEBUG
+//
+//	if (m_dwTime + 100 < GetTickCount())
+//	{
+//		cout << m_bAttachedBox << endl;
+//		m_dwTime = GetTickCount();
+//	}
+//#endif
 }
 
 void CPlayer::Render(HDC hDC)
@@ -275,7 +275,7 @@ void CPlayer::AlmostFell()
 
 void CPlayer::InLadder()
 {
-	if (CLineMgr::Get_Instance()->Ladder_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
+	if (CLineMgr::Get_Instance()->Ladder_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY)) //이거는 여러개중에서 for문돌려서 찾을필요 없을듯
 	{
 		m_iJumpCount = 0;
 		m_bLadder = true;
@@ -430,6 +430,8 @@ void CPlayer::Key_Input()
 	{
 		m_eCurState = IDLE;
 		m_bKneelDown = false;
+		//if()
+		m_bAttachedBox = false;
 	}
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::X) == KEY_STATE::TAP) { m_eCurState = ATTACK; }
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::Z) == KEY_STATE::TAP) { TapZ(); }
