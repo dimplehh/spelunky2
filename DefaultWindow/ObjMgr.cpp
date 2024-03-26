@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ObjMgr.h"
 #include "CollisionMgr.h"
+#include "Player.h"
 
 CObjMgr*		CObjMgr::m_pInstance = nullptr;
 
@@ -87,7 +88,12 @@ void CObjMgr::Late_Update()
 		}
 	}
 
-	CCollisionMgr::Collision_RectEx(m_ObjList[OBJ_BOX], m_ObjList[OBJ_PLAYER]);
+	for (auto iter : m_ObjList[OBJ_BOX])
+	{
+		CCollisionMgr::Collision_RectEx(iter, m_ObjList[OBJ_PLAYER].front());
+		if (dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetAttatchedBox() == true)
+			break;
+	}
 }
 
 void CObjMgr::Render(HDC hDC)

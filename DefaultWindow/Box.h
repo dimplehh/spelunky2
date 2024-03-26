@@ -18,5 +18,8 @@ private:
 
 	float				m_fPower;
 	float				m_fTime;
+
+private:
+	DWORD				m_dwTime;
 };
 

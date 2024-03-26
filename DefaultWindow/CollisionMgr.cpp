@@ -42,46 +42,39 @@ void CCollisionMgr::Collision_Rect(list<CObj*> _Dst, list<CObj*> _Src)
 }
 
 
-void CCollisionMgr::Collision_RectEx(list<CObj*> _Dst, list<CObj*> _Src)
+void CCollisionMgr::Collision_RectEx(CObj* Dst, CObj* Src)
 {
 	float	fX(0.f), fY(0.f);
 
-	for (auto& Dst : _Dst)
+	if (Check_Rect(Dst, Src, &fX, &fY))
 	{
-		for (auto& Src : _Src)
+		if (fX <= fY)		// 谅快 面倒
 		{
-			if (Check_Rect(Dst, Src, &fX, &fY))
+			// 谅 面倒
+			if (Dst->Get_Info().fX < Src->Get_Info().fX)
 			{
-				if(fX <= fY)		// 谅快 面倒
-				{
-					// 谅 面倒
-					if (Dst->Get_Info().fX < Src->Get_Info().fX)
-					{
-						Dst->Set_PosX(-fX);
-					}
-					// 快 面倒
-					else
-					{
-						Dst->Set_PosX(fX);
-					}
-				}
+				Dst->Set_PosX(-fX);
+			}
+			// 快 面倒
+			else
+			{
+				Dst->Set_PosX(fX);
+			}
+		}
+		Dst->SetCollision(true);
+		Src->SetCollision(true);
+		if (OBJECT_TYPE::PLAYER == Src->Get_MyObjType())
+		{
+			if (OBJECT_TYPE::BOX == Dst->Get_MyObjType())
+			{
 				Dst->SetCollision(true);
 				Src->SetCollision(true);
-				if (OBJECT_TYPE::PLAYER == Src->Get_MyObjType())
-				{
-					if (OBJECT_TYPE::BOX == Dst->Get_MyObjType())
-					{
-						Dst->SetCollision(true);
-						Src->SetCollision(true);
-						dynamic_cast<CPlayer*>(Src)->SetAttachedBox(true);
-					}
-				}
+				dynamic_cast<CPlayer*>(Src)->SetAttachedBox(true);
 			}
-			else
-				dynamic_cast<CPlayer*>(Src)->SetAttachedBox(false);
 		}
 	}
-
+	else
+		dynamic_cast<CPlayer*>(Src)->SetAttachedBox(false);
 }
 
 bool CCollisionMgr::Check_Rect(CObj * pDst, CObj * pSrc, float * pX, float * pY)

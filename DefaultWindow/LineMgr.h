@@ -14,6 +14,8 @@ public:
 	bool		Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping);			// 밟는 땅
 	bool		Collision_Board_Line(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping);		// 상향, 하향점프 가능한 발판
 	int			Collision_Vertical_Line(float& fX, float& fY, float& fCX, float& fCY);					// 벽 ( 반환값으로 왼쪽벽, 오른쪽벽, 충돌  x 구분 )
+	bool		Box_Collision_Vertical_Line(float& fX, float& fY, float& fCX, float& fCY);				// 상자 벽충돌
+
 	bool		Collision_Line_Ceiling(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping);	// 천장	
 
 	float		Equation_Line(float& fX, float _x1, float _y1, float _x2, float _y2);

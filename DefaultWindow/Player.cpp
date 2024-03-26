@@ -66,9 +66,9 @@ void CPlayer::Late_Update()	//어떤걸 Late_Update, 어떤걸 Update에 넣어야할지 잘 
 
 #ifdef _DEBUG
 
-	if (m_dwTime + 10 < GetTickCount())
+	if (m_dwTime + 100 < GetTickCount())
 	{
-		cout << m_bCanHang << endl;
+		cout << m_eCurState << endl;
 		m_dwTime = GetTickCount();
 	}
 #endif

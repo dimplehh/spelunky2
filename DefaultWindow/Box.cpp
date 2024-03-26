@@ -4,7 +4,7 @@
 #include "ScrollMgr.h"
 #include "LineMgr.h"
 
-CBox::CBox() : m_fTime(0.f), m_fPower(0.f)
+CBox::CBox() : m_fTime(0.f), m_fPower(0.f), m_dwTime(GetTickCount())
 {
 	m_eMyObjType = OBJECT_TYPE::BOX;
 }
@@ -36,6 +36,7 @@ int CBox::Update()
 void CBox::Late_Update()
 {
 	Gravity();
+	CLineMgr::Get_Instance()->Box_Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY);
 }
 
 void CBox::Render(HDC hDC)

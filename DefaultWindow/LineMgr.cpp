@@ -3,6 +3,8 @@
 #include "TileMgr.h"
 #include <string>
 #include "AbstractFactory.h"
+#include "ObjMgr.h"
+#include "Player.h"
 
 CLineMgr*	CLineMgr::m_pInstance = nullptr;
 
@@ -149,6 +151,37 @@ int		CLineMgr::Collision_Vertical_Line(float& fX, float& fY, float& fCX, float& 
 		return 0;
 }
 
+bool CLineMgr::Box_Collision_Vertical_Line(float& fX, float& fY, float& fCX, float& fCY)
+{
+	if (m_LineList.empty())
+		false;
+
+	m_AttachedLine = nullptr;
+
+	for (auto& iter : m_LineList)
+	{
+		if ((iter->Get_Info().tLPoint.fX - 10 < fX +fCX / 2 && fX + fCX / 2 < iter->Get_Info().tLPoint.fX + 10)
+			&& (iter->Get_Info().tLPoint.fY < fY && fY < iter->Get_Info().tRPoint.fY)
+			&& (iter->Get_LineType() == CLine::LEFTWALL))
+		{
+			return true;
+		}
+		else if ((iter->Get_Info().tLPoint.fY - fCY / 2 < fY && fY < iter->Get_Info().tRPoint.fY + fCY / 2)
+			&& (iter->Get_Info().tLPoint.fX - 5 <= fX - fCX / 2 && fX - fCX / 2 < iter->Get_Info().tLPoint.fX + 5)
+			&& (iter->Get_LineType() == CLine::RIGHTWALL))
+		{
+			m_fX = iter->Get_Info().tLPoint.fX;
+			m_AttachedLine = iter;
+			fX = m_fX + fCX / 2 + 6;
+			CObjMgr::Get_Instance()->Get_Player()->Set_Pos(fX + fCX / 2 + 17, fY);
+			dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetAttachedBox(false);
+			
+			return true;
+		}
+	}
+	if (!m_AttachedLine)
+		return false;
+}
 
 bool CLineMgr::LastBottom_Line(float& fX, float& fY, float& fCX, float& fCY)
 {

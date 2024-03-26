@@ -21,6 +21,7 @@ public:
 
 public:
 	void		SetAttachedBox(bool _isAttached) { m_bAttachedBox = _isAttached; }
+	bool		GetAttatchedBox() { return m_bAttachedBox; }
 
 private:
 	void		SetRenderImage(HDC hDC);
