@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Obj.h"
+#include "Line.h"
 
 template<typename T>
 class CAbstractFactory
@@ -40,3 +41,13 @@ public:
 	~CAbstractFactory(){}
 };
 
+class CLineFactory
+{
+public:
+	static CLine* Create(LINEPOINT lPoint, LINEPOINT rPoint, CLine::LINETYPE lineType)
+	{
+		CLine* pLine = new CLine(lPoint, rPoint);
+		dynamic_cast<CLine*>(pLine)->Set_LineType(lineType);
+		return pLine;
+	}
+};
