@@ -45,7 +45,37 @@ bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool
 	{
 		for (auto& iter : m_LineList)
 		{
-			if (iter->Get_LineType() == CLine::FLOOR
+			if ((iter->Get_LineType() == CLine::FLOOR || iter->Get_LineType() == CLine::BOARD)
+				&& iter->Get_Info().tLPoint.fX <= fX + fCX / 6 && fX - fCX / 6 < iter->Get_Info().tRPoint.fX
+				&& fY >= iter->Get_Info().tLPoint.fY - fCY / 2)
+			{
+				m_fY = iter->Get_Info().tLPoint.fY;										//플레이어 위치를 변경시켜주는 부분
+
+				if (((fY + (fCY / 6.f)) <= m_fY) && (m_fY <= (fY + (fCY / 2.f))))		// 하단 부분 충돌 범위 지정 전체 사이즈의 1/6 가량
+				{
+					m_AttachedLine = iter;
+					fY = m_fY - (fCY / 2);
+					return true;
+				}
+			}
+		}
+	}
+	if (!m_AttachedLine)
+		return false;
+}
+
+bool CLineMgr::Collision_Board_Line(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping)
+{
+	if (m_LineList.empty())
+		return false;
+
+	m_AttachedLine = nullptr;
+
+	if (!_Jumping) //점프 상태가 아닐 때만 지면과의 충돌판정하라는 뜻
+	{
+		for (auto& iter : m_LineList)
+		{
+			if (iter->Get_LineType() == CLine::BOARD
 				&& iter->Get_Info().tLPoint.fX <= fX + fCX / 6 && fX - fCX / 6 < iter->Get_Info().tRPoint.fX
 				&& fY >= iter->Get_Info().tLPoint.fY - fCY / 2)
 			{
@@ -198,18 +228,10 @@ bool CLineMgr::Ladder_Line(float& fX, float& fY, float& fCX, float& fCY)
 		{
 			if ((fX - (fCX / 2.f) < iter->Get_Info().tLPoint.fX) && (iter->Get_Info().tLPoint.fX < fX + (fCX / 2.f)))
 			{
-				if ((iter->Get_Info().tLPoint.fY >= fY - (fCY / 2.f)) && (fY - (fCY / 2.f) > iter->Get_Info().tRPoint.fY) ||
+				if ((iter->Get_Info().tLPoint.fY >= fY - (fCY / 2.f)) && (fY - (fCY / 2.f) >= iter->Get_Info().tRPoint.fY) ||
 					(iter->Get_Info().tLPoint.fY >= fY + (fCY / 2.f)) && (fY + (fCY / 2.f) > iter->Get_Info().tRPoint.fY))
-				{  //- 플레이어 fy 가 y1 ~y2 사이에 존재하면 true
-					//fX = iter->Get_Info().tLPoint.fX;
-
-					//float x1 = iter->Get_Info().tLPoint.fX;
-					//float y1 = iter->Get_Info().tLPoint.fY;
-					//float x2 = iter->Get_Info().tRPoint.fX;
-					//float y2 = iter->Get_Info().tRPoint.fY;
-
-					//m_fY = Equation_Line(fX, x1, y1, x2, y2);
-
+				{  
+					// 사다리 맨 위에 있을 경우 처리
 					return true;
 				}
 			}
@@ -231,11 +253,44 @@ void CLineMgr::SetLine()
 	m_LineList.back()->Set_LineType(CLine::FLOOR);
 	m_LineList.push_back(new CLine({ LINEPOINT{2 * TILECX, 1 * TILECY}, LINEPOINT{2 * TILECX, (TILEY - 2) * TILECY} }));							// 왼쪽 벽
 	m_LineList.back()->Set_LineType(CLine::LEFTWALL);
-	m_LineList.push_back(new CLine({ LINEPOINT{(TILEX - 2) * TILECX, 1 * TILECY}, LINEPOINT{(TILEX - 2) * TILECX, (TILEY - 2) * TILECY} }));	// 오른쪽 벽
+	m_LineList.push_back(new CLine({ LINEPOINT{(TILEX - 2) * TILECX, 1 * TILECY}, LINEPOINT{(TILEX - 2) * TILECX, (TILEY - 2) * TILECY} }));		// 오른쪽 벽
 	m_LineList.back()->Set_LineType(CLine::RIGHTWALL);
 
-	m_LineList.push_back(new CLine({ LINEPOINT{22 * TILECX, 6 * TILECY}, LINEPOINT{22 * TILECX, 4 * TILECY} }));									// 사다리
+	m_LineList.push_back(new CLine({ LINEPOINT{(17 + 0.5f) * TILECX, 18 * TILECY}, LINEPOINT{(17 + 0.5f) * TILECX, 15 * TILECY} }));				// 사다리
 	m_LineList.back()->Set_LineType(CLine::LADDER);
+	m_LineList.push_back(new CLine({ LINEPOINT{(3 + 0.5f) * TILECX, 18 * TILECY}, LINEPOINT{(3 + 0.5f) * TILECX, 14 * TILECY} }));					// 사다리
+	m_LineList.back()->Set_LineType(CLine::LADDER);
+	m_LineList.push_back(new CLine({ LINEPOINT{(32 + 0.5f) * TILECX, 23 * TILECY}, LINEPOINT{(32 + 0.5f) * TILECX, 19 * TILECY} }));				// 사다리
+	m_LineList.back()->Set_LineType(CLine::LADDER);
+
+	m_LineList.push_back(new CLine({ LINEPOINT{4 * TILECX, 15 * TILECY + 20}, LINEPOINT{5 * TILECX, 15 * TILECY + 10} }));						// 발판
+	m_LineList.back()->Set_LineType(CLine::BOARD);
+	m_LineList.push_back(new CLine({ LINEPOINT{5 * TILECX, 15 * TILECY + 20}, LINEPOINT{6 * TILECX, 15 * TILECY + 10} }));						// 발판
+	m_LineList.back()->Set_LineType(CLine::BOARD);
+
+	m_LineList.push_back(new CLine({ LINEPOINT{15 * TILECX, 17 * TILECY + 15}, LINEPOINT{16 * TILECX, 17 * TILECY + 15} }));						// 발판
+	m_LineList.back()->Set_LineType(CLine::BOARD);
+	m_LineList.push_back(new CLine({ LINEPOINT{16 * TILECX, 17 * TILECY + 15}, LINEPOINT{17 * TILECX, 17 * TILECY + 15} }));						// 발판
+	m_LineList.back()->Set_LineType(CLine::BOARD);
+
+	m_LineList.push_back(new CLine({ LINEPOINT{19 * TILECX, 18 * TILECY + 15}, LINEPOINT{20 * TILECX, 18 * TILECY + 15} }));						// 발판
+	m_LineList.back()->Set_LineType(CLine::BOARD);
+	m_LineList.push_back(new CLine({ LINEPOINT{20 * TILECX, 18 * TILECY + 15}, LINEPOINT{21 * TILECX, 18 * TILECY + 15} }));						// 발판
+	m_LineList.back()->Set_LineType(CLine::BOARD);
+
+	m_LineList.push_back(new CLine({ LINEPOINT{49 * TILECX, 22 * TILECY + 10}, LINEPOINT{50 * TILECX, 22 * TILECY + 10} }));						// 발판
+	m_LineList.back()->Set_LineType(CLine::BOARD);
+
+	m_LineList.push_back(new CLine({ LINEPOINT{54 * TILECX, 20 * TILECY + 10}, LINEPOINT{55 * TILECX, 20 * TILECY + 10} }));						// 발판
+	m_LineList.back()->Set_LineType(CLine::BOARD);
+	m_LineList.push_back(new CLine({ LINEPOINT{54 * TILECX, 21 * TILECY + 10}, LINEPOINT{55 * TILECX, 21 * TILECY + 10} }));						// 발판
+	m_LineList.back()->Set_LineType(CLine::BOARD);
+	m_LineList.push_back(new CLine({ LINEPOINT{54 * TILECX, 22 * TILECY + 10}, LINEPOINT{55 * TILECX, 22 * TILECY + 10} }));						// 발판
+	m_LineList.back()->Set_LineType(CLine::BOARD);
+
+	m_LineList.push_back(new CLine({ LINEPOINT{58 * TILECX, 21 * TILECY + 10}, LINEPOINT{59 * TILECX, 21 * TILECY + 10} }));						// 발판
+	m_LineList.back()->Set_LineType(CLine::BOARD);
+
 
 	LINE	tInfo{};
 	INFO	iterInfo{};

@@ -146,7 +146,7 @@ void CPlayer::HoldLeft()
 
 void CPlayer::HoldRight()
 {
-	if (m_bCanHang || m_eCurState == ATTACK)
+	if (m_bLadder || m_bCanHang || m_eCurState == ATTACK)
 		return;
 	m_pFrameKey = L"Player_BASE";
 	m_bFlip = false;
@@ -215,12 +215,9 @@ void CPlayer::TapZ()
 {
 	if (m_bKneelDown == true)	// 하향점프
 	{
-		if (CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
+		if (CLineMgr::Get_Instance()->Collision_Board_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
 		{
-			if (!CLineMgr::Get_Instance()->LastBottom_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
-			{
-				m_tInfo.fY += 50;
-			}
+			m_tInfo.fY += 50;
 		}
 	}
 	else
