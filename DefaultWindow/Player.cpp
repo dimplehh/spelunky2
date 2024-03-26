@@ -68,10 +68,7 @@ void CPlayer::Late_Update()	//어떤걸 Late_Update, 어떤걸 Update에 넣어야할지 잘 
 
 	if (m_dwTime + 10 < GetTickCount())
 	{
-		if(m_bWallAttatched && nullptr != CLineMgr::Get_Instance()->Get_AttachedLine())
-			cout << CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tLPoint.fX << "/" << CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tLPoint.fY << "/"
-			<< CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tRPoint.fX << "/" << CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tRPoint.fY << endl;
-		//cout << m_bCanHang << endl;
+		cout << m_bCanHang << endl;
 		m_dwTime = GetTickCount();
 	}
 #endif
@@ -138,10 +135,6 @@ void CPlayer::HoldLeft()
 				m_bCanHang = true;
 				m_eCurState = HANGON;
 			}
-			else
-			{
-				m_bCanHang = false;
-			}
 		}
 		if (!m_bJump && CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
 		{
@@ -178,12 +171,8 @@ void CPlayer::HoldRight()
 														m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
 			{
 				m_iJumpCount = 0;
-				m_bCanHang = true;
+				m_bCanHang = true;		
 				m_eCurState = HANGON;
-			}
-			else
-			{
-				m_bCanHang = false;
 			}
 		}
 		if (!m_bJump && CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
@@ -440,7 +429,7 @@ void CPlayer::Key_Input()
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::A) == KEY_STATE::TAP) { m_iHp -= 10;		m_eCurState = ATTACKED; }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::HOLD) { m_eCurState = ENTER; }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::AWAY) { m_eCurState = EXIT; }
-	else if ((m_tFrame.bRoop == true && m_bLadder == false || ((m_tFrame.bRoop == false) && Check_Move_End() == true) && m_eCurState != HANGON))
+	else if ((m_tFrame.bRoop == true && m_bLadder == false || ((m_tFrame.bRoop == false) && Check_Move_End() == true))&& m_bCanHang == false)
 	{
 		m_eCurState = IDLE;
 		m_bKneelDown = false;
