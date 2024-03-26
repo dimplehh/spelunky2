@@ -278,6 +278,13 @@ void CLineMgr::SetLine()
 	m_LineList.push_back(new CLine({ LINEPOINT{20 * TILECX, 18 * TILECY + 15}, LINEPOINT{21 * TILECX, 18 * TILECY + 15} }));						// 발판
 	m_LineList.back()->Set_LineType(CLine::BOARD);
 
+	m_LineList.push_back(new CLine({ LINEPOINT{25 * TILECX, 12 * TILECY + 25}, LINEPOINT{26 * TILECX, 12 * TILECY + 25} }));						// 발판
+	m_LineList.back()->Set_LineType(CLine::BOARD);
+	m_LineList.push_back(new CLine({ LINEPOINT{26 * TILECX, 12 * TILECY + 25}, LINEPOINT{27 * TILECX, 12 * TILECY + 25} }));						// 발판
+	m_LineList.back()->Set_LineType(CLine::BOARD);
+	m_LineList.push_back(new CLine({ LINEPOINT{27 * TILECX, 12 * TILECY + 25}, LINEPOINT{28 * TILECX, 12 * TILECY + 25} }));						// 발판
+	m_LineList.back()->Set_LineType(CLine::BOARD);
+
 	m_LineList.push_back(new CLine({ LINEPOINT{49 * TILECX, 22 * TILECY + 10}, LINEPOINT{50 * TILECX, 22 * TILECY + 10} }));						// 발판
 	m_LineList.back()->Set_LineType(CLine::BOARD);
 
