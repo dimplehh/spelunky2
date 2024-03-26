@@ -60,16 +60,18 @@ void CPlayer::Late_Update()	//어떤걸 Late_Update, 어떤걸 Update에 넣어야할지 잘 
 	m_bJump = !CLineMgr::Get_Instance()->Collision_Line_Ceiling(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump); //천장체킹
 	Gravity();
 	FallDamage();
-	CanHanging();
 	AlmostFell();
 	Motion_Change();
 	__super::Move_Frame();
 
 #ifdef _DEBUG
 
-	if (m_dwTime + 1000 < GetTickCount())
+	if (m_dwTime + 10 < GetTickCount())
 	{
-		cout << m_eCurState << endl;
+		if(m_bWallAttatched && nullptr != CLineMgr::Get_Instance()->Get_AttachedLine())
+			cout << CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tLPoint.fX << "/" << CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tLPoint.fY << "/"
+			<< CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tRPoint.fX << "/" << CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tRPoint.fY << endl;
+		//cout << m_bCanHang << endl;
 		m_dwTime = GetTickCount();
 	}
 #endif
@@ -126,7 +128,21 @@ void CPlayer::HoldLeft()
 	}
 	else
 	{
-		CLineMgr::Get_Instance()->Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY);
+		if (CLineMgr::Get_Instance()->Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))	//벽충돌 판단
+		{																											// 벽에 충돌한 상황일 때 매달릴 수 있는지도 판단
+			if (CLineMgr::Get_Instance()->Can_Hang_Line(CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tLPoint.fX, 
+														CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tLPoint.fY, 
+														m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
+			{
+				m_iJumpCount = 0;
+				m_bCanHang = true;
+				m_eCurState = HANGON;
+			}
+			else
+			{
+				m_bCanHang = false;
+			}
+		}
 		if (!m_bJump && CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
 		{
 			m_eCurState = WALK;
@@ -155,7 +171,21 @@ void CPlayer::HoldRight()
 	{
 		if (m_bLadder)
 			return;
-		CLineMgr::Get_Instance()->Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY);
+		if (CLineMgr::Get_Instance()->Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))	//벽충돌 판단
+		{
+			if (CLineMgr::Get_Instance()->Can_Hang_Line(CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tLPoint.fX, 
+														CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tLPoint.fY,
+														m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
+			{
+				m_iJumpCount = 0;
+				m_bCanHang = true;
+				m_eCurState = HANGON;
+			}
+			else
+			{
+				m_bCanHang = false;
+			}
+		}
 		if (!m_bJump && CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
 		{
 			m_eCurState = WALK;
@@ -245,7 +275,7 @@ void CPlayer::FallDamage()
 
 void CPlayer::AlmostFell()
 {
-	if (CLineMgr::Get_Instance()->Check_Almost_Fell_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
+	if (CLineMgr::Get_Instance()->Check_Almost_Fell(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
 	{
 		m_bAlmostFell = true;
 		if (m_eCurState == IDLE)
@@ -266,23 +296,6 @@ void CPlayer::InLadder()
 	}
 	else
 		m_bLadder = false;
-}
-
-void CPlayer::CanHanging()	// 점프상태였었는지 판단해야함
-{
-	if (CLineMgr::Get_Instance()->Can_Hang_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
-	{
-		if (m_bJump)
-		{
-			m_iJumpCount = 0;
-			m_bCanHang = true;
-			m_eCurState = HANGON;
-		}
-	}
-	else
-	{
-		m_bCanHang = false;
-	}
 }
 
 bool CPlayer::Check_Move_End()
@@ -363,7 +376,8 @@ void CPlayer::Gravity()	//숫자 의미 판단, 더 정리 필요 -> Obj로 나중에 빼야될듯
 		{
 			m_fPower = 0.f;
 			m_iJumpCount = 0;
-			m_fCurY = CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tLPoint.fY;
+			if(nullptr != CLineMgr::Get_Instance()->Get_AttachedLine())
+				m_fCurY = CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tLPoint.fY;
 			if (m_fPreY != m_fCurY)
 			{
 				m_fDiffY = -(m_fPreY - m_fCurY);
@@ -426,7 +440,7 @@ void CPlayer::Key_Input()
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::A) == KEY_STATE::TAP) { m_iHp -= 10;		m_eCurState = ATTACKED; }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::HOLD) { m_eCurState = ENTER; }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::AWAY) { m_eCurState = EXIT; }
-	else if ((m_tFrame.bRoop == true && m_bLadder == false || ((m_tFrame.bRoop == false) && Check_Move_End() == true)))
+	else if ((m_tFrame.bRoop == true && m_bLadder == false || ((m_tFrame.bRoop == false) && Check_Move_End() == true) && m_eCurState != HANGON))
 	{
 		m_eCurState = IDLE;
 		m_bKneelDown = false;

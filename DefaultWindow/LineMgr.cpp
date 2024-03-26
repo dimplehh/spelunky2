@@ -126,7 +126,7 @@ bool CLineMgr::LastBottom_Line(float& fX, float& fY, float& fCX, float& fCY)
 
 	for (auto& iter : m_LineList)
 	{
-		if (iter->Get_Info().tLPoint.fY == iter->Get_Info().tRPoint.fY && (iter->Get_Info().tLPoint.fX <= fX) && (fX < iter->Get_Info().tRPoint.fX) 
+		if (iter->Get_Info().tLPoint.fY == iter->Get_Info().tRPoint.fY && (iter->Get_Info().tLPoint.fX <= fX) && (fX < iter->Get_Info().tRPoint.fX)
 			&& iter->Get_Info().tRPoint.fX - iter->Get_Info().tRPoint.fX > 1000)
 		{
 			return true;
@@ -135,7 +135,7 @@ bool CLineMgr::LastBottom_Line(float& fX, float& fY, float& fCX, float& fCY)
 	return false;
 }
 
-bool CLineMgr::Check_Almost_Fell_Line(float& fX, float& fY, float& fCX, float& fCY)
+bool CLineMgr::Check_Almost_Fell(float& fX, float& fY, float& fCX, float& fCY)
 {
 	if (m_LineList.empty())
 		return false;
@@ -144,12 +144,43 @@ bool CLineMgr::Check_Almost_Fell_Line(float& fX, float& fY, float& fCX, float& f
 
 	for (auto& iter : m_LineList)
 	{
-		if((iter->Get_Info().tLPoint.fX - 10 < fX && fX < iter->Get_Info().tLPoint.fX + 10)
-		&& (fY < iter->Get_Info().tLPoint.fY + fCY / 2 && iter->Get_Info().tLPoint.fY - fCY - 10 < fY)
-		&& (iter->Get_LineType() == CLine::LEFTWALL || iter->Get_LineType() == CLine::RIGHTWALL))		//벽 위에 서있는 경우
+		if ((iter->Get_Info().tLPoint.fX - 10 < fX && fX < iter->Get_Info().tLPoint.fX + 10)
+			&& (fY < iter->Get_Info().tLPoint.fY && iter->Get_Info().tLPoint.fY - fCY - 10 < fY)
+			&& (iter->Get_LineType() == CLine::LEFTWALL || iter->Get_LineType() == CLine::RIGHTWALL))		//벽 위에 서있는 경우
 		{
+			m_AttachedLine = iter;
+			return true;
+		}
+	}
+	if (!m_AttachedLine)
+		return false;
+}
+
+bool CLineMgr::Can_Hang_Line(float fPointX, float fPointY, float& fX, float& fY, float& fCX, float& fCY, bool bJumping)	// 매달릴 수 있는지 판단하는 코드
+{
+	if (m_LineList.empty())
+		return false;
+
+	m_AttachedLine = nullptr;
+
+	if (bJumping)
+	{
+		for (auto& iter : m_LineList)
+		{
+			if (((iter->Get_Info().tLPoint.fX == fPointX && iter->Get_Info().tLPoint.fY == fPointY) && fX < iter->Get_Info().tLPoint.fX) && iter->Get_LineType() == CLine::FLOOR)
+			{
+				fX = iter->Get_Info().tLPoint.fX - 15;
+				fY = iter->Get_Info().tLPoint.fY + 10;
 				m_AttachedLine = iter;
 				return true;
+			}
+			else if (((iter->Get_Info().tRPoint.fX == fPointX && iter->Get_Info().tRPoint.fY == fPointY) && iter->Get_Info().tRPoint.fX < fX) && iter->Get_LineType() == CLine::FLOOR)
+			{
+				fX = iter->Get_Info().tRPoint.fX + 15;
+				fY = iter->Get_Info().tRPoint.fY + 10;
+				m_AttachedLine = iter;
+				return true;
+			}
 		}
 	}
 	if (!m_AttachedLine)
@@ -171,37 +202,6 @@ bool CLineMgr::Ladder_Line(float& fX, float& fY, float& fCX, float& fCY)
 				if ((iter->Get_Info().tLPoint.fY >= fY - (fCY / 2.f)) && (fY - (fCY / 2.f) > iter->Get_Info().tRPoint.fY) ||
 					(iter->Get_Info().tLPoint.fY >= fY + (fCY / 2.f)) && (fY + (fCY / 2.f) > iter->Get_Info().tRPoint.fY))
 				{  //- 플레이어 fy 가 y1 ~y2 사이에 존재하면 true
-					//fX = iter->Get_Info().tLPoint.fX;
-
-					//float x1 = iter->Get_Info().tLPoint.fX;
-					//float y1 = iter->Get_Info().tLPoint.fY;
-					//float x2 = iter->Get_Info().tRPoint.fX;
-					//float y2 = iter->Get_Info().tRPoint.fY;
-
-					//m_fY = Equation_Line(fX, x1, y1, x2, y2);
-
-					return true;
-				}
-			}
-		}
-	}
-	return false;
-}
-
-bool CLineMgr::Can_Hang_Line(float& fX, float& fY, float& fCX, float& fCY)	// 매달릴 수 있는지 판단하는 코드
-{
-	if (m_LineList.empty())							// 맵에 선이 없다면 
-		return false;								//  false
-	for (auto& iter : m_LineList)
-	{
-		if (iter->Get_Info().tLPoint.fX == iter->Get_Info().tRPoint.fX
-			&& abs(iter->Get_Info().tLPoint.fY - iter->Get_Info().tRPoint.fY) <= 5)
-		{      //- 선 x1 == x2 이고
-			if ((fX - (fCX / 2.f) < iter->Get_Info().tLPoint.fX) && (iter->Get_Info().tLPoint.fX < fX + (fCX / 2.f)))
-			{
-				if ((iter->Get_Info().tLPoint.fY >= fY - (fCY / 2.f)) && (fY - (fCY / 2.f) > iter->Get_Info().tRPoint.fY) ||
-					(iter->Get_Info().tLPoint.fY >= fY + (fCY / 2.f)) && (fY + (fCY / 2.f) > iter->Get_Info().tRPoint.fY))
-				{
 					//fX = iter->Get_Info().tLPoint.fX;
 
 					//float x1 = iter->Get_Info().tLPoint.fX;
