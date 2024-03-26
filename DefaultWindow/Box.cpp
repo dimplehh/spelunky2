@@ -36,7 +36,7 @@ int CBox::Update()
 void CBox::Late_Update()
 {
 	Gravity();
-	m_boxLine->Set_Info(LINE(LINEPOINT{ m_tInfo.fX - TILECX * 0.5f, m_tInfo.fY - TILECY * 0.5f - 0.01f }, LINEPOINT{ m_tInfo.fX + TILECX * 0.5f, m_tInfo.fY - TILECY * 0.5f - 0.01f }));
+	m_boxLine->Set_Info(LINE(LINEPOINT{ m_tInfo.fX - TILECX * 0.5f + 15.f , m_tInfo.fY - TILECY * 0.5f - 0.01f }, LINEPOINT{ m_tInfo.fX + TILECX * 0.5f - 15.f, m_tInfo.fY - TILECY * 0.5f - 0.01f }));
 	CLineMgr::Get_Instance()->Box_Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY);
 }
 
