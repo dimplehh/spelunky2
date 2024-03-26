@@ -1,7 +1,9 @@
 #pragma once
 
 #include "Obj.h"
+#include "LineMgr.h"
 #include "Line.h"
+#include "Box.h"
 
 template<typename T>
 class CAbstractFactory
@@ -31,7 +33,6 @@ public:
 		
 		pObj->Set_Pos(_fX, _fY);
 		pObj->Set_Angle(_fAngle);
-
 		return pObj;
 	}
 
@@ -49,5 +50,20 @@ public:
 		CLine* pLine = new CLine(lPoint, rPoint);
 		dynamic_cast<CLine*>(pLine)->Set_LineType(lineType);
 		return pLine;
+	}
+};
+
+class CBoxFactory
+{
+public:
+	static CBox* Create(float _fX, float _fY)
+	{
+		CBox* pObj = new CBox;
+		pObj->Initialize();
+		pObj->Set_Pos(_fX, _fY);
+
+		CLineMgr::Get_Instance()->Set_Box_Line(_fX, _fY);
+		pObj->SetBoxLine(CLineMgr::Get_Instance()->Get_Box_Line()->back());
+		return pObj;
 	}
 };

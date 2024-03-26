@@ -1,5 +1,7 @@
 #pragma once
 #include "Obj.h"
+#include "Line.h"
+
 class CBox : public CObj
 {
 public:
@@ -13,6 +15,9 @@ public:
 	virtual void Render(HDC hDC) override;
 	virtual void Release() override;
 
+public:
+	void	SetBoxLine(CLine* boxLine) { m_boxLine = boxLine; };
+
 private:
 	void		Gravity();
 
@@ -21,5 +26,6 @@ private:
 
 private:
 	DWORD				m_dwTime;
+	CLine*				m_boxLine;
 };
 

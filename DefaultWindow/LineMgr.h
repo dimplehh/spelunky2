@@ -26,6 +26,7 @@ public:
 	bool		Can_Hang_Line(float fPointX, float fPointY, float& fX, float& fY, float& fCX, float& fCY, bool bJumping);
 
 	void		Set_Box_Line(float fX, float fY);
+	list<CLine*>* Get_Box_Line() { return &m_BoxLineList; }
 
 	CLine*		Get_AttachedLine() { return m_AttachedLine; };
 	float		Get_fY() { return m_fY; }
