@@ -31,10 +31,9 @@ void CStage::Initialize()
 
 	CObjMgr::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CPlayer>::Create());
 
-	for (int i = 0; i < 1; ++i)
-	{
-		CObjMgr::Get_Instance()->Add_Object(OBJ_BOX, CAbstractFactory<CBox>::Create(TILECX * 20, TILECY * 2));
-	}
+	CObjMgr::Get_Instance()->Add_Object(OBJ_BOX, CAbstractFactory<CBox>::Create(TILECX * (15 + 0.5f), TILECY * 1));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_BOX, CAbstractFactory<CBox>::Create(TILECX * (59 + 0.5f), TILECY * 10));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_BOX, CAbstractFactory<CBox>::Create(TILECX * (38 + 0.5f), TILECY * 17));
 
 	CTileMgr::Get_Instance()->Load_Tile();
 	CLineMgr::Get_Instance()->Initialize();

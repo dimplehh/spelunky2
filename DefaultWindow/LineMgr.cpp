@@ -104,7 +104,7 @@ bool CLineMgr::Collision_Line_Ceiling(float& fX, float& fY, float& fCX, float& f
 	for (auto& iter : m_LineList)
 	{
 		if ((iter->Get_Info().tLPoint.fX < fX && fX < iter->Get_Info().tRPoint.fX)
-			&& (iter->Get_Info().tLPoint.fY - 10 < fY - fCY / 2 && fY - fCY / 2 < iter->Get_Info().tLPoint.fY + 10)
+			&& (iter->Get_Info().tLPoint.fY - 10 < fY && fY - fCY / 2 < iter->Get_Info().tLPoint.fY + 10)
 			&& iter->Get_LineType() == CLine::CEILING)
 		{
 			m_fY = iter->Get_Info().tLPoint.fY;
@@ -232,7 +232,10 @@ bool CLineMgr::Ladder_Line(float& fX, float& fY, float& fCX, float& fCY)
 				if ((iter->Get_Info().tLPoint.fY >= fY - (fCY / 2.f)) && (fY - (fCY / 2.f) >= iter->Get_Info().tRPoint.fY) ||
 					(iter->Get_Info().tLPoint.fY >= fY + (fCY / 2.f)) && (fY + (fCY / 2.f) > iter->Get_Info().tRPoint.fY))
 				{  
-					// 사다리 맨 위에 있을 경우 처리
+					fX = iter->Get_Info().tLPoint.fX;
+					
+					// 사다리 맨 위에 있을 경우 처리 마저 필요
+
 					return true;
 				}
 			}
@@ -264,7 +267,7 @@ void CLineMgr::SetLine()
 				m_LineList.push_back(CLineFactory::Create(	LINEPOINT{ iterInfo.fX - iterInfo.fCX / 2, iterInfo.fY - iterInfo.fCY / 2 }, LINEPOINT{ iterInfo.fX - iterInfo.fCX / 2, iterInfo.fY + iterInfo.fCY / 2 },CLine::LEFTWALL));
 			if (_x < TILEX - 1 && (*m_pVecTile)[_index]->Get_Option() >= 1 && (*m_pVecTile)[_index + 1]->Get_Option() == 0) //오른쪽 벽
 				m_LineList.push_back(CLineFactory::Create(	LINEPOINT{ iterInfo.fX + iterInfo.fCX / 2, iterInfo.fY - iterInfo.fCY / 2 }, LINEPOINT{ iterInfo.fX + iterInfo.fCX / 2, iterInfo.fY + iterInfo.fCY / 2 }, CLine::RIGHTWALL));
-			if (2 < _y && (*m_pVecTile)[_index]->Get_Option() >= 1 && (*m_pVecTile)[_index - TILEX]->Get_Option() == 0) //밟는 땅
+			if (0 < _y && (*m_pVecTile)[_index]->Get_Option() >= 1 && (*m_pVecTile)[_index - TILEX]->Get_Option() == 0) //밟는 땅
 				m_LineList.push_back(CLineFactory::Create(	LINEPOINT{ iterInfo.fX - iterInfo.fCX / 2, iterInfo.fY - iterInfo.fCY / 2 }, LINEPOINT{ iterInfo.fX + iterInfo.fCX / 2, iterInfo.fY - iterInfo.fCY / 2 }, CLine::FLOOR));
 			if (_y < TILEY - 2 && (*m_pVecTile)[_index]->Get_Option() >= 1 && (*m_pVecTile)[_index + TILEX]->Get_Option() == 0) // 천장
 				m_LineList.push_back(CLineFactory::Create(	LINEPOINT{ iterInfo.fX - iterInfo.fCX / 2, iterInfo.fY + iterInfo.fCY / 2 }, LINEPOINT{ iterInfo.fX + iterInfo.fCX / 2, iterInfo.fY + iterInfo.fCY / 2 }, CLine::CEILING));
