@@ -2,6 +2,7 @@
 #include "LineMgr.h"
 #include "TileMgr.h"
 #include <string>
+#include "AbstractFactory.h"
 
 CLineMgr*	CLineMgr::m_pInstance = nullptr;
 
@@ -247,58 +248,6 @@ float CLineMgr::Equation_Line(float& fX, float _x1, float _y1, float _x2, float 
 
 void CLineMgr::SetLine()
 {
-	m_LineList.push_back(new CLine({ LINEPOINT{2 * TILECX, 1 * TILECY}, LINEPOINT{(TILEX - 2) * TILECX, 1 * TILECY} }));							// 천장
-	m_LineList.back()->Set_LineType(CLine::CEILING);
-	m_LineList.push_back(new CLine({ LINEPOINT{2 * TILECX, (TILEY - 2) * TILECY}, LINEPOINT{(TILEX - 2) * TILECX, (TILEY - 2) * TILECY} }));		// 바닥
-	m_LineList.back()->Set_LineType(CLine::FLOOR);
-	m_LineList.push_back(new CLine({ LINEPOINT{2 * TILECX, 1 * TILECY}, LINEPOINT{2 * TILECX, (TILEY - 2) * TILECY} }));							// 왼쪽 벽
-	m_LineList.back()->Set_LineType(CLine::LEFTWALL);
-	m_LineList.push_back(new CLine({ LINEPOINT{(TILEX - 2) * TILECX, 1 * TILECY}, LINEPOINT{(TILEX - 2) * TILECX, (TILEY - 2) * TILECY} }));		// 오른쪽 벽
-	m_LineList.back()->Set_LineType(CLine::RIGHTWALL);
-
-	m_LineList.push_back(new CLine({ LINEPOINT{(17 + 0.5f) * TILECX, 18 * TILECY}, LINEPOINT{(17 + 0.5f) * TILECX, 15 * TILECY} }));				// 사다리
-	m_LineList.back()->Set_LineType(CLine::LADDER);
-	m_LineList.push_back(new CLine({ LINEPOINT{(3 + 0.5f) * TILECX, 18 * TILECY}, LINEPOINT{(3 + 0.5f) * TILECX, 14 * TILECY} }));					// 사다리
-	m_LineList.back()->Set_LineType(CLine::LADDER);
-	m_LineList.push_back(new CLine({ LINEPOINT{(32 + 0.5f) * TILECX, 23 * TILECY}, LINEPOINT{(32 + 0.5f) * TILECX, 19 * TILECY} }));				// 사다리
-	m_LineList.back()->Set_LineType(CLine::LADDER);
-
-	m_LineList.push_back(new CLine({ LINEPOINT{4 * TILECX, 15 * TILECY + 20}, LINEPOINT{5 * TILECX, 15 * TILECY + 10} }));						// 발판
-	m_LineList.back()->Set_LineType(CLine::BOARD);
-	m_LineList.push_back(new CLine({ LINEPOINT{5 * TILECX, 15 * TILECY + 20}, LINEPOINT{6 * TILECX, 15 * TILECY + 10} }));						// 발판
-	m_LineList.back()->Set_LineType(CLine::BOARD);
-
-	m_LineList.push_back(new CLine({ LINEPOINT{15 * TILECX, 17 * TILECY + 15}, LINEPOINT{16 * TILECX, 17 * TILECY + 15} }));						// 발판
-	m_LineList.back()->Set_LineType(CLine::BOARD);
-	m_LineList.push_back(new CLine({ LINEPOINT{16 * TILECX, 17 * TILECY + 15}, LINEPOINT{17 * TILECX, 17 * TILECY + 15} }));						// 발판
-	m_LineList.back()->Set_LineType(CLine::BOARD);
-
-	m_LineList.push_back(new CLine({ LINEPOINT{19 * TILECX, 18 * TILECY + 15}, LINEPOINT{20 * TILECX, 18 * TILECY + 15} }));						// 발판
-	m_LineList.back()->Set_LineType(CLine::BOARD);
-	m_LineList.push_back(new CLine({ LINEPOINT{20 * TILECX, 18 * TILECY + 15}, LINEPOINT{21 * TILECX, 18 * TILECY + 15} }));						// 발판
-	m_LineList.back()->Set_LineType(CLine::BOARD);
-
-	m_LineList.push_back(new CLine({ LINEPOINT{25 * TILECX, 12 * TILECY + 25}, LINEPOINT{26 * TILECX, 12 * TILECY + 25} }));						// 발판
-	m_LineList.back()->Set_LineType(CLine::BOARD);
-	m_LineList.push_back(new CLine({ LINEPOINT{26 * TILECX, 12 * TILECY + 25}, LINEPOINT{27 * TILECX, 12 * TILECY + 25} }));						// 발판
-	m_LineList.back()->Set_LineType(CLine::BOARD);
-	m_LineList.push_back(new CLine({ LINEPOINT{27 * TILECX, 12 * TILECY + 25}, LINEPOINT{28 * TILECX, 12 * TILECY + 25} }));						// 발판
-	m_LineList.back()->Set_LineType(CLine::BOARD);
-
-	m_LineList.push_back(new CLine({ LINEPOINT{49 * TILECX, 22 * TILECY + 10}, LINEPOINT{50 * TILECX, 22 * TILECY + 10} }));						// 발판
-	m_LineList.back()->Set_LineType(CLine::BOARD);
-
-	m_LineList.push_back(new CLine({ LINEPOINT{54 * TILECX, 20 * TILECY + 10}, LINEPOINT{55 * TILECX, 20 * TILECY + 10} }));						// 발판
-	m_LineList.back()->Set_LineType(CLine::BOARD);
-	m_LineList.push_back(new CLine({ LINEPOINT{54 * TILECX, 21 * TILECY + 10}, LINEPOINT{55 * TILECX, 21 * TILECY + 10} }));						// 발판
-	m_LineList.back()->Set_LineType(CLine::BOARD);
-	m_LineList.push_back(new CLine({ LINEPOINT{54 * TILECX, 22 * TILECY + 10}, LINEPOINT{55 * TILECX, 22 * TILECY + 10} }));						// 발판
-	m_LineList.back()->Set_LineType(CLine::BOARD);
-
-	m_LineList.push_back(new CLine({ LINEPOINT{58 * TILECX, 21 * TILECY + 10}, LINEPOINT{59 * TILECX, 21 * TILECY + 10} }));						// 발판
-	m_LineList.back()->Set_LineType(CLine::BOARD);
-
-
 	LINE	tInfo{};
 	INFO	iterInfo{};
 
@@ -308,33 +257,53 @@ void CLineMgr::SetLine()
 		{
 			int _y = _index / TILEX;
 			int _x = _index % TILEX;
+
 			iterInfo = (*m_pVecTile)[_index]->Get_Info();
+
 			if (2 < _x && (*m_pVecTile)[_index]->Get_Option() >= 1 && (*m_pVecTile)[_index - 1]->Get_Option() == 0) //왼쪽 벽
-			{
-				m_LineList.push_back(new CLine({ LINEPOINT{iterInfo.fX - iterInfo.fCX / 2, iterInfo.fY - iterInfo.fCY / 2}, 
-					LINEPOINT{iterInfo.fX - iterInfo.fCX / 2, iterInfo.fY + iterInfo.fCY / 2} }));
-				m_LineList.back()->Set_LineType(CLine::LEFTWALL);
-			}
+				m_LineList.push_back(CLineFactory::Create(	LINEPOINT{ iterInfo.fX - iterInfo.fCX / 2, iterInfo.fY - iterInfo.fCY / 2 }, LINEPOINT{ iterInfo.fX - iterInfo.fCX / 2, iterInfo.fY + iterInfo.fCY / 2 },CLine::LEFTWALL));
 			if (_x < TILEX - 1 && (*m_pVecTile)[_index]->Get_Option() >= 1 && (*m_pVecTile)[_index + 1]->Get_Option() == 0) //오른쪽 벽
-			{
-				m_LineList.push_back(new CLine({ LINEPOINT{iterInfo.fX + iterInfo.fCX / 2, iterInfo.fY - iterInfo.fCY / 2},
-					LINEPOINT{iterInfo.fX + iterInfo.fCX / 2, iterInfo.fY + iterInfo.fCY / 2} }));
-				m_LineList.back()->Set_LineType(CLine::RIGHTWALL);
-			}
+				m_LineList.push_back(CLineFactory::Create(	LINEPOINT{ iterInfo.fX + iterInfo.fCX / 2, iterInfo.fY - iterInfo.fCY / 2 }, LINEPOINT{ iterInfo.fX + iterInfo.fCX / 2, iterInfo.fY + iterInfo.fCY / 2 }, CLine::RIGHTWALL));
 			if (2 < _y && (*m_pVecTile)[_index]->Get_Option() >= 1 && (*m_pVecTile)[_index - TILEX]->Get_Option() == 0) //밟는 땅
-			{
-				m_LineList.push_back(new CLine({ LINEPOINT{iterInfo.fX - iterInfo.fCX / 2, iterInfo.fY - iterInfo.fCY / 2},
-					LINEPOINT{iterInfo.fX + iterInfo.fCX / 2, iterInfo.fY - iterInfo.fCY / 2} }));
-				m_LineList.back()->Set_LineType(CLine::FLOOR);
-			}
+				m_LineList.push_back(CLineFactory::Create(	LINEPOINT{ iterInfo.fX - iterInfo.fCX / 2, iterInfo.fY - iterInfo.fCY / 2 }, LINEPOINT{ iterInfo.fX + iterInfo.fCX / 2, iterInfo.fY - iterInfo.fCY / 2 }, CLine::FLOOR));
 			if (_y < TILEY - 2 && (*m_pVecTile)[_index]->Get_Option() >= 1 && (*m_pVecTile)[_index + TILEX]->Get_Option() == 0) // 천장
-			{
-				m_LineList.push_back(new CLine({ LINEPOINT{iterInfo.fX - iterInfo.fCX / 2, iterInfo.fY + iterInfo.fCY / 2},
-					LINEPOINT{iterInfo.fX + iterInfo.fCX / 2, iterInfo.fY + iterInfo.fCY / 2} }));
-				m_LineList.back()->Set_LineType(CLine::CEILING);
-			}
+				m_LineList.push_back(CLineFactory::Create(	LINEPOINT{ iterInfo.fX - iterInfo.fCX / 2, iterInfo.fY + iterInfo.fCY / 2 }, LINEPOINT{ iterInfo.fX + iterInfo.fCX / 2, iterInfo.fY + iterInfo.fCY / 2 }, CLine::CEILING));
 		}
 	}
+	MakeEtcLine();	// 맵 상하좌우 끝, 사다리, 발판 함수
+}
+
+void CLineMgr::MakeEtcLine()
+{
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 2 * TILECX, 1 * TILECY }, LINEPOINT{ (TILEX - 2) * TILECX, 1 * TILECY }, CLine::CEILING));							// 천장
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 2 * TILECX, (TILEY - 2) * TILECY }, LINEPOINT{ (TILEX - 2) * TILECX, (TILEY - 2) * TILECY }, CLine::FLOOR));		// 바닥
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 2 * TILECX, 1 * TILECY }, LINEPOINT{ 2 * TILECX, (TILEY - 2) * TILECY }, CLine::LEFTWALL));						// 왼쪽 벽
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ (TILEX - 2) * TILECX, 1 * TILECY }, LINEPOINT{ (TILEX - 2) * TILECX, (TILEY - 2) * TILECY }, CLine::RIGHTWALL));	// 오른쪽 벽
+
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ (17 + 0.5f) * TILECX, 18 * TILECY }, LINEPOINT{ (17 + 0.5f) * TILECX, 15 * TILECY }, CLine::LADDER));				// 사다리
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ (3 + 0.5f) * TILECX, 18 * TILECY }, LINEPOINT{ (3 + 0.5f) * TILECX, 14 * TILECY }, CLine::LADDER));
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ (32 + 0.5f) * TILECX, 23 * TILECY }, LINEPOINT{ (32 + 0.5f) * TILECX, 19 * TILECY }, CLine::LADDER));
+
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 4 * TILECX, 15 * TILECY + 20 }, LINEPOINT{ 5 * TILECX, 15 * TILECY + 10 }, CLine::BOARD));							// 발판
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 5 * TILECX, 15 * TILECY + 20 }, LINEPOINT{ 6 * TILECX, 15 * TILECY + 10 }, CLine::BOARD));
+
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 15 * TILECX, 17 * TILECY + 15 }, LINEPOINT{ 16 * TILECX, 17 * TILECY + 15 }, CLine::BOARD));
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 16 * TILECX, 17 * TILECY + 15 }, LINEPOINT{ 17 * TILECX, 17 * TILECY + 15 }, CLine::BOARD));
+
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 19 * TILECX, 18 * TILECY + 15 }, LINEPOINT{ 20 * TILECX, 18 * TILECY + 15 }, CLine::BOARD));
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 20 * TILECX, 18 * TILECY + 15 }, LINEPOINT{ 21 * TILECX, 18 * TILECY + 15 }, CLine::BOARD));
+
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 25 * TILECX, 12 * TILECY + 25 }, LINEPOINT{ 26 * TILECX, 12 * TILECY + 25 }, CLine::BOARD));
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 26 * TILECX, 12 * TILECY + 25 }, LINEPOINT{ 27 * TILECX, 12 * TILECY + 25 }, CLine::BOARD));
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 27 * TILECX, 12 * TILECY + 25 }, LINEPOINT{ 28 * TILECX, 12 * TILECY + 25 }, CLine::BOARD));
+
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 49 * TILECX, 22 * TILECY + 10 }, LINEPOINT{ 50 * TILECX, 22 * TILECY + 10 }, CLine::BOARD));
+
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 54 * TILECX, 20 * TILECY + 10 }, LINEPOINT{ 55 * TILECX, 20 * TILECY + 10 }, CLine::BOARD));
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 54 * TILECX, 21 * TILECY + 10 }, LINEPOINT{ 55 * TILECX, 21 * TILECY + 10 }, CLine::BOARD));
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 54 * TILECX, 22 * TILECY + 10 }, LINEPOINT{ 55 * TILECX, 22 * TILECY + 10 }, CLine::BOARD));
+
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 58 * TILECX, 21 * TILECY + 10 }, LINEPOINT{ 59 * TILECX, 21 * TILECY + 10 }, CLine::BOARD));
 }
 
 void CLineMgr::Change_idx()

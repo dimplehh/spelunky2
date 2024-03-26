@@ -31,6 +31,7 @@ public:
 	void		Render(HDC hDC);
 	void		Release();
 	void		SetLine();
+	void		MakeEtcLine();
 	void		Change_idx();
 
 public:
