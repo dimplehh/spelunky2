@@ -14,6 +14,9 @@
 #include "Rope.h"
 #include <iostream>
 
+#include "SoundMgr.h"
+
+float g_fVolume(1.f);
 
 CPlayer::CPlayer()
 	: m_fDistance(0.f), m_bJump(false), m_bLadder(false), m_iJumpCount(0), m_iHp(100), m_fPreY(0.f), m_fCurY(0.f), m_bCanHang(false), m_fDiffY(0.f),
@@ -45,6 +48,8 @@ void CPlayer::Initialize()
 	m_pFrameKey = L"Player_BASE";
 
 	m_eRender = RENDER_GAMEOBJECT;
+
+	CSoundMgr::Get_Instance()->PlayBGM(L"Success.wav", g_fVolume);
 }
 
 int CPlayer::Update()

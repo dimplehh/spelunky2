@@ -10,6 +10,7 @@
 #include "BmpMgr.h"
 #include "SceneMgr.h"
 #include "TileMgr.h"
+#include "SoundMgr.h"
 
 CMainGame::CMainGame() : m_iFPS(0), m_dwTime(GetTickCount())
 {
@@ -39,7 +40,7 @@ void CMainGame::Initialize()
 	m_hDC = GetDC(g_hWnd);
 	CKeyMgr::CreateSingleTonInst()->init();
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Ground.bmp", L"Back");
-
+	CSoundMgr::Get_Instance()->Initialize();
 	CSceneMgr::Get_Instance()->Scene_Change(SC_LOGO);
 
 }
@@ -95,6 +96,7 @@ void CMainGame::Release()
 	CLineMgr::Destroy();
 	CSceneMgr::Destroy();
 	CObjMgr::Destroy();
+	CSoundMgr::Destroy_Instance();
 		
 	ReleaseDC(g_hWnd, m_hDC);
 }
