@@ -26,6 +26,7 @@ public:
 	bool		Check_Almost_Fell(float& fX, float& fY, float& fCX, float& fCY);
 	bool		Can_Hang_Line(float fPointX, float fPointY, float& fX, float& fY, float& fCX, float& fCY, bool bJumping);
 	int			Check_Rope_Attach_Ceiling(float& fX, float& fY);
+	void		MakeRopeLine(LINEPOINT _tLPoint, LINEPOINT _tRPoint);
 
 	void		Set_Box_Line(float fX, float fY);
 	list<CLine*>* Get_Box_Line() { return &m_BoxLineList; }
