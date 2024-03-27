@@ -5,7 +5,7 @@
 #include "TileMgr.h"
 #include "Bomb.h"
 
-CBomb::CBomb():m_dwTime(GetTickCount())
+CBomb::CBomb():m_dwTime(GetTickCount()), m_fTime(0.f)
 {
 	m_eMyObjType = OBJECT_TYPE::BOMB;
 }
@@ -17,10 +17,10 @@ CBomb::~CBomb()
 
 void CBomb::Initialize()
 {
-	m_tInfo = { 0, 0, TILECX, TILECY };
-	m_fSpeed = 3.f;								//speed 대신에 second.. 대충 3초 뒤에 터지도록 설계
+	m_tInfo = { 0, 0, TILECX / 2, TILECY / 2 };
 	m_pFrameKey = L"Bomb";
 	m_eRender = RENDER_GAMEOBJECT;
+	m_fPower = 40.f;
 
 	m_pVecTile = CTileMgr::Get_Instance()->Get_VecTile();
 }
@@ -29,6 +29,7 @@ int CBomb::Update()
 {
 	if (m_bDead)
 		return OBJ_DEAD;
+
 
 	if(m_dwTime + 3000 < GetTickCount())
 	{
@@ -43,7 +44,13 @@ int CBomb::Update()
 
 void CBomb::Late_Update()
 {
-	Gravity();
+	if (!Gravity())
+	{
+		CLineMgr::Get_Instance()->Box_Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY);
+		m_tInfo.fX += 6.f;
+		m_tInfo.fY = m_fPreY - m_fPower * m_fTime + ((9.8f * m_fTime * m_fTime) * 0.5f);
+		m_fTime += 0.05f;
+	}
 }
 
 void CBomb::Render(HDC hDC)
@@ -81,12 +88,12 @@ void CBomb::Explosion()  // 폭발 범위 인게임과 똑같이 설정
 
 void CBomb::SetExplodedTile(int index)
 {
-	if (nullptr != (*m_pVecTile)[index])
-	{
-		(*m_pVecTile)[index]->Set_FrameKey(L"Tile");
-		(*m_pVecTile)[index]->Set_Option(0);
-		(*m_pVecTile)[index]->Set_DrawID(0);
-	}
+	if (0 > index || (size_t)index >= (*m_pVecTile).size())
+		return;
+
+	(*m_pVecTile)[index]->Set_FrameKey(L"Tile");
+	(*m_pVecTile)[index]->Set_Option(0);
+	(*m_pVecTile)[index]->Set_DrawID(0);
 }
 
 bool CBomb::Gravity()

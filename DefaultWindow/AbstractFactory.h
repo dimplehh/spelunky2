@@ -5,6 +5,7 @@
 #include "Line.h"
 #include "Box.h"
 #include "Rope.h"
+#include "Bomb.h"
 
 template<typename T>
 class CAbstractFactory
@@ -23,7 +24,8 @@ public:
 		CObj*		pObj = new T;
 		pObj->Initialize();
 		pObj->Set_Pos(_fX, _fY);
-
+		if (pObj->Get_MyObjType() == OBJECT_TYPE::BOMB)
+			dynamic_cast<CBomb*>(pObj)->Set_PreY(_fY);
 		return pObj;
 	}
 

@@ -15,6 +15,9 @@ public:
 	virtual void Release() override;
 
 public:
+	void		Set_PreY(float _fY) { m_fPreY = _fY; }
+
+public:
 	void		Explosion();
 
 private:
@@ -24,7 +27,7 @@ private:
 	float		m_fPower;
 	float		m_fTime;
 
-	float		m_fThrowAngle;	//그냥 Obj m_fAngle 써도 될거같긴함
+	float		m_fPreY = 0;
 
 	DWORD		m_dwTime;
 	int			m_iBombTime;	//	터지는데 걸리는 시간
