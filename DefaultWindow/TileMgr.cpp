@@ -127,6 +127,14 @@ void CTileMgr::Picking_Tile(POINT ptMouse, int iDrawID, int iOption, const TCHAR
 	dynamic_cast<CTile*>(m_vecTile[iIndex])->Set_FrameKey((TCHAR*)pframeKey);
 }
 
+int CTileMgr::Get_Tile_Idx(float _fX, float _fY)
+{
+	int	x = _fX / TILECX;
+	int	y = _fY / TILECY;
+
+	return y * TILEX + x;
+}
+
 void CTileMgr::Save_Tile()
 {
 	HANDLE hFile = CreateFile(L"../Data/Tile.dat",		// 파일 경로(이름을 포함)
