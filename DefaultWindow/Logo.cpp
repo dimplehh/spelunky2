@@ -27,7 +27,7 @@ void CLogo::Late_Update()
 {
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::ENTER) == KEY_STATE::TAP)
 	{
-		CSceneMgr::Get_Instance()->Scene_Change(SC_MENU);
+		CSceneMgr::Get_Instance()->Scene_Change(SC_STAGE);
 		return;
 	}
 }

@@ -60,7 +60,7 @@ bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool
 		for (auto& iter : m_BoxLineList)
 		{
 			if ((iter->Get_LineType() == CLine::FLOOR || iter->Get_LineType() == CLine::BOARD)
-				&& iter->Get_Info().tLPoint.fX <= fX + fCX / 6 && fX - fCX / 6 < iter->Get_Info().tRPoint.fX
+				&& iter->Get_Info().tLPoint.fX <= fX && fX < iter->Get_Info().tRPoint.fX
 				&& fY >= iter->Get_Info().tLPoint.fY - fCY / 2)
 			{
 				m_fY = iter->Get_Info().tLPoint.fY;	
@@ -91,6 +91,34 @@ bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool
 			}
 		}
 	}
+	if (!m_AttachedLine)
+		return false;
+}
+
+bool CLineMgr::Collision_Box_Line(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping)
+{
+	if (m_LineList.empty())							// 맵에 선이 없다면 
+		return false;								// 충돌 x
+
+	m_AttachedLine = nullptr;
+
+	for (auto& iter : m_LineList)
+	{
+		if ((iter->Get_LineType() == CLine::FLOOR || iter->Get_LineType() == CLine::BOARD)
+			&& iter->Get_Info().tLPoint.fX <= fX + fCX / 2 && fX - fCX / 2 < iter->Get_Info().tRPoint.fX
+			&& fY >= iter->Get_Info().tLPoint.fY - fCY / 2)
+		{
+			m_fY = iter->Get_Info().tLPoint.fY;										//플레이어 위치를 변경시켜주는 부분
+
+			if (((fY + (fCY / 6.f)) <= m_fY) && (m_fY <= (fY + (fCY / 2.f))))		// 하단 부분 충돌 범위 지정 전체 사이즈의 1/6 가량
+			{
+				m_AttachedLine = iter;
+				fY = m_fY - (fCY / 2);
+				return true;
+			}
+		}
+	}
+
 	if (!m_AttachedLine)
 		return false;
 }
@@ -189,24 +217,30 @@ bool CLineMgr::Box_Collision_Vertical_Line(float& fX, float& fY, float& fCX, flo
 	for (auto& iter : m_LineList)
 	{
 		if ((iter->Get_Info().tLPoint.fY - fCY / 2 < fY && fY < iter->Get_Info().tRPoint.fY + fCY / 2)
-			&& (iter->Get_Info().tLPoint.fX - 1 <= fX + fCX / 2 && fX + fCX / 2 < iter->Get_Info().tLPoint.fX + 1)
+			&& (iter->Get_Info().tLPoint.fX - 1 <= fX + fCX / 2 && fX + fCX / 2 < iter->Get_Info().tLPoint.fX + 9)
 			&& (iter->Get_LineType() == CLine::LEFTWALL))
 		{
 			m_fX = iter->Get_Info().tLPoint.fX;
 			m_AttachedLine = iter;
-			fX = m_fX - fCX / 2 - 4;
-			CObjMgr::Get_Instance()->Get_Player()->Set_Pos(fX - fCX / 2 - 16, fY);
-			dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetAttachedBox(false);
+			if (CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY == fY)
+			{
+				fX = m_fX - fCX / 2 - 10;
+				CObjMgr::Get_Instance()->Get_Player()->Set_Pos(fX - fCX / 2 - 20, fY);
+			}
+			return true;
 		}
 		else if ((iter->Get_Info().tLPoint.fY - fCY / 2 < fY && fY < iter->Get_Info().tRPoint.fY + fCY / 2)
-			&& (iter->Get_Info().tLPoint.fX - 1 <= fX - fCX / 2 && fX - fCX / 2 < iter->Get_Info().tLPoint.fX + 1)
+			&& (iter->Get_Info().tLPoint.fX - 5 <= fX - fCX / 2 && fX - fCX / 2 < iter->Get_Info().tLPoint.fX + 1)
 			&& (iter->Get_LineType() == CLine::RIGHTWALL))
 		{
 			m_fX = iter->Get_Info().tLPoint.fX;
 			m_AttachedLine = iter;
-			fX = m_fX + fCX / 2 + 4;
-			CObjMgr::Get_Instance()->Get_Player()->Set_Pos(fX + fCX / 2 + 16, fY);
-			dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetAttachedBox(false);
+			if (CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY == fY)
+			{
+				fX = m_fX + fCX / 2 + 10;
+				CObjMgr::Get_Instance()->Get_Player()->Set_Pos(fX + fCX / 2 + 20, fY);
+
+			}
 			return true;
 		}
 	}

@@ -6,8 +6,8 @@ class CPlayer :	public CObj
 {
 public:								//±âÀý	//À§¸¦ º½			// ¾þµå¸²			//±â¾î°¨	//ÀÏ¾î¼¶	//¶³¾îÁü
 	enum STATE { IDLE, WALK, JUMP, DIZZY, DIE, LOOKUP, LOOKFRONT, KNEELDOWN, KNEELSTAY, CRAWL, STANDUP,		FALLING,
-					ATTACKED, ALMOSTFELL, ATTACK, ENTER, EXIT, LADDER, PUSH, HANGON, ST_END };
-							//¶³¾îÁú »·										// ¸Å´Þ¸²
+					ATTACKED, ALMOSTFELL, ATTACK, ENTER, EXIT, LADDER, PUSH, HANGON, THROW, ST_END };
+							//¶³¾îÁú »·										// ¸Å´Þ¸²//´øÁö±â
 public:
 	CPlayer();
 	virtual ~CPlayer();
@@ -22,6 +22,7 @@ public:
 public:
 	void		SetAttachedBox(bool _isAttached) { m_bAttachedBox = _isAttached; }
 	bool		GetAttatchedBox() { return m_bAttachedBox; }
+	STATE		GetState() { return m_eCurState; }
 
 private:
 	void		SetRenderImage(HDC hDC);

@@ -19,7 +19,7 @@ public:
 	void	SetBoxLine(CLine* boxLine) { m_boxLine = boxLine; };
 
 private:
-	void		Gravity();
+	bool		Gravity();
 
 	float				m_fPower;
 	float				m_fTime;

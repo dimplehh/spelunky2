@@ -35,9 +35,10 @@ int CBox::Update()
 
 void CBox::Late_Update()
 {
-	Gravity();
-	m_boxLine->Set_Info(LINE(LINEPOINT{ m_tInfo.fX - TILECX * 0.5f + 15.f , m_tInfo.fY - TILECY * 0.5f - 0.01f }, LINEPOINT{ m_tInfo.fX + TILECX * 0.5f - 15.f, m_tInfo.fY - TILECY * 0.5f - 0.01f }));
-	CLineMgr::Get_Instance()->Box_Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY);
+	if(Gravity() == true)
+		CLineMgr::Get_Instance()->Box_Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY);
+
+	m_boxLine->Set_Info(LINE(LINEPOINT{ m_tInfo.fX - TILECX * 0.5f + 1.f , m_tInfo.fY - TILECY * 0.5f - 0.01f }, LINEPOINT{ m_tInfo.fX + TILECX * 0.5f - 1.f, m_tInfo.fY - TILECY * 0.5f - 0.01f }));
 }
 
 void CBox::Render(HDC hDC)
@@ -46,16 +47,16 @@ void CBox::Render(HDC hDC)
 	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
 	HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
 	GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, (int)m_tInfo.fCX, (int)m_tInfo.fCY,
-		hMemDC, 0, 0, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(255, 255, 255));
+		hMemDC, 0, 0, TILECX, TILECY, RGB(255, 255, 255));
 }
 
 void CBox::Release()
 {
 }
 
-void CBox::Gravity()
+bool CBox::Gravity()
 {
-	if (!CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, false))
+	if (!CLineMgr::Get_Instance()->Collision_Box_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, false))
 	{						//if 플레이어가 충돌상태가 아니라면 + (점프상태가 아니라면)
 		m_fTime += 0.2f;
 
@@ -68,10 +69,11 @@ void CBox::Gravity()
 			fGravity = 5.f;
 
 		m_tInfo.fY -= fGravity;	// y 값은 중력값만큼 변환
+		return false;
 	}
 	else	// 플레이어가 충돌 중인경우
 	{
 		m_fPower = 0.f;			// 점프력 초기화
-		return;
+		return true;
 	}
 }

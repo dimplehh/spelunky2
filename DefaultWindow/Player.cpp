@@ -254,7 +254,7 @@ void CPlayer::FallDamage()
 	}
 	else if (m_fDiffY >= TILECY * 4)
 	{
-		m_iHp -= 10;
+		//m_iHp -= 10;
 		m_eCurState = DIZZY;
 	}
 }
@@ -406,6 +406,7 @@ void CPlayer::Motion_Change()
 		case CPlayer::LADDER:		Set_Frame(0, 5, 6, true, 60 , 0, 15);		break;
 		case CPlayer::PUSH:			Set_Frame(6, 11, 6, true, 60, 0, 15);		break;	// 상자가 덜덜거리지 않는 구간 - offset에 변화가 없는 구간, 차후 수정 필요
 		case CPlayer::HANGON:		Set_Frame(8, 11, 3, true, 100, 0, 15);		break;
+		case CPlayer::THROW:		Set_Frame(6, 10, 4, false, 80, 1, 15);		break;
 		}
 		m_ePreState = m_eCurState;
 	}
@@ -426,11 +427,11 @@ void CPlayer::Key_Input()
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::A) == KEY_STATE::TAP) { m_iHp -= 10;		m_eCurState = ATTACKED; }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::HOLD) { m_eCurState = ENTER; }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::AWAY) { m_eCurState = EXIT; }
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::C) == KEY_STATE::TAP) { m_eCurState = THROW; }
 	else if ((m_tFrame.bRoop == true && m_bLadder == false || ((m_tFrame.bRoop == false) && Check_Move_End() == true))&& m_bCanHang == false)
 	{
 		m_eCurState = IDLE;
 		m_bKneelDown = false;
-		//if()
 		m_bAttachedBox = false;
 	}
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::X) == KEY_STATE::TAP) { m_eCurState = ATTACK; }
