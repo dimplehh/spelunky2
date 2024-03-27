@@ -217,7 +217,7 @@ bool CLineMgr::Box_Collision_Vertical_Line(float& fX, float& fY, float& fCX, flo
 	for (auto& iter : m_LineList)
 	{
 		if ((iter->Get_Info().tLPoint.fY - fCY / 2 < fY && fY < iter->Get_Info().tRPoint.fY + fCY / 2)
-			&& (iter->Get_Info().tLPoint.fX - 1 <= fX + fCX / 2 && fX + fCX / 2 < iter->Get_Info().tLPoint.fX + 9)
+			&& (iter->Get_Info().tLPoint.fX - 1 <= fX + fCX / 2 && fX + fCX / 2 < iter->Get_Info().tLPoint.fX + 5)
 			&& (iter->Get_LineType() == CLine::LEFTWALL))
 		{
 			m_fX = iter->Get_Info().tLPoint.fX;
@@ -225,7 +225,7 @@ bool CLineMgr::Box_Collision_Vertical_Line(float& fX, float& fY, float& fCX, flo
 			if (CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY == fY)
 			{
 				fX = m_fX - fCX / 2 - 10;
-				CObjMgr::Get_Instance()->Get_Player()->Set_Pos(fX - fCX / 2 - 20, fY);
+				CObjMgr::Get_Instance()->Get_Player()->Set_Pos(fX - fCX / 2 - 11, fY);
 			}
 			return true;
 		}
@@ -238,7 +238,7 @@ bool CLineMgr::Box_Collision_Vertical_Line(float& fX, float& fY, float& fCX, flo
 			if (CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY == fY)
 			{
 				fX = m_fX + fCX / 2 + 10;
-				CObjMgr::Get_Instance()->Get_Player()->Set_Pos(fX + fCX / 2 + 20, fY);
+				CObjMgr::Get_Instance()->Get_Player()->Set_Pos(fX + fCX / 2 + 11, fY);
 
 			}
 			return true;
