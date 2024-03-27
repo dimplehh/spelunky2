@@ -50,7 +50,7 @@ void CBomb::Late_Update()
 	{
 		CLineMgr::Get_Instance()->Box_Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY);
 		if (dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetFlip() == true)
-			m_tInfo.fX -= 6.f;
+			m_tInfo.fX -= 6.f; 
 		else
 			m_tInfo.fX += 6.f;
 		
