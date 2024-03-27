@@ -24,6 +24,7 @@ public:
 	bool		GetAttatchedBox() { return m_bAttachedBox; }
 	STATE		GetState() { return m_eCurState; }
 	bool		GetFlip() { return m_bFlip; }
+	bool		GetKneelDown() { return m_bKneelDown; }
 
 private:
 	void		SetRenderImage(HDC hDC);

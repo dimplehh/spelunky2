@@ -24,6 +24,7 @@ void CBomb::Initialize()
 	m_eRender = RENDER_GAMEOBJECT;
 	m_fPower = 40.f;
 	m_bFlip = dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetFlip();
+	m_bKneelDown = dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetKneelDown();
 	m_pVecTile = CTileMgr::Get_Instance()->Get_VecTile();
 }
 
@@ -49,10 +50,23 @@ void CBomb::Late_Update()
 	if (!Gravity())
 	{
 		CLineMgr::Get_Instance()->Box_Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY);
-		if (m_bFlip)
-			m_tInfo.fX -= 6.f; 
+
+		if (m_bKneelDown == false)
+		{
+			m_fPower = 40.f;
+			if (m_bFlip)
+				m_tInfo.fX -= 6.f;
+			else
+				m_tInfo.fX += 6.f;
+		}
 		else
-			m_tInfo.fX += 6.f;
+		{
+			m_fPower = 5.f;
+			if (m_bFlip)
+				m_tInfo.fX -= 7.f;
+			else
+				m_tInfo.fX += 7.f;
+		}
 		
 		
 		m_tInfo.fY = m_fPreY - m_fPower * m_fTime + ((9.8f * m_fTime * m_fTime) * 0.5f);

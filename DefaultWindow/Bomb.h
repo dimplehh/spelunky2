@@ -29,6 +29,8 @@ private:
 
 	float		m_fPreY = 0;
 
+	bool		m_bKneelDown = false;
+
 	DWORD		m_dwTime;
 	int			m_iBombTime;	//	터지는데 걸리는 시간
 
