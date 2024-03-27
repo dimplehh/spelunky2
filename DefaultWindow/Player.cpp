@@ -16,7 +16,7 @@
 
 #include "SoundMgr.h"
 
-float g_fVolume(0.5f);
+float g_fVolume(0.25f);
 
 CPlayer::CPlayer()
 	: m_fDistance(0.f), m_bJump(false), m_bLadder(false), m_iJumpCount(0), m_iHp(100), m_fPreY(0.f), m_fCurY(0.f), m_bCanHang(false), m_fDiffY(0.f),

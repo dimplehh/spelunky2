@@ -318,23 +318,29 @@ bool CLineMgr::Can_Hang_Line(float fPointX, float fPointY, float& fX, float& fY,
 
 int CLineMgr::Check_Rope_Attach_Ceiling(float& fX, float& fY)
 {
+	int CeilingY(0);
 	if (m_LineList.empty())
 		return 0;
 
 	m_AttachedLine = nullptr;
 	for (auto& iter : m_LineList)
 	{
-		if ( iter->Get_Info().tLPoint.fX <= fX && fX <= iter->Get_Info().tRPoint.fX
-			&& iter->Get_Info().tLPoint.fY < fY - TILECX
+		if (iter->Get_Info().tLPoint.fX <= fX && fX <= iter->Get_Info().tRPoint.fX
+			&& iter->Get_Info().tLPoint.fY < fY
 			&& iter->Get_LineType() == CLine::CEILING)
 		{
 			m_AttachedLine = iter;
-				return (fY - iter->Get_Info().tLPoint.fY - TILECY * 0.5f);
+			if (iter->Get_Info().tLPoint.fY > CeilingY)
+				CeilingY = iter->Get_Info().tLPoint.fY;
 		}
 	}
+
 	if (!m_AttachedLine)
 		return 0;
+
+	return (fY - CeilingY - TILECY * 0.5f);
 }
+
 
 //줄타기 전용 선 판단 함수
 bool CLineMgr::Ladder_Line(float& fX, float& fY, float& fCX, float& fCY)
