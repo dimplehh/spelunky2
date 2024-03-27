@@ -32,6 +32,9 @@ public:
 	}
 
 public:
+	SCENEID			Get_Scene() { return m_eCurScene; }
+
+public:
 	void			Scene_Change(SCENEID eID);
 	void			Update();
 	void			Late_Update();

@@ -15,7 +15,14 @@ CLogo::~CLogo()
 
 void CLogo::Initialize()
 {
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Logo/Logo.bmp", L"Logo");
+	//CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Logo/Logo.bmp", L"Logo");
+	m_hVideo = MCIWndCreate(g_hWnd,
+							nullptr,
+							WS_CHILD | WS_VISIBLE | MCIWNDF_NOPLAYBAR,
+							L"../Video/Wildlife.wmv");
+	MoveWindow(m_hVideo, 0, 0, WINCX, WINCY, FALSE);
+
+	MCIWndPlay(m_hVideo);
 }
 
 int CLogo::Update()
@@ -42,4 +49,5 @@ void CLogo::Render(HDC hDC)
 
 void CLogo::Release()
 {
+	MCIWndClose(m_hVideo);
 }

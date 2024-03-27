@@ -70,6 +70,9 @@ void CMainGame::Render()
 		m_iFPS = 0;
 		m_dwTime = GetTickCount();
 	}
+
+	if (SC_LOGO == CSceneMgr::Get_Instance()->Get_Scene())
+		return;
 	
 	HDC	hBackDC = CBmpMgr::Get_Instance()->Find_Image(L"Back");
 
