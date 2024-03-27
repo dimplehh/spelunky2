@@ -11,6 +11,7 @@
 #include "ScrollMgr.h"
 #include "BmpMgr.h"
 #include "Define.h"
+#include "Rope.h"
 #include <iostream>
 
 
@@ -275,7 +276,7 @@ void CPlayer::AlmostFell()
 
 void CPlayer::InLadder()
 {
-	if (CLineMgr::Get_Instance()->Ladder_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY)) //이거는 여러개중에서 for문돌려서 찾을필요 없을듯
+	if (CLineMgr::Get_Instance()->Ladder_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
 	{
 		m_iJumpCount = 0;
 		m_bLadder = true;
@@ -423,11 +424,12 @@ void CPlayer::Key_Input()
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::UP) == KEY_STATE::AWAY) { if (!m_bLadder)		m_eCurState = LOOKFRONT; }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::TAP) { if (!m_bLadder) { m_eCurState = KNEELDOWN;	m_bKneelDown = true; } }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::HOLD) { HoldDown(); }
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::AWAY) { if (!m_bLadder) { m_eCurState = STANDUP;		m_bKneelDown = false; } }
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::AWAY) { if (!m_bLadder) { m_eCurState = STANDUP;	m_bKneelDown = false; } }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::A) == KEY_STATE::TAP) { m_iHp -= 10;		m_eCurState = ATTACKED; }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::HOLD) { m_eCurState = ENTER; }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::AWAY) { m_eCurState = EXIT; }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::C) == KEY_STATE::TAP) { m_eCurState = THROW; }
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::D) == KEY_STATE::TAP) { CObjMgr::Get_Instance()->Add_Object(OBJ_ROPE, CRopeFactory::Create(m_tInfo.fX, m_tInfo.fY)); } 
 	else if ((m_tFrame.bRoop == true && m_bLadder == false || ((m_tFrame.bRoop == false) && Check_Move_End() == true))&& m_bCanHang == false)
 	{
 		m_eCurState = IDLE;

@@ -4,6 +4,7 @@
 #include "LineMgr.h"
 #include "Line.h"
 #include "Box.h"
+#include "Rope.h"
 
 template<typename T>
 class CAbstractFactory
@@ -64,6 +65,19 @@ public:
 
 		CLineMgr::Get_Instance()->Set_Box_Line(_fX, _fY);
 		pObj->SetBoxLine(CLineMgr::Get_Instance()->Get_Box_Line()->back());
+		return pObj;
+	}
+};
+
+class CRopeFactory
+{
+public:
+	static CRope* Create(float _fX, float _fY)
+	{
+		CRope* pObj = new CRope;
+		pObj->Initialize();
+		int height = CLineMgr::Get_Instance()->Check_Rope_Attach_Ceiling(_fX, _fY);	//천장위치 체킹
+		pObj->Set_Pos(_fX, _fY - height);
 		return pObj;
 	}
 };
