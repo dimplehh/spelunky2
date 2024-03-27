@@ -5,7 +5,7 @@
 #include "TileMgr.h"
 #include "Bomb.h"
 
-CBomb::CBomb()
+CBomb::CBomb():m_dwTime(GetTickCount())
 {
 	m_eMyObjType = OBJECT_TYPE::BOMB;
 }
@@ -29,6 +29,11 @@ int CBomb::Update()
 {
 	if (m_bDead)
 		return OBJ_DEAD;
+
+	if(m_dwTime + 3000 < GetTickCount())
+	{
+		Explosion();
+	}
 
 
 	__super::Update_Rect();

@@ -26,6 +26,7 @@ private:
 
 	float		m_fThrowAngle;	//그냥 Obj m_fAngle 써도 될거같긴함
 
+	DWORD		m_dwTime;
 	int			m_iBombTime;	//	터지는데 걸리는 시간
 
 	vector<CTile*>* m_pVecTile;
