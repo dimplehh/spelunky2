@@ -18,6 +18,7 @@ public:
 	void		Explosion();
 
 private:
+	void		SetExplodedTile(int index);
 	bool		Gravity();
 
 	float		m_fPower;

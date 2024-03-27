@@ -53,25 +53,35 @@ void CBomb::Render(HDC hDC)
 	//	hMemDC, 0, 0, TILECX, TILECY, RGB(255, 255, 255));
 }
 
-void CBomb::Explosion()  //터지는	범위 인게임과 똑같이 설정하기
+void CBomb::Explosion()  // 폭발 범위 인게임과 똑같이 설정
 {
 	int index = CTileMgr::Get_Instance()->Get_Tile_Idx(m_tInfo.fX, m_tInfo.fY);
 
-	(*m_pVecTile)[index - 2]->Set_Option(0);
-	(*m_pVecTile)[index - 2]->Set_DrawID(0);
-	(*m_pVecTile)[index - 1]->Set_Option(0);
-	(*m_pVecTile)[index - 1]->Set_DrawID(0);
-	(*m_pVecTile)[index]->Set_Option(0);
-	(*m_pVecTile)[index]->Set_DrawID(0);
-	(*m_pVecTile)[index + 1]->Set_Option(0);
-	(*m_pVecTile)[index + 1]->Set_DrawID(0);
-	(*m_pVecTile)[index + 2]->Set_Option(0);
-	(*m_pVecTile)[index + 2]->Set_DrawID(0);
+	for (int _add = -1; _add <= 1; _add++)
+	{
+		SetExplodedTile(index + _add - TILEX * 2);
+		SetExplodedTile(index + _add + TILEX);
+	}
+	for (int _add = -2; _add <= 2; _add++)
+	{
+		SetExplodedTile(index + _add - TILEX);
+		SetExplodedTile(index + _add);
+	}
 
 	CLineMgr::Get_Instance()->Release();
 	CLineMgr::Get_Instance()->SetLine(); //라인 재세팅
 
 	m_bDead = true;
+}
+
+void CBomb::SetExplodedTile(int index)
+{
+	if (nullptr != (*m_pVecTile)[index])
+	{
+		(*m_pVecTile)[index]->Set_FrameKey(L"Tile");
+		(*m_pVecTile)[index]->Set_Option(0);
+		(*m_pVecTile)[index]->Set_DrawID(0);
+	}
 }
 
 bool CBomb::Gravity()
