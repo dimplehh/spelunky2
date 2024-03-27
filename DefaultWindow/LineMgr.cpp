@@ -329,9 +329,9 @@ int CLineMgr::Check_Rope_Attach_Ceiling(float& fX, float& fY)
 			&& iter->Get_LineType() == CLine::CEILING)
 		{
 			m_AttachedLine = iter;
-			if (fY - iter->Get_Info().tLPoint.fY >= TILECY * (6.5f))
-				return TILECY * 6.5f;
-			else
+			//if (fY - iter->Get_Info().tLPoint.fY >= TILECY * (6.5f))
+			//	return TILECY * 6.5f;
+			//else
 				return (fY - iter->Get_Info().tLPoint.fY - TILECY * 0.5f);
 		}
 	}

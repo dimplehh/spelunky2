@@ -78,6 +78,7 @@ public:
 		pObj->Initialize();
 		int height = CLineMgr::Get_Instance()->Check_Rope_Attach_Ceiling(_fX, _fY);	//천장위치 체킹
 		pObj->Set_Pos(_fX, _fY - height);
+		dynamic_cast<CRope*>(pObj)->SetRopeSize(height / TILECY);
 		return pObj;
 	}
 };

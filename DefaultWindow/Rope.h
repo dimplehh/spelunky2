@@ -13,5 +13,12 @@ public:
 	virtual void Late_Update() override;
 	virtual void Render(HDC hDC) override;
 	virtual void Release() override;
+
+public:
+	void	SetRopeSize(int _ropeSize) { m_iRopeSize = _ropeSize; }
+	int		GetRopeSize() { return m_iRopeSize; }
+
+private:
+	int		m_iRopeSize = 0;
 };
 

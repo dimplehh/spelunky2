@@ -46,8 +46,9 @@ void CRope::Render(HDC hDC)
 {
 	int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
 	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
-
-	Rectangle(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, m_tRect.right + iScrollX, m_tRect.bottom + iScrollY);
+	
+	for(int i = 0; i <= m_iRopeSize; i++)
+		Rectangle(hDC, m_tRect.left + iScrollX, m_tRect.top + TILECY * i + iScrollY, m_tRect.right + iScrollX, m_tRect.bottom + TILECY * i + iScrollY);
 
 	//HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
 	//GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, (int)m_tInfo.fCX, (int)m_tInfo.fCY,
