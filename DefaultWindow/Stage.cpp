@@ -9,6 +9,7 @@
 #include "Monster.h"
 #include "LineMgr.h"
 #include "Box.h"
+#include "UIIcon.h"
 
 CStage::CStage()
 {
@@ -25,10 +26,15 @@ void CStage::Initialize()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Ground.bmp", L"Ground");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette.bmp", L"Tile");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette2.bmp", L"Tile2");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/UIIcon.bmp", L"UIIcon");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Box.bmp", L"Box");
 	//CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Rope.bmp", L"Rope");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/Monster.bmp", L"Monster");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/DecoLand.bmp", L"DecoLand");
+
+	CObj* pObj = CAbstractFactory<CUIIcon>::Create(50.f, 50.f);
+	dynamic_cast<CUIIcon*>(pObj)->Set_FrameKey(L"UIIcon");
+	CObjMgr::Get_Instance()->Add_Object(OBJ_UI, pObj);
 
 	CObjMgr::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CPlayer>::Create());
 
@@ -46,7 +52,6 @@ int CStage::Update()
 {
 	CTileMgr::Get_Instance()->Update();
 	CObjMgr::Get_Instance()->Update();
-
 	return 0;
 }
 
@@ -66,11 +71,11 @@ void CStage::Render(HDC hDC)
 	BitBlt(hDC, iScrollX, iScrollY, TILECX * TILEX, TILECY * TILEY, hGroundDC, 0, 0, SRCCOPY);
 
 	CTileMgr::Get_Instance()->Render(hDC);
-	CObjMgr::Get_Instance()->Render(hDC);
-
 	CLineMgr::Get_Instance()->Render(hDC);
+	CObjMgr::Get_Instance()->Render(hDC);
 }
 
 void CStage::Release()
 {
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_UI);
 }
