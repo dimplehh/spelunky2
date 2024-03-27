@@ -3,6 +3,8 @@
 #include "ScrollMgr.h"
 #include "LineMgr.h"
 #include "TileMgr.h"
+#include "ObjMgr.h"
+#include "Player.h"
 #include "Bomb.h"
 
 CBomb::CBomb():m_dwTime(GetTickCount()), m_fTime(0.f)
@@ -47,7 +49,12 @@ void CBomb::Late_Update()
 	if (!Gravity())
 	{
 		CLineMgr::Get_Instance()->Box_Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY);
-		m_tInfo.fX += 6.f;
+		if (dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetFlip() == true)
+			m_tInfo.fX -= 6.f;
+		else
+			m_tInfo.fX += 6.f;
+		
+		
 		m_tInfo.fY = m_fPreY - m_fPower * m_fTime + ((9.8f * m_fTime * m_fTime) * 0.5f);
 		m_fTime += 0.05f;
 	}

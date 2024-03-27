@@ -23,6 +23,7 @@ public:
 	void		SetAttachedBox(bool _isAttached) { m_bAttachedBox = _isAttached; }
 	bool		GetAttatchedBox() { return m_bAttachedBox; }
 	STATE		GetState() { return m_eCurState; }
+	bool		GetFlip() { return m_bFlip; }
 
 private:
 	void		SetRenderImage(HDC hDC);
