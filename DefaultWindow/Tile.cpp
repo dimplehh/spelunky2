@@ -20,6 +20,7 @@ void CTile::Initialize()
 	m_tInfo.fCY = TILECY;
 
 	m_pFrameKey = L"Tile";
+	m_eRender = RENDER_TILE;
 }
 
 int CTile::Update()

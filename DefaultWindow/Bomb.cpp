@@ -19,7 +19,7 @@ CBomb::~CBomb()
 
 void CBomb::Initialize()
 {
-	m_tInfo = { 0, 0, TILECX / 2, TILECY / 2 };
+	m_tInfo = { 0, 0, 48.f, 48.f };
 	m_pFrameKey = L"Bomb";
 	m_eRender = RENDER_GAMEOBJECT;
 	m_fPower = 40.f;
@@ -79,11 +79,11 @@ void CBomb::Render(HDC hDC)
 	int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
 	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
 
-	Rectangle(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, m_tRect.right + iScrollX, m_tRect.bottom + iScrollY);
+	/*Rectangle(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, m_tRect.right + iScrollX, m_tRect.bottom + iScrollY);*/
 
-	//HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
-	//GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, (int)m_tInfo.fCX, (int)m_tInfo.fCY,
-	//	hMemDC, 0, 0, TILECX, TILECY, RGB(255, 255, 255));
+	HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
+	GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, (int)m_tInfo.fCX, (int)m_tInfo.fCY,
+		hMemDC, 0, 0, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(255, 0, 255));
 }
 
 void CBomb::Explosion()  // 폭발 범위 인게임과 똑같이 설정
