@@ -18,14 +18,9 @@ CLogo::~CLogo()
 
 void CLogo::Initialize()
 {
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Logo/Logo.bmp", L"Logo");
-	//m_hVideo = MCIWndCreate(g_hWnd,
-	//						nullptr,
-	//						WS_CHILD | WS_VISIBLE | MCIWNDF_NOPLAYBAR,
-	//						L"../Video/Title.wmv");
-	//MoveWindow(m_hVideo, 0, 0, WINCX, WINCY, FALSE);
-
-	//MCIWndPlay(m_hVideo);
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Logo/Title.bmp", L"Logo");
+	m_tFrame = { 0, 5, 0, 5, true, 80, GetTickCount(), 0 };
+	m_pFrameKey = L"Logo";
 	CSoundMgr::Get_Instance()->PlayBGM(L"Menu.wav", g_fVolume);
 }
 
@@ -36,8 +31,9 @@ int CLogo::Update()
 
 void CLogo::Late_Update()
 {
-	//if (MCIWndGetLength(m_hVideo) <= MCIWndGetPosition(m_hVideo))
-	//	MCIWndPlay(m_hVideo);
+
+	Move_Frame();
+
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::ENTER) == KEY_STATE::TAP)
 	{
 		CSoundMgr::Get_Instance()->StopSound(SOUND_BGM);
@@ -50,11 +46,23 @@ void CLogo::Late_Update()
 void CLogo::Render(HDC hDC)
 {
 	HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"Logo");
-
-	BitBlt(hDC, 0, 0, WINCX, WINCY, hMemDC, 0, 0, SRCCOPY);
+	BitBlt(hDC, 0, 0, WINCX, WINCY, hMemDC, m_tFrame.iFrameStart * WINCX, 0, SRCCOPY);
 }
 
 void CLogo::Release()
 {
 	//MCIWndClose(m_hVideo);
+}
+
+void CLogo::Move_Frame()
+{
+	if (m_tFrame.dwTime + m_tFrame.dwSpeed < GetTickCount())
+	{
+		m_tFrame.dwTime = GetTickCount();
+		++m_tFrame.iFrameStart;
+		if (m_tFrame.iFrameStart >= m_tFrame.iFrameEnd)
+		{
+			m_tFrame.iFrameStart = 0;
+		}
+	}
 }

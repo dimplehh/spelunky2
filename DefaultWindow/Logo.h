@@ -13,7 +13,12 @@ public:
 	virtual void Render(HDC hDC) override;
 	virtual void Release()		 override;
 
+	void		Move_Frame();
+
 private:
 	HWND	m_hVideo;
+
+	const TCHAR* m_pFrameKey = L"";
+	FRAME		m_tFrame;
 };
 
