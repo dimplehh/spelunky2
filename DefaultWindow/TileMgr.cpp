@@ -64,44 +64,36 @@ void CTileMgr::Render(HDC hDC)	//ÄÃ¸µ
 				continue;
 
 			m_vecTile[iIndex]->Render(hDC);
+
+			SetDecoLand(hDC, iScrollX, iScrollY, i, j, iIndex);			// ²Ù¹Ì´Â ¶¥µµ culling Àû¿ë
 		}
 	}
-
-	SetDecoLand(hDC, iScrollX, iScrollY);
 }
 
-void CTileMgr::SetDecoLand(HDC hDC, int _iScrollX, int _iScrollY)
+void CTileMgr::SetDecoLand(HDC hDC, int iScrollX, int iScrollY, int i, int j, int iIndex)
 {
-	HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"DecoLand");
-
 	LINE	tInfo{};
 	INFO	iterInfo{};
 
-	for (int _index = 0; _index < m_vecTile.size(); _index++)
-	{
-		int _y = _index / TILEX;
-		int _x = _index % TILEX;
-		iterInfo = m_vecTile[_index]->Get_Info();
+	iterInfo = m_vecTile[iIndex]->Get_Info();
 
-		if (!m_vecTile.empty())
-		{
-			if (2 < _x && m_vecTile[_index]->Get_Option() == 1 && m_vecTile[_index - 1]->Get_Option() == 0) //¿ÞÂÊ º®
-			{
-				GdiTransparentBlt(hDC, iterInfo.fX - iterInfo.fCX / 2 - 32 + _iScrollX, iterInfo.fY + _iScrollY - 32, 64, 64, hMemDC, 0, 0, 64, 64, RGB(58, 58, 58));
-			}
-			if (_x < TILEX - 1 && m_vecTile[_index]->Get_Option() == 1 && m_vecTile[_index + 1]->Get_Option() == 0) //¿À¸¥ÂÊ º®
-			{
-				GdiTransparentBlt(hDC, iterInfo.fX + iterInfo.fCX / 2 - 32 + _iScrollX, iterInfo.fY + _iScrollY - 32, 64, 64, hMemDC, 64, 0, 64, 64, RGB(58, 58, 58));
-			}
-			if (1 < _y && m_vecTile[_index]->Get_Option() == 1 && m_vecTile[_index - TILEX]->Get_Option() == 0) //¹â´Â ¶¥
-			{
-				GdiTransparentBlt(hDC, iterInfo.fX - 32 + _iScrollX, iterInfo.fY - iterInfo.fCY / 2 - 32 + _iScrollY, 64, 64, hMemDC, 128, 0, 64, 64, RGB(58, 58, 58));
-			}
-			if (_y < TILEY - 2 && m_vecTile[_index]->Get_Option() == 1 && m_vecTile[_index + TILEX]->Get_Option() == 0) // ¾Æ·¡¶¥
-			{
-				GdiTransparentBlt(hDC, iterInfo.fX - 32 + _iScrollX, iterInfo.fY + iterInfo.fCY / 2 - 32 + _iScrollY, 64, 64, hMemDC, 192, 0, 64, 64, RGB(58, 58, 58));
-			}
-		}
+	HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"DecoLand");
+
+	if (2 < j && m_vecTile[iIndex]->Get_Option() == 1 && m_vecTile[iIndex - 1]->Get_Option() == 0) //¿ÞÂÊ º®
+	{
+		GdiTransparentBlt(hDC, iterInfo.fX - iterInfo.fCX / 2 - 32 + iScrollX, iterInfo.fY + iScrollY - 32, TILECX, TILECY, hMemDC, 0, 0, TILECX, TILECY, RGB(58, 58, 58));
+	}
+	if (j < TILEX - 1 && m_vecTile[iIndex]->Get_Option() == 1 && m_vecTile[iIndex + 1]->Get_Option() == 0) //¿À¸¥ÂÊ º®
+	{
+		GdiTransparentBlt(hDC, iterInfo.fX + iterInfo.fCX / 2 - 32 + iScrollX, iterInfo.fY + iScrollY - 32, TILECX, TILECY, hMemDC, 64, 0, TILECX, TILECY, RGB(58, 58, 58));
+	}
+	if (1 < i && m_vecTile[iIndex]->Get_Option() == 1 && m_vecTile[iIndex - TILEX]->Get_Option() == 0) //¹â´Â ¶¥
+	{
+		GdiTransparentBlt(hDC, iterInfo.fX - 32 + iScrollX, iterInfo.fY - iterInfo.fCY / 2 - 32 + iScrollY, TILECX, TILECY, hMemDC, 128, 0, TILECX, TILECY, RGB(58, 58, 58));
+	}
+	if (i < TILEY - 2 && m_vecTile[iIndex]->Get_Option() == 1 && m_vecTile[iIndex + TILEX]->Get_Option() == 0) // ¾Æ·¡¶¥
+	{
+		GdiTransparentBlt(hDC, iterInfo.fX - 32 + iScrollX, iterInfo.fY + iterInfo.fCY / 2 - 32 + iScrollY, TILECX, TILECY, hMemDC, 192, 0, TILECX, TILECY, RGB(58, 58, 58));
 	}
 }
 

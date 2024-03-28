@@ -19,7 +19,7 @@ public:
 	void			Picking_Tile(POINT ptMouse, int iDrawID, int iOption, const TCHAR* pframeKey);
 	int				Get_Tile_Idx(float _fX, float _fY);
 	vector<CTile*>* Get_VecTile() { return &m_vecTile; };
-	void			SetDecoLand(HDC hDC, int _iScrollX, int _iScroll);
+	void			SetDecoLand(HDC hDC, int iScrollX, int iScrollY, int i, int j, int iIndex);
 
 	void		Save_Tile();
 	void		Load_Tile();
