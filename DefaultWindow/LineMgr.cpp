@@ -45,7 +45,8 @@ void CLineMgr::Render(HDC hDC)
 
 void CLineMgr::Set_Box_Line(float fX, float fY)
 {
-	m_BoxLineList.push_back(CLineFactory::Create(LINEPOINT{ fX - TILECX * 0.5f , fY}, LINEPOINT{ fX + TILECX * 0.5f, fY}, CLine::FLOOR));
+	m_BoxLineList.push_back(CLineFactory::Create(	LINEPOINT{ fX - TILECX * 0.6f , fY - TILECY * 0.5f - 0.01f },  
+		LINEPOINT{ fX + TILECX * 0.6f, fY - TILECY * 0.5f - 0.01f }, CLine::FLOOR));								//이거 박스에서 업데이트해줄때 값을 완전 똑같이 넣어줘야함
 }
 
 bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping) //바닥충돌 - 상향점프까지
@@ -222,26 +223,25 @@ bool CLineMgr::Box_Collision_Vertical_Line(float& fX, float& fY, float& fCX, flo
 		{
 			m_fX = iter->Get_Info().tLPoint.fX;
 			m_AttachedLine = iter;
-			if (fY - fCY < CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY && CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY < fY + fCY
+			if (fY - fCY <= CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY && CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY <= fY + fCY
 				&& CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX < fX - fCX / 2 - 1)
 			{
 				fX = m_fX - fCX / 2 - 1;
-				CObjMgr::Get_Instance()->Get_Player()->Set_Pos(fX - fCX / 2 - 17, fY);
+				CObjMgr::Get_Instance()->Get_Player()->Set_RealPosX(fX - fCX / 2 - 17);
 			}
 			return true;
 		}
-		else if ((iter->Get_Info().tLPoint.fY - fCY / 2 < fY && fY < iter->Get_Info().tRPoint.fY + fCY / 2)
-			&& (iter->Get_Info().tLPoint.fX - 5 <= fX - fCX / 2 && fX - fCX / 2 < iter->Get_Info().tLPoint.fX + 1)
+		else if ((iter->Get_Info().tLPoint.fY - fCY / 2 - 5 <= fY && fY <= iter->Get_Info().tRPoint.fY + fCY / 2 + 5)
+			&& (iter->Get_Info().tLPoint.fX - 10 <= fX - fCX / 2 && fX - fCX / 2 < iter->Get_Info().tLPoint.fX + 1)
+			&&(fY - fCY * 3 <= CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY && CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY <= fY + fCY * 3)
+			&& fX + fCX / 2 + 1 < CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX
 			&& (iter->Get_LineType() == CLine::RIGHTWALL))
 		{
 			m_fX = iter->Get_Info().tLPoint.fX;
 			m_AttachedLine = iter;
-			if (CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY == fY && fX + fCX / 2 + 1 < CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX )
-			{
-				fX = m_fX + fCX / 2 + 1;
-				CObjMgr::Get_Instance()->Get_Player()->Set_Pos(fX + fCX / 2 + 17, fY);
+			fX = m_fX + fCX / 2 + 1;
+			CObjMgr::Get_Instance()->Get_Player()->Set_RealPosX(fX + fCX / 2 + 17);
 
-			}
 			return true;
 		}
 	}

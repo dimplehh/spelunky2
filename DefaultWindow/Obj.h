@@ -14,6 +14,8 @@ public:
 		m_tInfo.fX = _fX;
 		m_tInfo.fY = _fY;
 	}
+	void			Set_RealPosX(float _fX) { m_tInfo.fX = _fX; }
+	void			Set_RealPosY(float _fY) { m_tInfo.fY = _fY; }
 	void			Set_Dir(DIRECTION eDir)
 	{
 		m_eDir = eDir;
