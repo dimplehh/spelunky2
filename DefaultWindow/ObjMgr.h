@@ -2,6 +2,7 @@
 
 #include "Obj.h"
 #include "Define.h"
+#include "UIIcon.h"
 
 class CObjMgr
 {
@@ -11,7 +12,8 @@ private:
 
 public:
 	CObj*		Get_Player() { return m_ObjList[OBJ_PLAYER].front(); }
-	CObj*		Get_Bomb() { return m_ObjList[OBJ_BOMB].back(); }	//차후 폭탄이 터진 이후 사라지도록 수정
+	CObj*		Get_Bomb() { return m_ObjList[OBJ_BOMB].back(); }
+	CObj*		Get_UI() { return m_ObjList[OBJ_UI].back(); }
 	CObj*		Get_Target(OBJID eID, CObj* pObj);
 
 public:

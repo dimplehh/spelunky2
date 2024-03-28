@@ -13,6 +13,7 @@
 #include "Define.h"
 #include "Rope.h"
 #include "Bomb.h"
+#include "UIMgr.h"
 #include <iostream>
 
 #include "SoundMgr.h"
@@ -80,6 +81,10 @@ void CPlayer::Late_Update()	//어떤걸 Late_Update, 어떤걸 Update에 넣어야할지 잘 
 //#endif
 }
 
+void CPlayer::Release()
+{
+}
+
 void CPlayer::Render(HDC hDC)
 {
 	SetRenderImage(hDC);
@@ -107,10 +112,6 @@ void CPlayer::SetRenderImage(HDC hDC)
 		GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, (int)m_tInfo.fCX, (int)m_tInfo.fCY,
 			hMemDC, m_tFrame.iFrameStart * (int)m_tInfo.fCX, m_tFrame.iMotion * (int)m_tInfo.fCY, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(62, 62, 62));
 	}
-}
-
-void CPlayer::Release()
-{
 }
 
 void CPlayer::HoldLeft()
@@ -260,7 +261,7 @@ void CPlayer::FallDamage()
 	}
 	else if (m_fDiffY >= TILECY * 5)
 	{
-		m_iHp -= 1;
+		SetHp(-1);
 		m_eCurState = DIZZY;
 	}
 }
@@ -429,7 +430,7 @@ void CPlayer::Key_Input()
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::TAP) { if (!m_bLadder) { m_eCurState = KNEELDOWN;	m_bKneelDown = true; } }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::HOLD) { HoldDown(); }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::AWAY) { if (!m_bLadder) { m_eCurState = STANDUP;	m_bKneelDown = false; } }
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::G) == KEY_STATE::TAP) { m_iHp -= 1;		m_eCurState = ATTACKED;}
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::G) == KEY_STATE::TAP) { SetHp(-1);		m_eCurState = ATTACKED; }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::HOLD) { m_eCurState = ENTER; }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::AWAY) { m_eCurState = EXIT; }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::D) == KEY_STATE::TAP) { CObjMgr::Get_Instance()->Add_Object(OBJ_ROPE, CRopeFactory::Create(m_tInfo.fX, m_tInfo.fY)); } 

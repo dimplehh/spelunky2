@@ -6,6 +6,7 @@
 #include "Box.h"
 #include "Rope.h"
 #include "Bomb.h"
+#include "UIIcon.h"
 
 template<typename T>
 class CAbstractFactory
@@ -86,6 +87,23 @@ public:
 		pObj->Set_Pos(_fX, _fY - height);
 		dynamic_cast<CRope*>(pObj)->SetRopeSize(height / TILECY);
 		CLineMgr::Get_Instance()->MakeRopeLine(LINEPOINT{ _fX, _fY + TILECY / 2 },LINEPOINT{_fX, _fY - height });
+		return pObj;
+	}
+};
+
+class CUIFactory
+{
+public:
+	static CObj* Create(float _fX, float _fY, CUIIcon::UIID _uiId, int _num = 0)
+	{
+		CObj* pObj = new CUIIcon;
+		
+		pObj->Initialize();
+		pObj->Set_Pos(_fX, _fY);
+		
+		dynamic_cast<CUIIcon*>(pObj)->SetUIID(_uiId);
+		dynamic_cast<CUIIcon*>(pObj)->Set_Num(_num);
+
 		return pObj;
 	}
 };

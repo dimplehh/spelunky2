@@ -11,6 +11,7 @@ public:
 
 public:
 	void	SetUIID(UIID _uiId) { m_eUiID = _uiId; }
+	void	Set_Num(int _iNum) { m_iNum = _iNum; }
 
 public:
 	virtual void Initialize() override;
@@ -22,5 +23,6 @@ public:
 private:
 	int		m_iDrawID = 0;
 	UIID	m_eUiID = UI_END;
+	int		m_iNum = 0;
 };
 

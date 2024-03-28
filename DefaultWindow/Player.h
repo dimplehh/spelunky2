@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Obj.h"
+#include "UIMgr.h"
 
 class CPlayer :	public CObj
 {
@@ -26,6 +27,16 @@ public:
 	bool		GetFlip() { return m_bFlip; }
 	bool		GetKneelDown() { return m_bKneelDown; }
 	int			GetHp() { return m_iHp; }
+	void		SetHp(int _num)
+	{
+		if (m_iHp + _num <= 0)
+			m_iHp = 0;
+		else
+			m_iHp += _num;
+		CUIMgr::Get_Instance()->Set_UINum(CUIIcon::UI_HP, m_iHp);
+	}
+	void		SetRopeCount();
+	void		SetBombCount();
 
 private:
 	void		SetRenderImage(HDC hDC);
@@ -76,6 +87,9 @@ private:
 
 	bool		m_bAlmostFell = false;
 	bool		m_bWallAttatched = false;
+
+	int			m_iRopeCount = 0;
+	int			m_iBombCount = 0;
 
 private:
 	DWORD				m_dwTime;
