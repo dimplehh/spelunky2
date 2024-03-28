@@ -26,6 +26,8 @@ void CBomb::Initialize()
 	m_bFlip = dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetFlip();
 	m_bKneelDown = dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetKneelDown();
 	m_pVecTile = CTileMgr::Get_Instance()->Get_VecTile();
+
+	m_tFrame = {0, 15, 0, 15, false, 140, GetTickCount(), 0};
 }
 
 int CBomb::Update()
@@ -72,6 +74,7 @@ void CBomb::Late_Update()
 		m_tInfo.fY = m_fPreY - m_fPower * m_fTime + ((9.8f * m_fTime * m_fTime) * 0.5f);
 		m_fTime += 0.05f;
 	}
+	Move_Frame();
 }
 
 void CBomb::Render(HDC hDC)
@@ -80,8 +83,9 @@ void CBomb::Render(HDC hDC)
 	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
 
 	HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
+
 	GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, (int)m_tInfo.fCX, (int)m_tInfo.fCY,
-		hMemDC, 0, 0, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(255, 0, 255));
+		hMemDC, m_tFrame.iFrameStart * (int)m_tInfo.fCX, 0, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(0, 0, 255));
 }
 
 void CBomb::Explosion()  // 폭발 범위 인게임과 똑같이 설정
@@ -140,4 +144,34 @@ bool CBomb::Gravity()
 }
 void CBomb::Release()
 {
+}
+
+
+void CBomb::Move_Frame()
+{
+	if (m_tFrame.dwTime + m_tFrame.dwSpeed < GetTickCount())
+	{
+		m_tFrame.dwTime = GetTickCount();
+		++m_tFrame.iFrameStart;
+		if (m_tFrame.iFrameStart >= m_tFrame.iFrameEnd)
+		{
+			if (m_tFrame.bRoop == false)
+			{
+				if (m_iRepeatCount >= m_tFrame.iRepeat)
+				{
+					m_tFrame.iFrameStart = m_tFrame.iFrameEnd;
+					m_iRepeatCount = m_tFrame.iRepeat;
+				}
+				else
+				{
+					m_tFrame.iFrameStart = m_iFirstFrameStart;
+					m_iRepeatCount++;
+				}
+			}
+			else if (m_tFrame.bRoop == true)
+			{
+				m_tFrame.iFrameStart = m_iFirstFrameStart;
+			}
+		}
+	}
 }

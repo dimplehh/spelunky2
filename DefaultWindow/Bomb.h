@@ -19,6 +19,7 @@ public:
 
 public:
 	void		Explosion();
+	void		Move_Frame();
 
 private:
 	void		SetExplodedTile(int index);

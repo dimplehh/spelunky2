@@ -43,9 +43,7 @@ void CRope::Late_Update()
 void CRope::Render(HDC hDC)
 {
 	int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
-	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();	
-	//for(int i = 0; i <= m_iRopeSize; i++)
-	//	Rectangle(hDC, m_tRect.left + iScrollX, m_tRect.top + TILECY * i + iScrollY, m_tRect.right + iScrollX, m_tRect.bottom + TILECY * i + iScrollY);
+	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
 
 	HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
 
