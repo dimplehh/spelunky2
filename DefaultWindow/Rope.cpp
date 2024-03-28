@@ -49,15 +49,13 @@ void CRope::Render(HDC hDC)
 
 	HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
 
-	for (int i = 0; i <= m_iRenderIndex; i++) // 줄 이미지로 고정되는 부분
+	//맨 위 이미지
+	GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, (int)m_tInfo.fCX, (int)m_tInfo.fCY, hMemDC,
+		3 * (int)m_tInfo.fCX, 0, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(62, 62, 62));
+
+	for (int i = 1; i <= m_iRenderIndex; i++) // 줄 이미지로 고정되는 부분
 		GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + TILECY * i + iScrollY, (int)m_tInfo.fCX, (int)m_tInfo.fCY, hMemDC,
 			9 * (int)m_tInfo.fCX, 0, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(62, 62, 62));
-
-	//줄 애니메이션이 동작하는 부분
-	//if(m_iRenderIndex == 0)	
-	//	m_tFrame = { 0, 3, 0, 10, false, 60, GetTickCount(), 0 };
-	//else
-	//	m_tFrame = { 5, 9, 0, 10, false, 60, GetTickCount(), 0 };
 
 	GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + TILECY * m_iRenderIndex + iScrollY, (int)m_tInfo.fCX, (int)m_tInfo.fCY, hMemDC,
 		m_tFrame.iFrameStart * (int)m_tInfo.fCX, 0, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(62, 62, 62));

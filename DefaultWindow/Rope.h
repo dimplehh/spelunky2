@@ -21,6 +21,6 @@ public:
 
 private:
 	int		m_iRopeSize = 0;
-	int		m_iRenderIndex = 0;
+	int		m_iRenderIndex = 1;
 };
 
