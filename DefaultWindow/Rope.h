@@ -15,7 +15,7 @@ public:
 	virtual void Release() override;
 
 public:
-	void	SetRopeSize(int _ropeSize) { m_iRopeSize = _ropeSize; }
+	void	SetRopeSize(int _ropeSize) { /*if (_ropeSize >= 6) m_iRopeSize = 6; else */ m_iRopeSize = _ropeSize; }
 	int		GetRopeSize() { return m_iRopeSize; }
 	void	CheckMoveEnd();	
 

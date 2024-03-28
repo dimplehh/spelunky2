@@ -51,7 +51,7 @@ void CBomb::Late_Update()
 {
 	if (!Gravity())
 	{
-		CLineMgr::Get_Instance()->Box_Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY);
+		CLineMgr::Get_Instance()->Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY); //이거 작동 안하는거가튼딩;;
 
 		if (m_bKneelDown == false)
 		{
@@ -69,8 +69,7 @@ void CBomb::Late_Update()
 			else
 				m_tInfo.fX += 7.f;
 		}
-		
-		
+
 		m_tInfo.fY = m_fPreY - m_fPower * m_fTime + ((9.8f * m_fTime * m_fTime) * 0.5f);
 		m_fTime += 0.05f;
 	}

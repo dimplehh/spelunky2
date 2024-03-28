@@ -79,6 +79,10 @@ public:
 		CRope* pObj = new CRope;
 		pObj->Initialize();
 		int height = CLineMgr::Get_Instance()->Check_Rope_Attach_Ceiling(_fX, _fY);	//천장위치 체킹
+
+		if (height >= 6 * TILECY)
+			height = 6 * TILECY;
+
 		pObj->Set_Pos(_fX, _fY - height);
 		dynamic_cast<CRope*>(pObj)->SetRopeSize(height / TILECY);
 		CLineMgr::Get_Instance()->MakeRopeLine(LINEPOINT{ _fX, _fY + TILECY / 2 },LINEPOINT{_fX, _fY - height });
