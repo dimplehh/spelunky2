@@ -25,6 +25,7 @@ public:
 	STATE		GetState() { return m_eCurState; }
 	bool		GetFlip() { return m_bFlip; }
 	bool		GetKneelDown() { return m_bKneelDown; }
+	int			GetHp() { return m_iHp; }
 
 private:
 	void		SetRenderImage(HDC hDC);

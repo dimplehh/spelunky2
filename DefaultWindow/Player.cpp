@@ -20,7 +20,7 @@
 float g_fVolume(0.25f);
 
 CPlayer::CPlayer()
-	: m_fDistance(0.f), m_bJump(false), m_bLadder(false), m_iJumpCount(0), m_iHp(100), m_fPreY(0.f), m_fCurY(0.f), m_bCanHang(false), m_fDiffY(0.f),
+	: m_fDistance(0.f), m_bJump(false), m_bLadder(false), m_iJumpCount(0), m_iHp(4), m_fPreY(0.f), m_fCurY(0.f), m_bCanHang(false), m_fDiffY(0.f),
 	m_fTime(0.f), m_fPower(0.f), m_ePreState(ST_END), m_eCurState(IDLE), m_bKneelDown(false), m_bAttachedBox(false), m_dwTime(GetTickCount())
 {
 	//ZeroMemory(&m_tPosin, sizeof(POINT));	// 나중에 총구구현에 쓸 수 있어 남겨놓음
@@ -70,15 +70,14 @@ void CPlayer::Late_Update()	//어떤걸 Late_Update, 어떤걸 Update에 넣어야할지 잘 
 	AlmostFell();
 	Motion_Change();
 	__super::Move_Frame();
-
-#ifdef _DEBUG
-
-	if (m_dwTime + 100 < GetTickCount())
-	{
-		cout << m_bAttachedBox << endl;
-		m_dwTime = GetTickCount();
-	}
-#endif
+//#ifdef _DEBUG
+//
+//	if (m_dwTime + 100 < GetTickCount())
+//	{
+//		cout << m_bAttachedBox << endl;
+//		m_dwTime = GetTickCount();
+//	}
+//#endif
 }
 
 void CPlayer::Render(HDC hDC)
@@ -259,9 +258,9 @@ void CPlayer::FallDamage()
 	{
 		m_eCurState = FALLING;
 	}
-	else if (m_fDiffY >= TILECY * 4)
+	else if (m_fDiffY >= TILECY * 5)
 	{
-		//m_iHp -= 10;
+		m_iHp -= 1;
 		m_eCurState = DIZZY;
 	}
 }
@@ -430,7 +429,7 @@ void CPlayer::Key_Input()
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::TAP) { if (!m_bLadder) { m_eCurState = KNEELDOWN;	m_bKneelDown = true; } }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::HOLD) { HoldDown(); }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::AWAY) { if (!m_bLadder) { m_eCurState = STANDUP;	m_bKneelDown = false; } }
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::G) == KEY_STATE::TAP) { m_iHp -= 10;		m_eCurState = ATTACKED;}
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::G) == KEY_STATE::TAP) { m_iHp -= 1;		m_eCurState = ATTACKED;}
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::HOLD) { m_eCurState = ENTER; }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::AWAY) { m_eCurState = EXIT; }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::D) == KEY_STATE::TAP) { CObjMgr::Get_Instance()->Add_Object(OBJ_ROPE, CRopeFactory::Create(m_tInfo.fX, m_tInfo.fY)); } 

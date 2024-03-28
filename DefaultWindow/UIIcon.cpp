@@ -42,12 +42,7 @@ void CUIIcon::Render(HDC hDC)
 {
 	HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
 
-	GdiTransparentBlt(hDC, m_tRect.left, m_tRect.top, (int)m_tInfo.fCX, (int)m_tInfo.fCY, hMemDC, 0 * (int)m_tInfo.fCX, 0, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(255, 0, 255));
-	GdiTransparentBlt(hDC, m_tRect.left + TILECX , m_tRect.top, (int)m_tInfo.fCX, (int)m_tInfo.fCY, hMemDC, 1 * (int)m_tInfo.fCX, 0, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(255, 0, 255));
-	GdiTransparentBlt(hDC, m_tRect.left + TILECX * 2, m_tRect.top, (int)m_tInfo.fCX, (int)m_tInfo.fCY, hMemDC, 2 * (int)m_tInfo.fCX, 0, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(255, 0, 255));
-	GdiTransparentBlt(hDC, WINCX - (int)m_tInfo.fCX * 6 , m_tRect.top, (int)m_tInfo.fCX, (int)m_tInfo.fCY, hMemDC, 3 * (int)m_tInfo.fCX, 0, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(255, 0, 255));
-	GdiTransparentBlt(hDC, WINCX - (int)m_tInfo.fCX * 4, m_tRect.top, (int)m_tInfo.fCX, (int)m_tInfo.fCY, hMemDC, 4 * (int)m_tInfo.fCX, 0, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(255, 0, 255));
-	GdiTransparentBlt(hDC, WINCX - (int)m_tInfo.fCX * 2, m_tRect.top, (int)m_tInfo.fCX, (int)m_tInfo.fCY, hMemDC, 5 * (int)m_tInfo.fCX, 0, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(255, 0, 255));
+	GdiTransparentBlt(hDC, m_tRect.left, m_tRect.top, (int)m_tInfo.fCX, (int)m_tInfo.fCY, hMemDC, m_eUiID * (int)m_tInfo.fCX, 0, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(255, 0, 255));
 }
 
 void CUIIcon::Release()

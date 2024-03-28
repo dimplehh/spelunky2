@@ -3,8 +3,14 @@
 class CUIIcon : public CObj
 {
 public:
+	enum UIID {UI_HP, UI_ROPE, UI_BOMB, UI_MONEY, UI_TIME, UI_MAP, UI_END };
+
+public:
 	CUIIcon();
 	~CUIIcon();
+
+public:
+	void	SetUIID(UIID _uiId) { m_eUiID = _uiId; }
 
 public:
 	virtual void Initialize() override;
@@ -15,5 +21,6 @@ public:
 
 private:
 	int		m_iDrawID = 0;
+	UIID	m_eUiID = UI_END;
 };
 
