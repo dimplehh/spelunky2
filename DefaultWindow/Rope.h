@@ -17,8 +17,10 @@ public:
 public:
 	void	SetRopeSize(int _ropeSize) { m_iRopeSize = _ropeSize; }
 	int		GetRopeSize() { return m_iRopeSize; }
+	void	CheckMoveEnd();	
 
 private:
 	int		m_iRopeSize = 0;
+	int		m_iRenderIndex = 0;
 };
 

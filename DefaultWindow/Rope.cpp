@@ -21,13 +21,13 @@ void CRope::Initialize()
 	m_fSpeed = 3.f;
 	m_pFrameKey = L"Rope";
 	m_eRender = RENDER_GAMEOBJECT;
+	m_tFrame = { 5, 9, 0, 10, false, 60, GetTickCount(), 0 };
 }
 
 int CRope::Update()
 {
 	if (m_bDead)
 		return OBJ_DEAD;
-
 
 	__super::Update_Rect();
 
@@ -36,25 +36,45 @@ int CRope::Update()
 
 void CRope::Late_Update()
 {
-	//if (Gravity() == true)
-	//	CLineMgr::Get_Instance()->Box_Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY);
-
-	//m_boxLine->Set_Info(LINE(LINEPOINT{ m_tInfo.fX - TILECX * 0.5f + 1.f , m_tInfo.fY - TILECY * 0.5f - 0.01f }, LINEPOINT{ m_tInfo.fX + TILECX * 0.5f - 1.f, m_tInfo.fY - TILECY * 0.5f - 0.01f }));
+	__super::Move_Frame();
+	CheckMoveEnd();
 }
 
 void CRope::Render(HDC hDC)
 {
 	int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
-	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
-	
-	for(int i = 0; i <= m_iRopeSize; i++)
-		Rectangle(hDC, m_tRect.left + iScrollX, m_tRect.top + TILECY * i + iScrollY, m_tRect.right + iScrollX, m_tRect.bottom + TILECY * i + iScrollY);
+	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();	
+	//for(int i = 0; i <= m_iRopeSize; i++)
+	//	Rectangle(hDC, m_tRect.left + iScrollX, m_tRect.top + TILECY * i + iScrollY, m_tRect.right + iScrollX, m_tRect.bottom + TILECY * i + iScrollY);
 
-	//HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
-	//GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, (int)m_tInfo.fCX, (int)m_tInfo.fCY,
-	//	hMemDC, 0, 0, TILECX, TILECY, RGB(255, 255, 255));
+	HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
+
+	for (int i = 0; i <= m_iRenderIndex; i++) // 줄 이미지로 고정되는 부분
+		GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + TILECY * i + iScrollY, (int)m_tInfo.fCX, (int)m_tInfo.fCY, hMemDC,
+			9 * (int)m_tInfo.fCX, 0, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(62, 62, 62));
+
+	//줄 애니메이션이 동작하는 부분
+	//if(m_iRenderIndex == 0)	
+	//	m_tFrame = { 0, 3, 0, 10, false, 60, GetTickCount(), 0 };
+	//else
+	//	m_tFrame = { 5, 9, 0, 10, false, 60, GetTickCount(), 0 };
+
+	GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + TILECY * m_iRenderIndex + iScrollY, (int)m_tInfo.fCX, (int)m_tInfo.fCY, hMemDC,
+		m_tFrame.iFrameStart * (int)m_tInfo.fCX, 0, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(62, 62, 62));
 }
 
 void CRope::Release()
 {
+}
+
+void CRope::CheckMoveEnd()
+{
+	if (m_iRenderIndex >= m_iRopeSize)
+		return;
+
+	if (m_tFrame.bRoop == false)
+	{
+		if (m_tFrame.iRepeat == m_iRepeatCount)
+			m_iRenderIndex++;
+	}
 }
