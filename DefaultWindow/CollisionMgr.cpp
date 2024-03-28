@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CollisionMgr.h"
 #include "Player.h"
+#include "KeyMgr.h"
 
 CCollisionMgr::CCollisionMgr()
 {
@@ -69,7 +70,9 @@ void CCollisionMgr::Collision_RectEx(CObj* Dst, CObj* Src)
 			{
 				Dst->SetCollision(true);
 				Src->SetCollision(true);
-				dynamic_cast<CPlayer*>(Src)->SetAttachedBox(true);
+				if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::HOLD || 
+					CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::HOLD)
+					dynamic_cast<CPlayer*>(Src)->SetAttachedBox(true);
 			}
 		}
 	}

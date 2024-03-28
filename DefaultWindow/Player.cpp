@@ -71,14 +71,14 @@ void CPlayer::Late_Update()	//어떤걸 Late_Update, 어떤걸 Update에 넣어야할지 잘 
 	Motion_Change();
 	__super::Move_Frame();
 
-//#ifdef _DEBUG
-//
-//	if (m_dwTime + 100 < GetTickCount())
-//	{
-//		cout << m_bAttachedBox << endl;
-//		m_dwTime = GetTickCount();
-//	}
-//#endif
+#ifdef _DEBUG
+
+	if (m_dwTime + 100 < GetTickCount())
+	{
+		cout << m_bAttachedBox << endl;
+		m_dwTime = GetTickCount();
+	}
+#endif
 }
 
 void CPlayer::Render(HDC hDC)
@@ -123,12 +123,12 @@ void CPlayer::HoldLeft()
 	if (m_bKneelDown)
 	{
 		m_eCurState = CRAWL;
-		m_tInfo.fX -= m_fSpeed * 0.25f;
+		m_tInfo.fX -= m_fSpeed * 0.5f;
 	}
 	else if (m_bAttachedBox)
 	{
 		m_eCurState = PUSH;
-		m_tInfo.fX -= m_fSpeed * 0.25f;
+		m_tInfo.fX -= m_fSpeed * 0.5f;
 	}
 	else
 	{
@@ -160,12 +160,12 @@ void CPlayer::HoldRight()
 	if (m_bKneelDown)
 	{
 		m_eCurState = CRAWL;
-		m_tInfo.fX += m_fSpeed * 0.25f;
+		m_tInfo.fX += m_fSpeed * 0.5f;
 	}
 	else if (m_bAttachedBox)
 	{
 		m_eCurState = PUSH;
-		m_tInfo.fX += m_fSpeed * 0.25f;
+		m_tInfo.fX += m_fSpeed * 0.5f;
 	}
 	else
 	{

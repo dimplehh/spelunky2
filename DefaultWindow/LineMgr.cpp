@@ -217,25 +217,24 @@ bool CLineMgr::Box_Collision_Vertical_Line(float& fX, float& fY, float& fCX, flo
 
 	for (auto& iter : m_LineList)
 	{
-		if ((iter->Get_Info().tLPoint.fY - fCY / 2 < fY && fY < iter->Get_Info().tRPoint.fY + fCY / 2)
+		if ((iter->Get_Info().tLPoint.fY - fCY / 2 - 5 < fY && fY < iter->Get_Info().tRPoint.fY + fCY / 2 + 5)
 			&& (iter->Get_Info().tLPoint.fX - 1 <= fX + fCX / 2 && fX + fCX / 2 < iter->Get_Info().tLPoint.fX + 5)
-			&& (iter->Get_LineType() == CLine::LEFTWALL))
+			&& fY - fCY * 3 <= CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY && CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY <= fY + fCY * 3
+			&& CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX < fX - fCX / 2 - 1
+			&& (iter->Get_LineType() == CLine::LEFTWALL) && dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetAttatchedBox() == true)
 		{
 			m_fX = iter->Get_Info().tLPoint.fX;
 			m_AttachedLine = iter;
-			if (fY - fCY <= CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY && CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY <= fY + fCY
-				&& CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX < fX - fCX / 2 - 1)
-			{
-				fX = m_fX - fCX / 2 - 1;
-				CObjMgr::Get_Instance()->Get_Player()->Set_RealPosX(fX - fCX / 2 - 17);
-			}
+			fX = m_fX - fCX / 2 - 1;
+			CObjMgr::Get_Instance()->Get_Player()->Set_RealPosX(fX - fCX / 2 - 17);
+
 			return true;
 		}
 		else if ((iter->Get_Info().tLPoint.fY - fCY / 2 - 5 <= fY && fY <= iter->Get_Info().tRPoint.fY + fCY / 2 + 5)
 			&& (iter->Get_Info().tLPoint.fX - 10 <= fX - fCX / 2 && fX - fCX / 2 < iter->Get_Info().tLPoint.fX + 1)
 			&&(fY - fCY * 3 <= CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY && CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY <= fY + fCY * 3)
 			&& fX + fCX / 2 + 1 < CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX
-			&& (iter->Get_LineType() == CLine::RIGHTWALL))
+			&& (iter->Get_LineType() == CLine::RIGHTWALL) && dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetAttatchedBox() == true)
 		{
 			m_fX = iter->Get_Info().tLPoint.fX;
 			m_AttachedLine = iter;
