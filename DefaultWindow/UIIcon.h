@@ -13,6 +13,7 @@ public:
 	void	SetUIID(UIID _uiId) { m_eUiID = _uiId; }
 	void	Set_Num(int _iNum) { m_iNum = _iNum; }
 	void	SetTextXY(float _fX, float _fY) { m_fTextX = _fX; m_fTextY = _fY; }
+	void	Set_Size(int _iSize) { m_iSize = _iSize; }
 
 public:
 	virtual void Initialize() override;
@@ -25,6 +26,7 @@ private:
 	int		m_iDrawID = 0;
 	UIID	m_eUiID = UI_END;
 	int		m_iNum = 0;
+	int		m_iSize = 0;
 
 	float	m_fTextX = 0;
 	float	m_fTextY = 0;

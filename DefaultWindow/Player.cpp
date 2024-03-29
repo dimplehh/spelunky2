@@ -101,7 +101,7 @@ void CPlayer::SetRenderImage(HDC hDC)
 		else					m_pFrameKey = L"Player_ATTACK_FLIP";
 
 		HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
-		GdiTransparentBlt(hDC, m_tRect.left + iScrollX - 32.f, m_tRect.top + iScrollY, 128, (int)m_tInfo.fCY,
+		GdiTransparentBlt(hDC, m_tRect.left + iScrollX - 32.f, m_tRect.top + iScrollY - 4, 128, (int)m_tInfo.fCY + 8,
 			hMemDC, m_tFrame.iFrameStart * 128, m_tFrame.iMotion * (int)m_tInfo.fCY, 128, (int)m_tInfo.fCY, RGB(62, 62, 62));
 	}
 	else
@@ -109,7 +109,7 @@ void CPlayer::SetRenderImage(HDC hDC)
 		if (m_bFlip == false)	m_pFrameKey = L"Player_BASE";
 		else					m_pFrameKey = L"Player_FLIP";
 		HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
-		GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, (int)m_tInfo.fCX, (int)m_tInfo.fCY,
+		GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY - 4, (int)m_tInfo.fCX + 8, (int)m_tInfo.fCY + 8,
 			hMemDC, m_tFrame.iFrameStart * (int)m_tInfo.fCX, m_tFrame.iMotion * (int)m_tInfo.fCY, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(62, 62, 62));
 	}
 }
