@@ -46,9 +46,28 @@ void CUIIcon::Render(HDC hDC)
 
 	GdiTransparentBlt(hDC, m_tRect.left, m_tRect.top, (int)m_tInfo.fCX, (int)m_tInfo.fCY, hMemDC, m_eUiID * (int)m_tInfo.fCX, 0, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(38, 38, 38));
 
-	hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"Font");
+	SetNumberToFont(hDC);
+}
 
-	GdiTransparentBlt(hDC, m_tInfo.fX + 10 + m_fTextX, m_tInfo.fY + m_fTextY, m_iSize, m_iSize, hMemDC, (m_iNum % 10) * 16, 0, 16, 16, RGB(63, 63, 63));
+void CUIIcon::SetNumberToFont(HDC  hDC)
+{
+	HDC hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"Font");
+
+	if (m_iNum < 10)
+		GdiTransparentBlt(hDC, m_tInfo.fX + 10 + m_fTextX, m_tInfo.fY + m_fTextY, m_iSize, m_iSize, hMemDC, (m_iNum % 10) * 16, 0, 16, 16, RGB(63, 63, 63));
+	else
+	{
+		int iTemp = m_iNum;
+		int addX = 0;
+		while (1)
+		{
+			GdiTransparentBlt(hDC, m_tInfo.fX + 10 + m_fTextX - 8.f * addX, m_tInfo.fY + m_fTextY, m_iSize, m_iSize, hMemDC, (iTemp % 10) * 16, 0, 16, 16, RGB(63, 63, 63));
+			iTemp = iTemp / 10;
+			addX++;
+			if (iTemp == 0)
+				break;
+		}
+	}
 }
 
 void CUIIcon::Release()

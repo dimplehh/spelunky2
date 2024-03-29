@@ -23,6 +23,9 @@ public:
 	virtual void Release() override;
 
 private:
+	void	SetNumberToFont(HDC  hDC);
+
+private:
 	int		m_iDrawID = 0;
 	UIID	m_eUiID = UI_END;
 	int		m_iNum = 0;

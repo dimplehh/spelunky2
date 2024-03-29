@@ -59,13 +59,10 @@ void CCollisionMgr::Collision_RectEx(CObj* Dst, CObj* Src)
 				switch (dynamic_cast<CItem*>(Dst)->Get_ItemID())
 				{
 				case CItem::ITEM_GEM:
-				{
-					CSoundMgr::Get_Instance()->PlaySound(L"Gem.wav", SOUND_EFFECT, g_fVolume);
-					break;
-				}
 				case CItem::ITEM_GOLD:
 				{
 					CSoundMgr::Get_Instance()->PlaySound(L"Gem.wav", SOUND_EFFECT, g_fVolume);
+					dynamic_cast<CPlayer*>(Src)->SetMoney(_num);
 					break;
 				}
 				case CItem::ITEM_BOMB:
