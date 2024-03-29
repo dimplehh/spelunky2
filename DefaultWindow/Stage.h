@@ -21,6 +21,7 @@ private:
 
 private:
 	BLENDFUNCTION _bf = {};
-	float			m_fAlpha = 0.f;
+	float			m_fAlpha = 0.f; 
+	int				m_fFadeIn = 0;
 };
 
