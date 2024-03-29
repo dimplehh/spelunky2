@@ -11,6 +11,7 @@
 #include "Box.h"
 #include "UIIcon.h"
 #include "UIMgr.h"
+#pragma comment(lib, "msimg32.lib")
 
 CStage::CStage()
 {
@@ -31,8 +32,13 @@ void CStage::Initialize()
 	InsertItems();
 	CTileMgr::Get_Instance()->Load_Tile();
 	CLineMgr::Get_Instance()->Initialize();
-	CScrollMgr::Get_Instance()->Set_ScrollXY(WINCX / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX, 
-											WINCY - -CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY);
+	CScrollMgr::Get_Instance()->Set_ScrollXY(	WINCX / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX, 
+												WINCY - -CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY);
+
+	_bf.BlendOp = AC_SRC_OVER;
+	_bf.BlendFlags = 0;
+	_bf.AlphaFormat = AC_SRC_ALPHA;
+	_bf.SourceConstantAlpha = 0;
 }
 
 int CStage::Update()
@@ -63,6 +69,17 @@ void CStage::Render(HDC hDC)
 	CLineMgr::Get_Instance()->Render(hDC);
 
 	CObjMgr::Get_Instance()->RenderUI(hDC);	// ui 가장 마지막에 렌더
+	HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"Fade");
+	if (dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetHp() == 0) //fade 효과 그보다 더 마지막에 렌더
+	{
+		m_fAlpha += 2.f;
+		if (m_fAlpha >= 255.f)
+			m_fAlpha = 255.f;
+
+		_bf.SourceConstantAlpha = m_fAlpha;
+		
+		AlphaBlend(hDC, 0, 0, WINCX, WINCY, hMemDC, 0, 0, WINCX, WINCY, _bf);
+	}
 }
 
 void CStage::Release()
@@ -73,6 +90,7 @@ void CStage::Release()
 void CStage::InsertBmps()
 {
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Ground.bmp", L"Ground");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Fade.bmp", L"Fade");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette.bmp", L"Tile");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette2.bmp", L"Tile2");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/UIIcon.bmp", L"UIIcon");

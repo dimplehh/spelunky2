@@ -18,5 +18,9 @@ private:
 	void		InsertUIs();
 	void		InsertBoxs();
 	void		InsertItems();
+
+private:
+	BLENDFUNCTION _bf = {};
+	float			m_fAlpha = 0.f;
 };
 
