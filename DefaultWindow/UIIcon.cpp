@@ -5,7 +5,7 @@
 #include "SceneMgr.h"
 
 
-CUIIcon::CUIIcon()
+CUIIcon::CUIIcon() : m_dwTime(GetTickCount())
 {
 }
 
@@ -37,7 +37,11 @@ int CUIIcon::Update()
 
 void CUIIcon::Late_Update()
 {
-
+	if (m_dwTime + 1000 < GetTickCount())
+	{
+		m_iTime++;
+		m_dwTime = GetTickCount();
+	}
 }
 
 void CUIIcon::Render(HDC hDC)
@@ -46,7 +50,10 @@ void CUIIcon::Render(HDC hDC)
 
 	GdiTransparentBlt(hDC, m_tRect.left, m_tRect.top, (int)m_tInfo.fCX, (int)m_tInfo.fCY, hMemDC, m_eUiID * (int)m_tInfo.fCX, 0, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(38, 38, 38));
 
-	SetNumberToFont(hDC);
+	if (m_eUiID == UI_TIME)
+		SetTimeToFont(hDC);
+	else
+		SetNumberToFont(hDC);
 }
 
 void CUIIcon::SetNumberToFont(HDC  hDC)
@@ -68,6 +75,20 @@ void CUIIcon::SetNumberToFont(HDC  hDC)
 				break;
 		}
 	}
+}
+
+void CUIIcon::SetTimeToFont(HDC hDC)
+{
+	HDC hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"Font");
+	
+	int _min = m_iTime / 60;
+	int _sec = m_iTime % 60;
+
+	GdiTransparentBlt(hDC, m_tInfo.fX + 10 + m_fTextX + 10.f * 0, m_tInfo.fY + m_fTextY, m_iSize, m_iSize, hMemDC, (_min / 10) * 16, 0, 16, 16, RGB(63, 63, 63));
+	GdiTransparentBlt(hDC, m_tInfo.fX + 10 + m_fTextX + 10.f * 1, m_tInfo.fY + m_fTextY, m_iSize, m_iSize, hMemDC, (_min % 10) * 16, 0, 16, 16, RGB(63, 63, 63));
+	GdiTransparentBlt(hDC, m_tInfo.fX + 10 + m_fTextX + 10.f * 2, m_tInfo.fY + m_fTextY, m_iSize, m_iSize, hMemDC, 10 * 16, 0, 16, 16, RGB(63, 63, 63));
+	GdiTransparentBlt(hDC, m_tInfo.fX + 10 + m_fTextX + 10.f * 3, m_tInfo.fY + m_fTextY, m_iSize, m_iSize, hMemDC, (_sec / 10) * 16, 0, 16, 16, RGB(63, 63, 63));
+	GdiTransparentBlt(hDC, m_tInfo.fX + 10 + m_fTextX + 10.f * 4, m_tInfo.fY + m_fTextY, m_iSize, m_iSize, hMemDC, (_sec % 10) * 16, 0, 16, 16, RGB(63, 63, 63));
 }
 
 void CUIIcon::Release()
