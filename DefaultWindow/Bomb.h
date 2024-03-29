@@ -16,10 +16,11 @@ public:
 
 public:
 	void		Set_PreY(float _fY) { m_fPreY = _fY; }
-
-public:
-	void		Explosion();
 	void		Move_Frame();
+
+private:
+	void		Explosion();
+	void		PlayerDamaged();
 
 private:
 	void		SetExplodedTile(int index);

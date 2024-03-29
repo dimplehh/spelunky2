@@ -44,7 +44,6 @@ int CBomb::Update()
 		Explosion();
 	}
 
-
 	__super::Update_Rect();
 
 	return OBJ_NOEVENT;
@@ -96,20 +95,37 @@ void CBomb::Explosion()  // 폭발 범위 인게임과 똑같이 설정
 
 	for (int _add = -1; _add <= 1; _add++)
 	{
-		SetExplodedTile(index + _add - TILEX * 2);
-		SetExplodedTile(index + _add + TILEX);
+		SetExplodedTile(index + _add - TILEX * 2);	// 맨 윗줄
+		SetExplodedTile(index + _add + TILEX);		// 맨 아랫줄
 	}
 	for (int _add = -2; _add <= 2; _add++)
 	{
-		SetExplodedTile(index + _add - TILEX);
-		SetExplodedTile(index + _add);
+		SetExplodedTile(index + _add - TILEX);		// 두번째줄
+		SetExplodedTile(index + _add);				// 세번째 줄
 	}
 
 	CLineMgr::Get_Instance()->Release();
 	CLineMgr::Get_Instance()->SetLine(); //라인 재세팅
 
 	m_bDead = true;
+
+	// 플레이어 체력 깎는 부분. 아직 완벽하진 X
+
+	float _fX = CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX;
+	float _fY = CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY;
+
+	if ((*m_pVecTile)[index -1]->Get_Info().fX <= _fX && _fX <= (*m_pVecTile)[index + 1]->Get_Info().fX
+		&& (*m_pVecTile)[index - TILEX * 2]->Get_Info().fY <= _fY && _fY <= (*m_pVecTile)[index + TILEX]->Get_Info().fY)
+	{
+		dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetHp(-1);
+	}
 }
+
+void CBomb::PlayerDamaged()
+{
+
+}
+
 
 void CBomb::SetExplodedTile(int index)
 {
