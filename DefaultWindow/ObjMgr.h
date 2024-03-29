@@ -20,7 +20,8 @@ public:
 	void		Add_Object(OBJID eID, CObj* pObj);
 	void		Update();		
 	void		Late_Update();
-	void		Render(HDC hDC);		
+	void		Render(HDC hDC);
+	void		RenderUI(HDC hDC);
 	void		Release();
 
 	void		Delete_ID(OBJID eID);

@@ -185,7 +185,7 @@ int		CLineMgr::Collision_Vertical_Line(float& fX, float& fY, float& fCX, float& 
 
 	for (auto& iter : m_LineList)
 	{
-		if ((iter->Get_Info().tLPoint.fX - fCX / 2 + 5 < fX && fX < iter->Get_Info().tLPoint.fX + fCX / 2 - 5)
+		if ((iter->Get_Info().tLPoint.fX - fCX / 2 + 3 < fX && fX < iter->Get_Info().tLPoint.fX + fCX / 2 - 7)
 			&& (iter->Get_Info().tLPoint.fY < fY && fY < iter->Get_Info().tRPoint.fY))
 		{
 			m_fX = iter->Get_Info().tLPoint.fX;
@@ -193,13 +193,13 @@ int		CLineMgr::Collision_Vertical_Line(float& fX, float& fY, float& fCX, float& 
 			if (iter->Get_LineType() == CLine::LEFTWALL)
 			{
 				m_AttachedLine = iter;
-				fX = m_fX - fCX / 2 + 6;
+				fX = m_fX - fCX / 2 + 4;
 				return -1;
 			}
 			else if (iter->Get_LineType() == CLine::RIGHTWALL)
 			{
 				m_AttachedLine = iter;
-				fX = m_fX + fCX / 2 - 6;
+				fX = m_fX + fCX / 2 - 8;
 				return 1;
 			}
 		}
@@ -298,14 +298,14 @@ bool CLineMgr::Can_Hang_Line(float fPointX, float fPointY, float& fX, float& fY,
 		{
 			if (((iter->Get_Info().tLPoint.fX == fPointX && iter->Get_Info().tLPoint.fY == fPointY) && fX < iter->Get_Info().tLPoint.fX) && iter->Get_LineType() == CLine::FLOOR)
 			{
-				fX = iter->Get_Info().tLPoint.fX - fCX / 2 - 5;
+				fX = iter->Get_Info().tLPoint.fX - fCX / 2 - 3;
 				fY = iter->Get_Info().tLPoint.fY + 10;
 				m_AttachedLine = iter;
 				return true;
 			}
-			else if (((iter->Get_Info().tRPoint.fX == fPointX && iter->Get_Info().tRPoint.fY == fPointY) && iter->Get_Info().tRPoint.fX + fCX / 2 - 15 < fX) && iter->Get_LineType() == CLine::FLOOR)
+			else if (((iter->Get_Info().tRPoint.fX == fPointX && iter->Get_Info().tRPoint.fY == fPointY) && iter->Get_Info().tRPoint.fX - 3 < fX) && iter->Get_LineType() == CLine::FLOOR)
 			{
-				fX = iter->Get_Info().tRPoint.fX + fCX / 2;
+				fX = iter->Get_Info().tRPoint.fX + fCX / 2 - 2;
 				fY = iter->Get_Info().tRPoint.fY + 10;
 				m_AttachedLine = iter;
 				return true;
