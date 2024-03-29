@@ -92,6 +92,8 @@ private:
 	void		HoldUp();
 	void		HoldDown();
 	void		TapZ();
+	void		TapC();
+	void		TapD();
 	
 
 private:

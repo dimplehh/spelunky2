@@ -218,30 +218,6 @@ void CPlayer::HoldDown()
 		m_eCurState = KNEELSTAY;
 }
 
-void CPlayer::TapZ()
-{
-	if (m_bKneelDown == true)	// 하향점프
-	{
-		if (CLineMgr::Get_Instance()->Collision_Board_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
-		{
-			m_tInfo.fY += 50;
-		}
-	}
-	else
-	{
-		if (m_iJumpCount < 1) //무한점프 방지
-		{
-			m_bJump = true;
-			m_eCurState = JUMP;
-			m_fTime = 0.f;
-			m_fPower = 10.f;
-			m_bLadder = false;
-			m_bCanHang = false;
-			m_iJumpCount++;
-		}
-	}
-}
-
 bool CPlayer::Die()
 {
 	if (m_iHp < 0)
@@ -431,8 +407,8 @@ void CPlayer::Key_Input()
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::HOLD) { HoldDown(); }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::AWAY) { if (!m_bLadder) { m_eCurState = STANDUP;	m_bKneelDown = false; } }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::G) == KEY_STATE::TAP) { SetHp(-1);		m_eCurState = ATTACKED; }
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::HOLD) { m_eCurState = ENTER; }
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::AWAY) { m_eCurState = EXIT; }
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::TAP) { m_eCurState = ENTER; }
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::F) == KEY_STATE::AWAY) { m_eCurState = EXIT; }
 	else if ((m_tFrame.bRoop == true && m_bLadder == false || ((m_tFrame.bRoop == false) && Check_Move_End() == true))&& m_bCanHang == false)
 	{
 		m_eCurState = IDLE;
@@ -441,25 +417,53 @@ void CPlayer::Key_Input()
 	}
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::X) == KEY_STATE::TAP) { m_eCurState = ATTACK; CSoundMgr::Get_Instance()->PlaySound(L"Attack.wav", SOUND_EFFECT, g_fVolume);}
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::Z) == KEY_STATE::TAP) { TapZ(); }
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::C) == KEY_STATE::TAP) 
-	{ 	 
-		if (SetBombCount(-1) == true) 
-		{
-			m_eCurState = THROW;
-			CObjMgr::Get_Instance()->Add_Object(OBJ_BOMB, CAbstractFactory<CBomb>::Create(m_tInfo.fX, m_tInfo.fY));
-			CSoundMgr::Get_Instance()->PlaySound(L"Throw2.wav", SOUND_EFFECT, g_fVolume);
-		}
-		else
-			CSoundMgr::Get_Instance()->PlaySound(L"Empty.wav", SOUND_EFFECT, g_fVolume);
-	}
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::D) == KEY_STATE::TAP)
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::C) == KEY_STATE::TAP) { TapC(); }
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::D) == KEY_STATE::TAP) { TapD(); }
+}
+
+void CPlayer::TapZ()
+{
+	if (m_bKneelDown == true)	// 하향점프
 	{
-		if (SetRopeCount(-1) == true)
+		if (CLineMgr::Get_Instance()->Collision_Board_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
 		{
-			CObjMgr::Get_Instance()->Add_Object(OBJ_ROPE, CRopeFactory::Create(m_tInfo.fX, m_tInfo.fY));
-			CSoundMgr::Get_Instance()->PlaySound(L"Rope.wav", SOUND_EFFECT, g_fVolume);
+			m_tInfo.fY += 50;
 		}
-		else
-			CSoundMgr::Get_Instance()->PlaySound(L"Empty.wav", SOUND_EFFECT, g_fVolume);
 	}
+	else
+	{
+		if (m_iJumpCount < 1) //무한점프 방지
+		{
+			m_bJump = true;
+			m_eCurState = JUMP;
+			m_fTime = 0.f;
+			m_fPower = 10.f;
+			m_bLadder = false;
+			m_bCanHang = false;
+			m_iJumpCount++;
+		}
+	}
+}
+
+void CPlayer::TapC()
+{
+	if (SetBombCount(-1) == true)
+	{
+		m_eCurState = THROW;
+		CObjMgr::Get_Instance()->Add_Object(OBJ_BOMB, CAbstractFactory<CBomb>::Create(m_tInfo.fX, m_tInfo.fY));
+		CSoundMgr::Get_Instance()->PlaySound(L"Throw2.wav", SOUND_EFFECT, g_fVolume);
+	}
+	else
+		CSoundMgr::Get_Instance()->PlaySound(L"Empty.wav", SOUND_EFFECT, g_fVolume);
+}
+
+void CPlayer::TapD()
+{
+	if (SetRopeCount(-1) == true)
+	{
+		CObjMgr::Get_Instance()->Add_Object(OBJ_ROPE, CRopeFactory::Create(m_tInfo.fX, m_tInfo.fY));
+		CSoundMgr::Get_Instance()->PlaySound(L"Rope.wav", SOUND_EFFECT, g_fVolume);
+	}
+	else
+		CSoundMgr::Get_Instance()->PlaySound(L"Empty.wav", SOUND_EFFECT, g_fVolume);
 }
