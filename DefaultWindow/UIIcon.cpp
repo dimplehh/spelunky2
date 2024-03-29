@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "UIIcon.h"
+#include "UIMgr.h"
 #include "BmpMgr.h"
 #include "KeyMgr.h"
 #include "SceneMgr.h"
@@ -37,11 +38,6 @@ int CUIIcon::Update()
 
 void CUIIcon::Late_Update()
 {
-	if (m_dwTime + 1000 < GetTickCount())
-	{
-		m_iTime++;
-		m_dwTime = GetTickCount();
-	}
 }
 
 void CUIIcon::Render(HDC hDC)
@@ -81,12 +77,12 @@ void CUIIcon::SetTimeToFont(HDC hDC)
 {
 	HDC hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"Font");
 	
-	int _min = m_iTime / 60;
-	int _sec = m_iTime % 60;
+	int _min = CUIMgr::Get_Instance()->Get_Time() / 60;
+	int _sec = CUIMgr::Get_Instance()->Get_Time() % 60;
 
 	GdiTransparentBlt(hDC, m_tInfo.fX + 10 + m_fTextX + 10.f * 0, m_tInfo.fY + m_fTextY, m_iSize, m_iSize, hMemDC, (_min / 10) * 16, 0, 16, 16, RGB(63, 63, 63));
 	GdiTransparentBlt(hDC, m_tInfo.fX + 10 + m_fTextX + 10.f * 1, m_tInfo.fY + m_fTextY, m_iSize, m_iSize, hMemDC, (_min % 10) * 16, 0, 16, 16, RGB(63, 63, 63));
-	GdiTransparentBlt(hDC, m_tInfo.fX + 10 + m_fTextX + 10.f * 2, m_tInfo.fY + m_fTextY, m_iSize, m_iSize, hMemDC, 10 * 16, 0, 16, 16, RGB(63, 63, 63));
+	GdiTransparentBlt(hDC, m_tInfo.fX + 10 + m_fTextX + 10.f * 2, m_tInfo.fY + m_fTextY, m_iSize, m_iSize, hMemDC,			10 * 16, 0, 16, 16, RGB(63, 63, 63));
 	GdiTransparentBlt(hDC, m_tInfo.fX + 10 + m_fTextX + 10.f * 3, m_tInfo.fY + m_fTextY, m_iSize, m_iSize, hMemDC, (_sec / 10) * 16, 0, 16, 16, RGB(63, 63, 63));
 	GdiTransparentBlt(hDC, m_tInfo.fX + 10 + m_fTextX + 10.f * 4, m_tInfo.fY + m_fTextY, m_iSize, m_iSize, hMemDC, (_sec % 10) * 16, 0, 16, 16, RGB(63, 63, 63));
 }

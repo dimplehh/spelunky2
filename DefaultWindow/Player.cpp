@@ -22,7 +22,8 @@ float g_fVolume(0.25f);
 
 CPlayer::CPlayer()
 	: m_fDistance(0.f), m_bJump(false), m_bLadder(false), m_iJumpCount(0), m_iHp(4), m_fPreY(0.f), m_fCurY(0.f), m_bCanHang(false), m_fDiffY(0.f),
-	m_fTime(0.f), m_fPower(0.f), m_ePreState(ST_END), m_eCurState(IDLE), m_bKneelDown(false), m_bAttachedBox(false), m_dwTime(GetTickCount())
+	m_fTime(0.f), m_fPower(0.f), m_ePreState(ST_END), m_eCurState(IDLE), m_bKneelDown(false), m_bAttachedBox(false), m_dwTime(GetTickCount()),
+	m_fFirstX(TILECX * 21), m_fFirstY(TILECY * 2)
 {
 	//ZeroMemory(&m_tPosin, sizeof(POINT));	// 나중에 총구구현에 쓸 수 있어 남겨놓음
 	m_eMyObjType = OBJECT_TYPE::PLAYER;
@@ -36,7 +37,7 @@ CPlayer::~CPlayer()
 
 void CPlayer::Initialize()
 {
-	m_tInfo		= { TILECX * 21 , TILECY * 2, 64.f, 64.f };
+	m_tInfo		= { m_fFirstX , m_fFirstY, 64.f, 64.f };
 	m_fSpeed	= 5.f;
 	m_fDistance = 100.f;
 	m_fPower = 2.f;
@@ -56,10 +57,15 @@ void CPlayer::Initialize()
 
 int CPlayer::Update()
 {
-	Die();
+	if (Die())
+		return OBJ_NOEVENT;
+
 	Key_Input();
+	
 	__super::Update_Rect();
+
 	Offset();
+	
 	return OBJ_NOEVENT;
 }
 
@@ -75,7 +81,8 @@ void CPlayer::Late_Update()	//어떤걸 Late_Update, 어떤걸 Update에 넣어야할지 잘 
 
 	if (m_dwTime + 1000 < GetTickCount())
 	{
-		cout << m_eCurState << endl;
+		cout << "m_iDeathTime : " << m_iDeathTime << endl;
+		cout << "UIMgr::GetTime() : " << CUIMgr::Get_Instance()->Get_Time() << endl;
 		m_dwTime = GetTickCount();
 	}
 #endif
@@ -126,7 +133,7 @@ void CPlayer::Motion_Change()
 		case CPlayer::JUMP:			Set_Frame(0, 11, 9, false, 15, 1, 15);		break;
 		case CPlayer::FALLING:		Set_Frame(0, 11, 9, false, 15, 1, 15);		break;
 		case CPlayer::DIZZY:		Set_Frame(0, 11, 13, false, 60, 3, 15);		break;
-		case CPlayer::DIE:			Set_Frame(9, 9, 0, false, 60, 1, 15);		break;
+		case CPlayer::DIE:			Set_Frame(9, 9, 0, true, 60, 0, 15);		break;
 		case CPlayer::LOOKUP:		Set_Frame(0, 3, 8, false, 60, 0, 15);		break;
 		case CPlayer::LOOKFRONT:	Set_Frame(3, 6, 8, false, 60, 1, 15);		break;
 		case CPlayer::KNEELDOWN:	Set_Frame(0, 2, 1, false, 60, 1, 15);		break;
@@ -149,8 +156,6 @@ void CPlayer::Motion_Change()
 
 void CPlayer::Key_Input()
 {
-	if (m_eCurState == DIE)
-		return;
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::HOLD) { HoldLeft(); }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::HOLD) { HoldRight(); }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::UP) == KEY_STATE::HOLD) { HoldUp(); }
@@ -279,10 +284,30 @@ void CPlayer::HoldDown()
 
 bool CPlayer::Die()
 {
-	if (m_iHp < 0)
+	if (m_iHp == 0)
 	{
-		m_iHp = 0;
 		m_eCurState = DIE;
+		if (m_bFirstDieCheck == true)
+		{
+			m_iDeathTime = CUIMgr::Get_Instance()->Get_Time();
+			m_bFirstDieCheck = false;
+		}
+		else
+		{
+			if (m_iDeathTime + 3 <= CUIMgr::Get_Instance()->Get_Time())
+			{
+				m_tInfo.fX = m_fFirstX;
+				m_tInfo.fY = m_fFirstY;
+
+				CScrollMgr::Get_Instance()->Set_ScrollXY(WINCX / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX,
+					WINCY - -CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY);
+
+				m_eCurState = IDLE;
+				SetHp(4);
+				m_iDeathTime = CUIMgr::Get_Instance()->Get_Time();
+				return false;
+			}
+		}
 		return true;
 	}
 	return false;

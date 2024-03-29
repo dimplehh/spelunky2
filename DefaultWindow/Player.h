@@ -31,7 +31,10 @@ public:
 	void		SetHp(int _num)
 	{
 		if (m_iHp + _num <= 0)
+		{
 			m_iHp = 0;
+			m_dwTime = GetTickCount();
+		}
 		else
 			m_iHp += _num;
 		CUIMgr::Get_Instance()->Set_UINum(CUIIcon::UI_HP, m_iHp);
@@ -103,6 +106,9 @@ private:
 private:
 
 	// POINT		m_tPosin; // 나중에 총 구현할때 사용할 수 있을듯
+	float		m_fFirstX;
+	float		m_fFirstY;
+
 	float		m_fDistance;
 	int			m_iHp;
 
@@ -127,6 +133,9 @@ private:
 
 	bool		m_bAlmostFell = false;
 	bool		m_bWallAttatched = false;
+
+	bool		m_bFirstDieCheck = true;
+	int			m_iDeathTime = 0;
 
 	int			m_iRopeCount = 0;
 	int			m_iBombCount = 0;

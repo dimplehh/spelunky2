@@ -29,6 +29,8 @@ private:
 	float		m_fPower;
 	float		m_fTime;
 
+	int			m_iBombPower = 1;
+
 	float		m_fPreY = 0;
 
 	bool		m_bKneelDown = false;

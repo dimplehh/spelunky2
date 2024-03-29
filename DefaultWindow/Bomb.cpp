@@ -118,19 +118,19 @@ void CBomb::Explosion()  // 폭발 범위 인게임과 똑같이 설정
 	if ((*m_pVecTile)[index - 2]->Get_Info().fX - TILECX / 2 <= _fX && _fX <= (*m_pVecTile)[index + 2]->Get_Info().fX + TILECX / 2
 		&& (*m_pVecTile)[index - TILEX]->Get_Info().fY - TILECY / 2 <= _fY && _fY <= (*m_pVecTile)[index + TILEX]->Get_Info().fY + TILECY / 2)	//	두번째줄 , 세번째줄에 해당될 때
 	{
-		dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetHp(-1);
+		dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetHp(-m_iBombPower);
 	}
 
 	if ((*m_pVecTile)[index - 1]->Get_Info().fX - TILECX / 2 <= _fX && _fX <= (*m_pVecTile)[index + 1]->Get_Info().fX + TILECX / 2
 		&& (*m_pVecTile)[index - TILEX * 2]->Get_Info().fY - TILECY / 2 <= _fY && _fY <= (*m_pVecTile)[index + TILEX]->Get_Info().fY + TILECY / 2)	// 가운데 세로 3줄
 	{
-		dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetHp(-1);
+		dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetHp(-m_iBombPower);
 	}
 
 	if ((*m_pVecTile)[index]->Get_Info().fX - TILECX / 2 <= _fX && _fX <= (*m_pVecTile)[index]->Get_Info().fX + TILECX / 2
 	&& (*m_pVecTile)[index - TILEX]->Get_Info().fY - TILEY / 2 <= _fY && _fY <= (*m_pVecTile)[index]->Get_Info().fY + TILEY / 2)	//		가장 가운데 2칸
 	{
-		dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetHp(-1);													// 여기까지 오면 체력 총 3번 깎임
+		dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetHp(-m_iBombPower);										// 여기까지 오면 체력 총 3번 깎임
 	}
 }
 

@@ -31,7 +31,6 @@ private:
 	UIID	m_eUiID = UI_END;
 	int		m_iNum = 0;
 	int		m_iSize = 0;
-	int		m_iTime = 0;
 
 	float	m_fTextX = 0;
 	float	m_fTextY = 0;
