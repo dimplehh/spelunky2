@@ -25,18 +25,18 @@ CMainGame::~CMainGame()
 
 void CMainGame::Initialize()
 {
-//#ifdef _DEBUG
-//
-//	if (::AllocConsole() == TRUE)
-//	{
-//		FILE* nfp[3];
-//		freopen_s(nfp + 0, "CONOUT$", "rb", stdin);
-//		freopen_s(nfp + 1, "CONOUT$", "wb", stdout);
-//		freopen_s(nfp + 2, "CONOUT$", "wb", stderr);
-//		std::ios::sync_with_stdio();
-//	}
-//
-//#endif // _DEBUG
+#ifdef _DEBUG
+
+	if (::AllocConsole() == TRUE)
+	{
+		FILE* nfp[3];
+		freopen_s(nfp + 0, "CONOUT$", "rb", stdin);
+		freopen_s(nfp + 1, "CONOUT$", "wb", stdout);
+		freopen_s(nfp + 2, "CONOUT$", "wb", stderr);
+		std::ios::sync_with_stdio();
+	}
+
+#endif // _DEBUG
 
 	m_hDC = GetDC(g_hWnd);
 	CKeyMgr::CreateSingleTonInst()->init();
@@ -72,9 +72,6 @@ void CMainGame::Render()
 		m_iFPS = 0;
 		m_dwTime = GetTickCount();
 	}
-
-	//if (SC_LOGO == CSceneMgr::Get_Instance()->Get_Scene())
-	//	return;
 	
 	HDC	hBackDC = CBmpMgr::Get_Instance()->Find_Image(L"Back");
 
@@ -85,11 +82,11 @@ void CMainGame::Render()
 
 void CMainGame::Release()
 {
-//#ifdef _DEBUG
-//
-//	FreeConsole();
-//
-//#endif // _DEBUG
+#ifdef _DEBUG
+
+	FreeConsole();
+
+#endif // _DEBUG
 
 	CTileMgr::Destroy();
 	CBmpMgr::Destroy();
