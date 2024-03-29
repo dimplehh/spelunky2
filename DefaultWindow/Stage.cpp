@@ -81,6 +81,19 @@ void CStage::Render(HDC hDC)
 		
 		AlphaBlend(hDC, 0, 0, WINCX, WINCY, hMemDC, 0, 0, WINCX, WINCY, _bf);
 	}
+	else if (dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetRevival() == true)
+	{
+		m_fAlpha -= 2.f;
+		if (m_fAlpha <= 0.f)
+			m_fAlpha = 0.f;
+
+		_bf.SourceConstantAlpha = m_fAlpha;
+
+		AlphaBlend(hDC, 0, 0, WINCX, WINCY, hMemDC, 0, 0, WINCX, WINCY, _bf);
+
+		if (m_fAlpha == 0)
+			dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetRevival(false);
+	}
 }
 
 void CStage::Release()

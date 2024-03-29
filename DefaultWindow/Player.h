@@ -27,6 +27,9 @@ public:
 	void		SetState(STATE _state) { m_eCurState = _state; }
 	bool		GetFlip() { return m_bFlip; }
 	bool		GetKneelDown() { return m_bKneelDown; }
+	bool		GetRevival() { return m_bRevival; }
+	void		SetRevival(bool _revival) { m_bRevival = _revival; }
+	int			GetDeathTime() { return m_iDeathTime; }
 	int			GetHp() { return m_iHp; }
 	void		SetHp(int _num)
 	{
@@ -133,6 +136,8 @@ private:
 
 	bool		m_bAlmostFell = false;
 	bool		m_bWallAttatched = false;
+
+	bool		m_bRevival = false;
 
 	bool		m_bFirstDieCheck = true;
 	int			m_iDeathTime = 0;

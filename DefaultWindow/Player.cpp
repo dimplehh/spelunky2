@@ -305,6 +305,7 @@ bool CPlayer::Die()
 				m_eCurState = IDLE;
 				SetHp(4);
 				m_iDeathTime = CUIMgr::Get_Instance()->Get_Time();
+				m_bRevival = true;
 				return false;
 			}
 		}
