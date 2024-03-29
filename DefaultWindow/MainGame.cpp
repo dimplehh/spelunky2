@@ -82,11 +82,11 @@ void CMainGame::Render()
 
 void CMainGame::Release()
 {
-//#ifdef _DEBUG
-//
-//	FreeConsole();
-//
-//#endif // _DEBUG
+#ifdef _DEBUG
+
+	FreeConsole();
+
+#endif // _DEBUG
 
 	CTileMgr::Destroy();
 	CBmpMgr::Destroy();

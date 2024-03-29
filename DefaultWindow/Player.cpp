@@ -71,14 +71,14 @@ void CPlayer::Late_Update()	//어떤걸 Late_Update, 어떤걸 Update에 넣어야할지 잘 
 	AlmostFell();
 	Motion_Change();
 	__super::Move_Frame();
-//#ifdef _DEBUG
-//
-//	if (m_dwTime + 100 < GetTickCount())
-//	{
-//		cout << m_bAttachedBox << endl;
-//		m_dwTime = GetTickCount();
-//	}
-//#endif
+#ifdef _DEBUG
+
+	if (m_dwTime + 1000 < GetTickCount())
+	{
+		cout << m_eCurState << endl;
+		m_dwTime = GetTickCount();
+	}
+#endif
 }
 
 void CPlayer::Release()
@@ -112,6 +112,65 @@ void CPlayer::SetRenderImage(HDC hDC)
 		GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY - 4, (int)m_tInfo.fCX + 8, (int)m_tInfo.fCY + 8,
 			hMemDC, m_tFrame.iFrameStart * (int)m_tInfo.fCX, m_tFrame.iMotion * (int)m_tInfo.fCY, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(62, 62, 62));
 	}
+}
+
+void CPlayer::Motion_Change()
+{
+	if (m_ePreState != m_eCurState)
+	{
+		m_iRepeatCount = 0;
+		switch (m_eCurState)
+		{
+		case CPlayer::IDLE:			Set_Frame(0, 0, 0, false, 60, 0, 15);		break;
+		case CPlayer::WALK:			Set_Frame(1, 8, 0, true, 30, 0, 15);		break;
+		case CPlayer::JUMP:			Set_Frame(0, 11, 9, false, 15, 1, 15);		break;
+		case CPlayer::FALLING:		Set_Frame(0, 11, 9, false, 15, 1, 15);		break;
+		case CPlayer::DIZZY:		Set_Frame(0, 11, 13, false, 60, 3, 15);		break;
+		case CPlayer::DIE:			Set_Frame(9, 9, 0, false, 60, 1, 15);		break;
+		case CPlayer::LOOKUP:		Set_Frame(0, 3, 8, false, 60, 0, 15);		break;
+		case CPlayer::LOOKFRONT:	Set_Frame(3, 6, 8, false, 60, 1, 15);		break;
+		case CPlayer::KNEELDOWN:	Set_Frame(0, 2, 1, false, 60, 1, 15);		break;
+		case CPlayer::KNEELSTAY:	Set_Frame(2, 2, 1, false, 60, 1, 15);		break;
+		case CPlayer::CRAWL:		Set_Frame(5, 11, 1, true, 20, 0, 15);		break;
+		case CPlayer::STANDUP:		Set_Frame(2, 4, 1, false, 60, 1, 15);		break;
+		case CPlayer::ATTACKED:		Set_Frame(0, 11, 13, false, 60, 3, 15);		break;
+		case CPlayer::ALMOSTFELL:	Set_Frame(0, 7, 3, true, 60, 0, 15);		break;
+		case CPlayer::ATTACK:		Set_Frame(0, 7, 0, false, 60, 1, 7);		break;
+		case CPlayer::ENTER:		Set_Frame(0, 5, 5, false, 30, 2, 15);		break;
+		case CPlayer::EXIT:			Set_Frame(6, 11, 5, false, 30, 2, 15);		break;
+		case CPlayer::LADDER:		Set_Frame(0, 5, 6, true, 60, 0, 15);		break;
+		case CPlayer::PUSH:			Set_Frame(6, 11, 6, true, 60, 0, 15);		break;	// 상자가 덜덜거리지 않는 구간 - offset에 변화가 없는 구간, 차후 수정 필요
+		case CPlayer::HANGON:		Set_Frame(8, 11, 3, true, 100, 0, 15);		break;
+		case CPlayer::THROW:		Set_Frame(6, 10, 4, false, 80, 1, 15);		break;
+		}
+		m_ePreState = m_eCurState;
+	}
+}
+
+void CPlayer::Key_Input()
+{
+	if (m_eCurState == DIE)
+		return;
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::HOLD) { HoldLeft(); }
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::HOLD) { HoldRight(); }
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::UP) == KEY_STATE::HOLD) { HoldUp(); }
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::UP) == KEY_STATE::AWAY) { if (!m_bLadder)		m_eCurState = LOOKFRONT; }
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::TAP) { if (!m_bLadder) { m_eCurState = KNEELDOWN;	m_bKneelDown = true; } }
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::HOLD) { HoldDown(); }
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::AWAY) { if (!m_bLadder) { m_eCurState = STANDUP;	m_bKneelDown = false; } }
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::G) == KEY_STATE::TAP) { SetHp(-1);		m_eCurState = ATTACKED; }
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::TAP) { m_eCurState = ENTER; }
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::F) == KEY_STATE::AWAY) { m_eCurState = EXIT; }
+	else if ((m_tFrame.bRoop == true && m_bLadder == false || ((m_tFrame.bRoop == false) && Check_Move_End() == true)) && m_bCanHang == false)
+	{
+		m_eCurState = IDLE;
+		m_bKneelDown = false;
+		m_bAttachedBox = false;
+	}
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::X) == KEY_STATE::TAP) { m_eCurState = ATTACK; CSoundMgr::Get_Instance()->PlaySound(L"Attack.wav", SOUND_EFFECT, g_fVolume); }
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::Z) == KEY_STATE::TAP) { TapZ(); }
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::C) == KEY_STATE::TAP) { TapC(); }
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::D) == KEY_STATE::TAP) { TapD(); }
 }
 
 void CPlayer::HoldLeft()
@@ -231,7 +290,7 @@ bool CPlayer::Die()
 
 void CPlayer::FallDamage()
 {
-	if (m_bJump == false && !CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
+	if (m_bJump == false && !CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump) && m_eCurState != DIZZY)
 	{
 		m_eCurState = FALLING;
 	}
@@ -360,65 +419,6 @@ void CPlayer::Gravity()	//숫자 의미 판단, 더 정리 필요 -> Obj로 나중에 빼야될듯
 			return;
 		}
 	}
-}
-
-void CPlayer::Motion_Change()
-{
-	if (m_ePreState != m_eCurState)
-	{
-		m_iRepeatCount = 0;
-		switch (m_eCurState)
-		{
-		case CPlayer::IDLE:			Set_Frame(0, 0, 0, false, 60, 0, 15);		break;
-		case CPlayer::WALK:			Set_Frame(1, 8, 0, true, 30, 0, 15);		break;
-		case CPlayer::JUMP:			Set_Frame(0, 11, 9, false, 15, 1, 15);		break;
-		case CPlayer::FALLING:		Set_Frame(0, 11, 9, false, 15, 1, 15);		break;
-		case CPlayer::DIZZY:		Set_Frame(0, 11, 13, false, 60, 3, 15);		break;
-		case CPlayer::DIE:			Set_Frame(9, 9, 0, false, 60, 1, 15);		break;
-		case CPlayer::LOOKUP:		Set_Frame(0, 3, 8, false, 60, 0, 15);		break;
-		case CPlayer::LOOKFRONT:	Set_Frame(3, 6, 8, false, 60, 1, 15);		break;
-		case CPlayer::KNEELDOWN:	Set_Frame(0, 2, 1, false, 60, 1, 15);		break;
-		case CPlayer::KNEELSTAY:	Set_Frame(2, 2, 1, false, 60,1, 15);		break;
-		case CPlayer::CRAWL:		Set_Frame(5, 11, 1, true, 20, 0, 15);		break;
-		case CPlayer::STANDUP:		Set_Frame(2, 4, 1, false, 60, 1, 15);		break;
-		case CPlayer::ATTACKED:		Set_Frame(0, 11, 13, false, 60, 3, 15);		break;
-		case CPlayer::ALMOSTFELL:	Set_Frame(0, 7, 3, true, 60, 0, 15);		break;
-		case CPlayer::ATTACK:		Set_Frame(0, 7, 0, false, 60, 1, 7);		break;
-		case CPlayer::ENTER:		Set_Frame(0, 5, 5, false, 30, 2, 15);		break;
-		case CPlayer::EXIT:			Set_Frame(6, 11, 5, false, 30,2, 15);		break;
-		case CPlayer::LADDER:		Set_Frame(0, 5, 6, true, 60 , 0, 15);		break;
-		case CPlayer::PUSH:			Set_Frame(6, 11, 6, true, 60, 0, 15);		break;	// 상자가 덜덜거리지 않는 구간 - offset에 변화가 없는 구간, 차후 수정 필요
-		case CPlayer::HANGON:		Set_Frame(8, 11, 3, true, 100, 0, 15);		break;
-		case CPlayer::THROW:		Set_Frame(6, 10, 4, false, 80, 1, 15);		break;
-		}
-		m_ePreState = m_eCurState;
-	}
-}
-
-void CPlayer::Key_Input()
-{
-	if (m_eCurState == DIE)
-		return;
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::HOLD) { HoldLeft(); }
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::HOLD) { HoldRight(); }
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::UP) == KEY_STATE::HOLD) { HoldUp(); }
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::UP) == KEY_STATE::AWAY) { if (!m_bLadder)		m_eCurState = LOOKFRONT; }
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::TAP) { if (!m_bLadder) { m_eCurState = KNEELDOWN;	m_bKneelDown = true; } }
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::HOLD) { HoldDown(); }
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::AWAY) { if (!m_bLadder) { m_eCurState = STANDUP;	m_bKneelDown = false; } }
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::G) == KEY_STATE::TAP) { SetHp(-1);		m_eCurState = ATTACKED; }
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::TAP) { m_eCurState = ENTER; }
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::F) == KEY_STATE::AWAY) { m_eCurState = EXIT; }
-	else if ((m_tFrame.bRoop == true && m_bLadder == false || ((m_tFrame.bRoop == false) && Check_Move_End() == true))&& m_bCanHang == false)
-	{
-		m_eCurState = IDLE;
-		m_bKneelDown = false;
-		m_bAttachedBox = false;
-	}
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::X) == KEY_STATE::TAP) { m_eCurState = ATTACK; CSoundMgr::Get_Instance()->PlaySound(L"Attack.wav", SOUND_EFFECT, g_fVolume);}
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::Z) == KEY_STATE::TAP) { TapZ(); }
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::C) == KEY_STATE::TAP) { TapC(); }
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::D) == KEY_STATE::TAP) { TapD(); }
 }
 
 void CPlayer::TapZ()

@@ -24,6 +24,7 @@ public:
 	void		SetAttachedBox(bool _isAttached) { m_bAttachedBox = _isAttached; }
 	bool		GetAttatchedBox() { return m_bAttachedBox; }
 	STATE		GetState() { return m_eCurState; }
+	void		SetState(STATE _state) { m_eCurState = _state; }
 	bool		GetFlip() { return m_bFlip; }
 	bool		GetKneelDown() { return m_bKneelDown; }
 	int			GetHp() { return m_iHp; }
@@ -34,6 +35,9 @@ public:
 		else
 			m_iHp += _num;
 		CUIMgr::Get_Instance()->Set_UINum(CUIIcon::UI_HP, m_iHp);
+
+		if (_num < 0)
+			m_eCurState = DIZZY;
 	}
 	int			GetRopeCount() { return m_iRopeCount; };
 	bool		SetRopeCount(int _num)
