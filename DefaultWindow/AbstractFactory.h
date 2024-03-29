@@ -95,7 +95,7 @@ public:
 class CUIFactory
 {
 public:
-	static CObj* Create(float _fX, float _fY, CUIIcon::UIID _uiId, int _num = 0)
+	static CObj* Create(float _fX, float _fY, CUIIcon::UIID _uiId, int _num = 0, float _fTextX = 0, float _fTextY = 0)
 	{
 		CObj* pObj = new CUIIcon;
 		
@@ -104,6 +104,7 @@ public:
 		
 		dynamic_cast<CUIIcon*>(pObj)->SetUIID(_uiId);
 		dynamic_cast<CUIIcon*>(pObj)->Set_Num(_num);
+		dynamic_cast<CUIIcon*>(pObj)->SetTextXY(_fTextX, _fTextY);
 
 		return pObj;
 	}

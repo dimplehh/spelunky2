@@ -46,7 +46,7 @@ void CUIIcon::Render(HDC hDC)
 
 	hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"Font");
 
-	GdiTransparentBlt(hDC, m_tInfo.fX + 10 /*+ 16 * 1*/, m_tInfo.fY + 10, 16, 16, hMemDC, (m_iNum % 10) * 16, 0, 16, 16, RGB(63, 63, 63));
+	GdiTransparentBlt(hDC, m_tInfo.fX + 10 + m_fTextX, m_tInfo.fY + m_fTextY, 16, 16, hMemDC, (m_iNum % 10) * 16, 0, 16, 16, RGB(63, 63, 63));
 }
 
 void CUIIcon::Release()
