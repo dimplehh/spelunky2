@@ -35,12 +35,11 @@ public:
 			m_iHp += _num;
 		CUIMgr::Get_Instance()->Set_UINum(CUIIcon::UI_HP, m_iHp);
 	}
+	int			GetRopeCount() { return m_iRopeCount; };
 	bool		SetRopeCount(int _num)
 	{
 		if (m_iRopeCount + _num < 0)
-		{
 			return false;
-		}
 		else
 		{
 			m_iRopeCount += _num;
@@ -48,12 +47,11 @@ public:
 			return true;
 		}
 	}
+	int			GetBombCount() { return m_iBombCount; };
 	bool		SetBombCount(int _num)
 	{
 		if (m_iBombCount + _num < 0)
-		{
 			return false;
-		}
 		else
 		{
 			m_iBombCount += _num;
@@ -61,8 +59,18 @@ public:
 			return true;
 		}
 	}
-	int			GetRopeCount() { return m_iRopeCount; };
-	int			GetBombCount() { return m_iBombCount; };
+	int			GetMoney() { return m_iMoney; }
+	bool		SetMoney(int _num)
+	{
+		if (m_iMoney + _num < 0)
+			return false;
+		else
+		{
+			m_iMoney += _num;
+			CUIMgr::Get_Instance()->Set_UINum(CUIIcon::UI_MONEY, m_iMoney);
+			return true;
+		}
+	}
 
 private:
 	void		SetRenderImage(HDC hDC);
@@ -114,8 +122,9 @@ private:
 	bool		m_bAlmostFell = false;
 	bool		m_bWallAttatched = false;
 
-	int			m_iRopeCount = 3;
-	int			m_iBombCount = 3;
+	int			m_iRopeCount = 0;
+	int			m_iBombCount = 0;
+	int			m_iMoney = 0;
 
 private:
 	DWORD				m_dwTime;

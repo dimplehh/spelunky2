@@ -1,11 +1,14 @@
 #include "stdafx.h"
 #include "BmpMgr.h"
+#include "SoundMgr.h"
 #include "ScrollMgr.h"
 #include "LineMgr.h"
 #include "TileMgr.h"
 #include "ObjMgr.h"
 #include "Player.h"
 #include "Bomb.h"
+
+extern float g_fVolume;
 
 CBomb::CBomb():m_dwTime(GetTickCount()), m_fTime(0.f)
 {
@@ -143,6 +146,7 @@ bool CBomb::Gravity()
 }
 void CBomb::Release()
 {
+	CSoundMgr::Get_Instance()->PlaySound(L"Eruption.wav", SOUND_EFFECT, g_fVolume);
 }
 
 

@@ -433,7 +433,6 @@ void CPlayer::Key_Input()
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::G) == KEY_STATE::TAP) { SetHp(-1);		m_eCurState = ATTACKED; }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::HOLD) { m_eCurState = ENTER; }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::AWAY) { m_eCurState = EXIT; }
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::D) == KEY_STATE::TAP) { if(SetRopeCount(-1) == true) CObjMgr::Get_Instance()->Add_Object(OBJ_ROPE, CRopeFactory::Create(m_tInfo.fX, m_tInfo.fY));}
 	else if ((m_tFrame.bRoop == true && m_bLadder == false || ((m_tFrame.bRoop == false) && Check_Move_End() == true))&& m_bCanHang == false)
 	{
 		m_eCurState = IDLE;
@@ -442,5 +441,21 @@ void CPlayer::Key_Input()
 	}
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::X) == KEY_STATE::TAP) { m_eCurState = ATTACK; CSoundMgr::Get_Instance()->PlaySound(L"Attack.wav", SOUND_EFFECT, g_fVolume);}
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::Z) == KEY_STATE::TAP) { TapZ(); }
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::C) == KEY_STATE::TAP) { m_eCurState = THROW;	 if (SetBombCount(-1) == true) CObjMgr::Get_Instance()->Add_Object(OBJ_BOMB, CAbstractFactory<CBomb>::Create(m_tInfo.fX, m_tInfo.fY)); }
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::C) == KEY_STATE::TAP) 
+	{ 	 
+		if (SetBombCount(-1) == true) 
+		{
+			m_eCurState = THROW;
+			CObjMgr::Get_Instance()->Add_Object(OBJ_BOMB, CAbstractFactory<CBomb>::Create(m_tInfo.fX, m_tInfo.fY));
+			CSoundMgr::Get_Instance()->PlaySound(L"Throw2.wav", SOUND_EFFECT, g_fVolume);
+		}
+	}
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::D) == KEY_STATE::TAP)
+	{
+		if (SetRopeCount(-1) == true)
+		{
+			CObjMgr::Get_Instance()->Add_Object(OBJ_ROPE, CRopeFactory::Create(m_tInfo.fX, m_tInfo.fY));
+			CSoundMgr::Get_Instance()->PlaySound(L"Rope.wav", SOUND_EFFECT, g_fVolume);
+		}
+	}
 }

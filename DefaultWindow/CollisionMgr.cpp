@@ -1,7 +1,11 @@
 #include "stdafx.h"
 #include "CollisionMgr.h"
+#include "SoundMgr.h"
 #include "Player.h"
 #include "KeyMgr.h"
+#include "Item.h"
+
+extern float g_fVolume;
 
 CCollisionMgr::CCollisionMgr()
 {
@@ -11,37 +15,6 @@ CCollisionMgr::CCollisionMgr()
 CCollisionMgr::~CCollisionMgr()
 {
 }
-
-void CCollisionMgr::Collision_Rect(list<CObj*> _Dst, list<CObj*> _Src)
-{
-	RECT	rcRect{};
-
-	for (auto& Dst : _Dst)
-	{
-		for (auto& Src : _Src)
-		{
-			if (IntersectRect(&rcRect, &(Dst->Get_Rect()), &(Src->Get_Rect())))
-			{
-				//Dst->SetCollision(true);
-				//Src->SetCollision(true);
-
-				//if (OBJECT_TYPE::PLAYER == Dst->Get_MyObjType())
-				//{
-				//	if (OBJECT_TYPE::MONSTER == Src->Get_MyObjType())
-				//	{
-				//		Dst->SetCollision(true);
-				//		Src->SetCollision(true);
-				//		dynamic_cast<CPlayer*>(Dst)->SetAttachedBox(true);
-				//	}
-				//	/*else
-				//		dynamic_cast<CPlayer*>(Dst)->SetAttachedBox(false);*/
-				//}
-				
-			}
-		}
-	}
-}
-
 
 void CCollisionMgr::Collision_RectEx(CObj* Dst, CObj* Src)
 {
@@ -73,6 +46,44 @@ void CCollisionMgr::Collision_RectEx(CObj* Dst, CObj* Src)
 				if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::HOLD || 
 					CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::HOLD)
 					dynamic_cast<CPlayer*>(Src)->SetAttachedBox(true);
+			}
+		}
+		if (OBJECT_TYPE::PLAYER == Src->Get_MyObjType())
+		{
+			if (OBJECT_TYPE::ITEM == Dst->Get_MyObjType())
+			{
+				Dst->SetCollision(true);
+				Src->SetCollision(true);
+				int _num = dynamic_cast<CItem*>(Dst)->Get_Num();
+
+				switch (dynamic_cast<CItem*>(Dst)->Get_ItemID())
+				{
+				case CItem::ITEM_GEM:
+				{
+					CSoundMgr::Get_Instance()->PlaySound(L"Gem.wav", SOUND_EFFECT, g_fVolume);
+					break;
+				}
+				case CItem::ITEM_GOLD:
+				{
+					CSoundMgr::Get_Instance()->PlaySound(L"Gem.wav", SOUND_EFFECT, g_fVolume);
+					break;
+				}
+				case CItem::ITEM_BOMB:
+				{
+					CSoundMgr::Get_Instance()->PlaySound(L"Gem.wav", SOUND_EFFECT, g_fVolume);
+					dynamic_cast<CPlayer*>(Src)->SetBombCount(_num);
+					break;
+				}
+				case CItem::ITEM_ROPE:
+				{
+					CSoundMgr::Get_Instance()->PlaySound(L"Gem.wav", SOUND_EFFECT, g_fVolume);
+					dynamic_cast<CPlayer*>(Src)->SetRopeCount(_num);
+					break;
+				}
+				default:
+					break;
+				}
+				Dst->Set_Dead();
 			}
 		}
 	}
