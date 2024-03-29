@@ -7,6 +7,7 @@
 #include "Rope.h"
 #include "Bomb.h"
 #include "UIIcon.h"
+#include "Item.h"
 
 template<typename T>
 class CAbstractFactory
@@ -103,6 +104,23 @@ public:
 		
 		dynamic_cast<CUIIcon*>(pObj)->SetUIID(_uiId);
 		dynamic_cast<CUIIcon*>(pObj)->Set_Num(_num);
+
+		return pObj;
+	}
+};
+
+class CItemFactory
+{
+public:
+	static CObj* Create(float _fX, float _fY, CItem::ITEMID _ItemId, int _num)
+	{
+		CObj* pObj = new CItem;
+
+		pObj->Initialize();
+		pObj->Set_Pos(_fX, _fY);
+
+		dynamic_cast<CItem*>(pObj)->Set_ItemID(_ItemId);
+		dynamic_cast<CItem*>(pObj)->Set_Num(_num);
 
 		return pObj;
 	}

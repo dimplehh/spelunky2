@@ -31,18 +31,17 @@ void CStage::Initialize()	// 여기좀 정리하기
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Box.bmp", L"Box");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Rope.bmp", L"Rope");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Bomb2.bmp", L"Bomb");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Item.bmp", L"Item");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/Monster.bmp", L"Monster");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/DecoLand.bmp", L"DecoLand");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Font/Font.bmp", L"Font");
 
-
 	CObjMgr::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CPlayer>::Create());
-
 	CObjMgr::Get_Instance()->Add_Object(OBJ_UI, CUIFactory::Create(50.f, 50.f, CUIIcon::UI_HP, dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetHp()));
 	CUIMgr::Get_Instance()->Insert_UI(CUIIcon::UI_HP, dynamic_cast<CUIIcon*>(CObjMgr::Get_Instance()->Get_UI()));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_UI, CUIFactory::Create(50.f + TILECX, 50.f, CUIIcon::UI_ROPE));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_UI, CUIFactory::Create(50.f + TILECX, 50.f, CUIIcon::UI_ROPE, dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetRopeCount()));
 	CUIMgr::Get_Instance()->Insert_UI(CUIIcon::UI_ROPE, dynamic_cast<CUIIcon*>(CObjMgr::Get_Instance()->Get_UI()));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_UI, CUIFactory::Create(50.f + TILECX * 2, 50.f, CUIIcon::UI_BOMB));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_UI, CUIFactory::Create(50.f + TILECX * 2, 50.f, CUIIcon::UI_BOMB, dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetBombCount()));
 	CUIMgr::Get_Instance()->Insert_UI(CUIIcon::UI_BOMB, dynamic_cast<CUIIcon*>(CObjMgr::Get_Instance()->Get_UI()));
 	CObjMgr::Get_Instance()->Add_Object(OBJ_UI, CUIFactory::Create(WINCX - TILECX * 6, 50.f, CUIIcon::UI_MONEY));
 	CUIMgr::Get_Instance()->Insert_UI(CUIIcon::UI_MONEY, dynamic_cast<CUIIcon*>(CObjMgr::Get_Instance()->Get_UI()));
@@ -55,6 +54,11 @@ void CStage::Initialize()	// 여기좀 정리하기
 	CObjMgr::Get_Instance()->Add_Object(OBJ_BOX, CBoxFactory::Create(TILECX * (38 + 0.5f), TILECY * 17));
 	CObjMgr::Get_Instance()->Add_Object(OBJ_BOX, CBoxFactory::Create(TILECX * (20 + 0.5f), TILECY * 6));
 	CObjMgr::Get_Instance()->Add_Object(OBJ_BOX, CBoxFactory::Create(TILECX * (15 + 0.5f), TILECY * 1));
+
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CItemFactory::Create(TILECX * (22 + 0.5f), TILECY * 6, CItem::ITEM_BOMB, 3));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CItemFactory::Create(TILECX * (23 + 0.5f), TILECY * 6, CItem::ITEM_ROPE, 3));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CItemFactory::Create(TILECX * (24 + 0.5f), TILECY * 6, CItem::ITEM_GOLD, 1000));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CItemFactory::Create(TILECX * (25 + 0.5f), TILECY * 6, CItem::ITEM_GEM, 500));
 
 	CTileMgr::Get_Instance()->Load_Tile();
 	CLineMgr::Get_Instance()->Initialize();
