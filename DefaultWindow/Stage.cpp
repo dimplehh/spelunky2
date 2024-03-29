@@ -83,6 +83,7 @@ void CStage::Render(HDC hDC)
 	}
 	else if (dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetRevival() == true)
 	{
+		m_fAlpha = 0.f;
 		hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"FadeIn");
 
 		GdiTransparentBlt(hDC, 0, 0, WINCX, WINCY, hMemDC, (m_fFadeIn / 2) * WINCX, 0, WINCX, WINCY, RGB(55, 55, 55));
@@ -144,7 +145,6 @@ void CStage::InsertBoxs()
 {
 	CObjMgr::Get_Instance()->Add_Object(OBJ_BOX, CBoxFactory::Create(TILECX * (59 + 0.5f), TILECY * 10));
 	CObjMgr::Get_Instance()->Add_Object(OBJ_BOX, CBoxFactory::Create(TILECX * (38 + 0.5f), TILECY * 17));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_BOX, CBoxFactory::Create(TILECX * (20 + 0.5f), TILECY * 6));
 	CObjMgr::Get_Instance()->Add_Object(OBJ_BOX, CBoxFactory::Create(TILECX * (15 + 0.5f), TILECY * 1));
 }
 
@@ -154,4 +154,5 @@ void CStage::InsertItems()
 	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CItemFactory::Create(TILECX * (23 + 0.5f), TILECY * 6, CItem::ITEM_ROPE, 3));
 	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CItemFactory::Create(TILECX * (24 + 0.5f), TILECY * 6, CItem::ITEM_GOLD, 1000));
 	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CItemFactory::Create(TILECX * (25 + 0.5f), TILECY * 6, CItem::ITEM_GEM, 500));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CItemFactory::Create(TILECX * (26 + 0.5f), TILECY * 6, CItem::ITEM_BOMB, 3));
 }

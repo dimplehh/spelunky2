@@ -13,6 +13,7 @@ public:
 	void		Set_UINum(CUIIcon::UIID _uiId, int _iNum) { m_mapUI[_uiId]->Set_Num(_iNum); }
 	int			Get_Time() { return m_iTime; }
 	void		Set_Time(int _time) { m_iTime += _time; }
+	void		Reset_Time() { m_iTime = 0; }
 
 public:
 	void	Late_Update();

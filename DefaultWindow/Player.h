@@ -46,6 +46,7 @@ public:
 			m_eCurState = DIZZY;
 	}
 	int			GetRopeCount() { return m_iRopeCount; };
+	void		SetRopeCount() { m_iRopeCount = 0; CUIMgr::Get_Instance()->Set_UINum(CUIIcon::UI_ROPE, m_iRopeCount); }
 	bool		SetRopeCount(int _num)
 	{
 		if (m_iRopeCount + _num < 0)
@@ -57,7 +58,9 @@ public:
 			return true;
 		}
 	}
+
 	int			GetBombCount() { return m_iBombCount; };
+	void		SetBombCount() { m_iBombCount = 0; CUIMgr::Get_Instance()->Set_UINum(CUIIcon::UI_BOMB, m_iBombCount); }
 	bool		SetBombCount(int _num)
 	{
 		if (m_iBombCount + _num < 0)
@@ -69,7 +72,9 @@ public:
 			return true;
 		}
 	}
+
 	int			GetMoney() { return m_iMoney; }
+	void		SetMoney() { m_iMoney = 0; CUIMgr::Get_Instance()->Set_UINum(CUIIcon::UI_MONEY, m_iMoney); }
 	bool		SetMoney(int _num)
 	{
 		if (m_iMoney + _num < 0)
@@ -84,6 +89,12 @@ public:
 
 private:
 	void		SetRenderImage(HDC hDC);
+	void		ResetNum() 
+	{
+		SetRopeCount();
+		SetBombCount();
+		SetMoney();
+	}
 
 	void		Key_Input();
 	void		Offset();

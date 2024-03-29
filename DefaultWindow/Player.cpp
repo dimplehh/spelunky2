@@ -69,6 +69,41 @@ int CPlayer::Update()
 	return OBJ_NOEVENT;
 }
 
+bool CPlayer::Die()
+{
+	if (m_iHp == 0)
+	{
+		m_eCurState = DIE;
+		if (m_bFirstDieCheck == true)
+		{
+			m_iDeathTime = CUIMgr::Get_Instance()->Get_Time();
+			m_bFirstDieCheck = false;
+		}
+		else
+		{
+			if (m_iDeathTime + 3 <= CUIMgr::Get_Instance()->Get_Time())
+			{
+				m_tInfo.fX = m_fFirstX;
+				m_tInfo.fY = m_fFirstY;
+
+				CScrollMgr::Get_Instance()->Set_ScrollXY(WINCX / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX,
+					WINCY - -CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY);
+
+				m_eCurState = IDLE;
+				SetHp(4);
+				ResetNum();
+				CUIMgr::Get_Instance()->Reset_Time();
+				m_iDeathTime = CUIMgr::Get_Instance()->Get_Time();
+				m_bRevival = true;
+				m_bFirstDieCheck = true;
+				return false;
+			}
+		}
+		return true;
+	}
+	return false;
+}
+
 void CPlayer::Late_Update()	//어떤걸 Late_Update, 어떤걸 Update에 넣어야할지 잘 생각해야 할듯
 {
 	m_bJump = !CLineMgr::Get_Instance()->Collision_Line_Ceiling(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump); //천장체킹
@@ -178,6 +213,54 @@ void CPlayer::Key_Input()
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::D) == KEY_STATE::TAP) { TapD(); }
 }
 
+void CPlayer::FallDamage()
+{
+	if (m_bJump == false && !CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump) && m_eCurState != DIZZY)
+	{
+		m_eCurState = FALLING;
+	}
+	else if (m_fDiffY >= TILECY * 6)
+	{
+		SetHp(-1);
+		m_eCurState = DIZZY;
+	}
+}
+
+void CPlayer::AlmostFell()
+{
+	if (CLineMgr::Get_Instance()->Check_Almost_Fell(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
+	{
+		m_bAlmostFell = true;
+		if (m_eCurState == IDLE)
+			m_eCurState = ALMOSTFELL;
+	}
+	else
+	{
+		m_bAlmostFell = false;
+	}
+}
+
+void CPlayer::InLadder()
+{
+	if (CLineMgr::Get_Instance()->Ladder_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
+	{
+		m_iJumpCount = 0;
+		m_bLadder = true;
+	}
+	else
+		m_bLadder = false;
+}
+
+bool CPlayer::Check_Move_End()
+{
+	if (m_tFrame.bRoop == false)
+	{
+		if (m_tFrame.iRepeat == m_iRepeatCount)
+			return true;
+	}
+	return false;
+}
+
 void CPlayer::HoldLeft()
 {
 	if (m_bLadder || m_bCanHang || m_eCurState == ATTACK)
@@ -282,84 +365,51 @@ void CPlayer::HoldDown()
 		m_eCurState = KNEELSTAY;
 }
 
-bool CPlayer::Die()
+void CPlayer::TapZ()
 {
-	if (m_iHp == 0)
+	if (m_bKneelDown == true)	// 하향점프
 	{
-		m_eCurState = DIE;
-		if (m_bFirstDieCheck == true)
+		if (CLineMgr::Get_Instance()->Collision_Board_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
 		{
-			m_iDeathTime = CUIMgr::Get_Instance()->Get_Time();
-			m_bFirstDieCheck = false;
+			m_tInfo.fY += 50;
 		}
-		else
-		{
-			if (m_iDeathTime + 3 <= CUIMgr::Get_Instance()->Get_Time())
-			{
-				m_tInfo.fX = m_fFirstX;
-				m_tInfo.fY = m_fFirstY;
-
-				CScrollMgr::Get_Instance()->Set_ScrollXY(WINCX / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX,
-					WINCY - -CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY);
-
-				m_eCurState = IDLE;
-				SetHp(4);
-				m_iDeathTime = CUIMgr::Get_Instance()->Get_Time();
-				m_bRevival = true;
-				return false;
-			}
-		}
-		return true;
-	}
-	return false;
-}
-
-void CPlayer::FallDamage()
-{
-	if (m_bJump == false && !CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump) && m_eCurState != DIZZY)
-	{
-		m_eCurState = FALLING;
-	}
-	else if (m_fDiffY >= TILECY * 5)
-	{
-		SetHp(-1);
-		m_eCurState = DIZZY;
-	}
-}
-
-void CPlayer::AlmostFell()
-{
-	if (CLineMgr::Get_Instance()->Check_Almost_Fell(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
-	{
-		m_bAlmostFell = true;
-		if (m_eCurState == IDLE)
-			m_eCurState = ALMOSTFELL;
 	}
 	else
 	{
-		m_bAlmostFell = false;
+		if (m_iJumpCount < 1) //무한점프 방지
+		{
+			m_bJump = true;
+			m_eCurState = JUMP;
+			m_fTime = 0.f;
+			m_fPower = 10.f;
+			m_bLadder = false;
+			m_bCanHang = false;
+			m_iJumpCount++;
+		}
 	}
 }
 
-void CPlayer::InLadder()
+void CPlayer::TapC()
 {
-	if (CLineMgr::Get_Instance()->Ladder_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
+	if (SetBombCount(-1) == true)
 	{
-		m_iJumpCount = 0;
-		m_bLadder = true;
+		m_eCurState = THROW;
+		CObjMgr::Get_Instance()->Add_Object(OBJ_BOMB, CAbstractFactory<CBomb>::Create(m_tInfo.fX, m_tInfo.fY));
+		CSoundMgr::Get_Instance()->PlaySound(L"Throw2.wav", SOUND_EFFECT, g_fVolume);
 	}
 	else
-		m_bLadder = false;
+		CSoundMgr::Get_Instance()->PlaySound(L"Empty.wav", SOUND_EFFECT, g_fVolume);
 }
 
-bool CPlayer::Check_Move_End()
+void CPlayer::TapD()
 {
-	if (m_tFrame.bRoop == false)
+	if (SetRopeCount(-1) == true)
 	{
-		if (m_tFrame.iRepeat == m_iRepeatCount)
-			return true;
+		CObjMgr::Get_Instance()->Add_Object(OBJ_ROPE, CRopeFactory::Create(m_tInfo.fX, m_tInfo.fY));
+		CSoundMgr::Get_Instance()->PlaySound(L"Rope.wav", SOUND_EFFECT, g_fVolume);
 	}
-	return false;
+	else
+		CSoundMgr::Get_Instance()->PlaySound(L"Empty.wav", SOUND_EFFECT, g_fVolume);
 }
 
 void CPlayer::Offset()
@@ -380,7 +430,7 @@ void CPlayer::Offset()
 			if (m_fMoveOffset < 10.f)
 			{
 				m_fMoveOffset += 0.3f;
-				if(m_eCurState == LOOKUP)
+				if (m_eCurState == LOOKUP)
 					CScrollMgr::Get_Instance()->Set_ScrollY(m_fMoveOffset);
 				else if (m_eCurState == KNEELSTAY)
 					CScrollMgr::Get_Instance()->Set_ScrollY(-m_fMoveOffset);
@@ -430,7 +480,7 @@ void CPlayer::Gravity()	//숫자 의미 판단, 더 정리 필요 -> Obj로 나중에 빼야될듯
 		{
 			m_fPower = 0.f;
 			m_iJumpCount = 0;
-			if(nullptr != CLineMgr::Get_Instance()->Get_AttachedLine())
+			if (nullptr != CLineMgr::Get_Instance()->Get_AttachedLine())
 				m_fCurY = CLineMgr::Get_Instance()->Get_AttachedLine()->Get_Info().tLPoint.fY;
 			if (m_fPreY != m_fCurY)
 			{
@@ -445,51 +495,4 @@ void CPlayer::Gravity()	//숫자 의미 판단, 더 정리 필요 -> Obj로 나중에 빼야될듯
 			return;
 		}
 	}
-}
-
-void CPlayer::TapZ()
-{
-	if (m_bKneelDown == true)	// 하향점프
-	{
-		if (CLineMgr::Get_Instance()->Collision_Board_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
-		{
-			m_tInfo.fY += 50;
-		}
-	}
-	else
-	{
-		if (m_iJumpCount < 1) //무한점프 방지
-		{
-			m_bJump = true;
-			m_eCurState = JUMP;
-			m_fTime = 0.f;
-			m_fPower = 10.f;
-			m_bLadder = false;
-			m_bCanHang = false;
-			m_iJumpCount++;
-		}
-	}
-}
-
-void CPlayer::TapC()
-{
-	if (SetBombCount(-1) == true)
-	{
-		m_eCurState = THROW;
-		CObjMgr::Get_Instance()->Add_Object(OBJ_BOMB, CAbstractFactory<CBomb>::Create(m_tInfo.fX, m_tInfo.fY));
-		CSoundMgr::Get_Instance()->PlaySound(L"Throw2.wav", SOUND_EFFECT, g_fVolume);
-	}
-	else
-		CSoundMgr::Get_Instance()->PlaySound(L"Empty.wav", SOUND_EFFECT, g_fVolume);
-}
-
-void CPlayer::TapD()
-{
-	if (SetRopeCount(-1) == true)
-	{
-		CObjMgr::Get_Instance()->Add_Object(OBJ_ROPE, CRopeFactory::Create(m_tInfo.fX, m_tInfo.fY));
-		CSoundMgr::Get_Instance()->PlaySound(L"Rope.wav", SOUND_EFFECT, g_fVolume);
-	}
-	else
-		CSoundMgr::Get_Instance()->PlaySound(L"Empty.wav", SOUND_EFFECT, g_fVolume);
 }
