@@ -48,6 +48,8 @@ void CUIIcon::Render(HDC hDC)
 
 	if (m_eUiID == UI_TIME)
 		SetTimeToFont(hDC);
+	else if (m_eUiID == UI_MAP)
+		SetMapFont(hDC);
 	else
 		SetNumberToFont(hDC);
 }
@@ -71,6 +73,15 @@ void CUIIcon::SetNumberToFont(HDC  hDC)
 				break;
 		}
 	}
+}
+
+void CUIIcon::SetMapFont(HDC hDC)
+{
+	HDC hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"Font");
+
+	GdiTransparentBlt(hDC, m_tInfo.fX + 10 + m_fTextX + 10.f * 0, m_tInfo.fY + m_fTextY, m_iSize, m_iSize, hMemDC, (m_iNum % 10) * 16, 0, 16, 16, RGB(63, 63, 63));
+	GdiTransparentBlt(hDC, m_tInfo.fX + 10 + m_fTextX + 10.f * 1, m_tInfo.fY + m_fTextY, m_iSize, m_iSize, hMemDC, 11 * 16, 0, 16, 16, RGB(63, 63, 63));
+	GdiTransparentBlt(hDC, m_tInfo.fX + 10 + m_fTextX + 10.f * 2, m_tInfo.fY + m_fTextY, m_iSize, m_iSize, hMemDC, 1 * 16, 0, 16, 16, RGB(63, 63, 63));
 }
 
 void CUIIcon::SetTimeToFont(HDC hDC)

@@ -25,6 +25,8 @@ CStage::~CStage()
 
 void CStage::Initialize()
 {
+	__super::m_iMapNum = 1;
+
 	CObjMgr::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CPlayer>::Create());
 	InsertBmps();
 	InsertUIs();
@@ -34,7 +36,6 @@ void CStage::Initialize()
 	CLineMgr::Get_Instance()->Initialize();
 	CScrollMgr::Get_Instance()->Set_ScrollXY(	WINCX / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX, 
 												WINCY - -CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY);
-
 	_bf.BlendOp = AC_SRC_OVER;
 	_bf.BlendFlags = 0;
 	_bf.AlphaFormat = AC_SRC_ALPHA;
@@ -120,7 +121,7 @@ void CStage::InsertUIs()
 	CObjMgr::Get_Instance()->Add_Object(OBJ_UI, CUIFactory::Create(WINCX - TILECX * 4, 50.f, CUIIcon::UI_TIME, 0, 15.f, 10.f, -7.f));
 	CUIMgr::Get_Instance()->Insert_UI(CUIIcon::UI_TIME, dynamic_cast<CUIIcon*>(CObjMgr::Get_Instance()->Get_UI()));
 	
-	CObjMgr::Get_Instance()->Add_Object(OBJ_UI, CUIFactory::Create(WINCX - TILECX * 2, 50.f, CUIIcon::UI_MAP, 0, 15.f, 10.f, -7.f));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_UI, CUIFactory::Create(WINCX - TILECX * 2, 50.f, CUIIcon::UI_MAP, __super::m_iMapNum, 15.f, 10.f, -7.f));
 	CUIMgr::Get_Instance()->Insert_UI(CUIIcon::UI_MAP, dynamic_cast<CUIIcon*>(CObjMgr::Get_Instance()->Get_UI()));
 }
 

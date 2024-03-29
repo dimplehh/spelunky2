@@ -24,6 +24,7 @@ public:
 
 private:
 	void	SetNumberToFont(HDC  hDC);
+	void	SetMapFont(HDC hDC);
 	void	SetTimeToFont(HDC hDC);
 
 private:
