@@ -78,7 +78,12 @@ void CPlayer::Late_Update()	//어떤걸 Late_Update, 어떤걸 Update에 넣어야할지 잘 
 	Motion_Change();
 	__super::Move_Frame();
 	if ((m_tFrame.bRoop == false) && Check_Move_End() == true)
-		m_eCurState = IDLE;
+	{
+		if (m_bCanHang == true)
+			m_eCurState = HANGON;
+		else
+			m_eCurState = IDLE;
+	}
 
 #ifdef _DEBUG
 
@@ -228,11 +233,11 @@ void CPlayer::HoldLeft()
 				m_eCurState = HANGON;
 			}
 		}
-		if (!m_bJump)
+		if (!m_bJump && m_bCanHang == false)
 		{
 			m_eCurState = WALK;
 		}
-		if(m_eCurState != HANGON)
+		if(m_bCanHang == false)
 			m_tInfo.fX -= m_fSpeed;
 	}
 }
@@ -266,11 +271,11 @@ void CPlayer::HoldRight()
 				m_eCurState = HANGON;
 			}
 		}
-		if (!m_bJump)
+		if (!m_bJump && m_bCanHang == false)
 		{
 			m_eCurState = WALK;
 		}
-		if (m_eCurState != HANGON)
+		if (m_bCanHang == false)
 			m_tInfo.fX += m_fSpeed;
 	}
 }
