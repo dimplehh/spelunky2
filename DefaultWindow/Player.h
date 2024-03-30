@@ -5,7 +5,7 @@
 
 class CPlayer :	public CObj
 {
-public:								//±âÀý	//À§¸¦ º½			// ¾þµå¸²			//±â¾î°¨	//ÀÏ¾î¼¶	//¶³¾îÁü
+public:										//±âÀý	//À§¸¦ º½			// ¾þµå¸²			//±â¾î°¨	//ÀÏ¾î¼¶	//¶³¾îÁü
 	enum STATE { IDLE, WALK, JUMP, DIZZY, DIE, LOOKUP, LOOKFRONT, KNEELDOWN, KNEELSTAY, CRAWL, STANDUP,		FALLING,
 					ATTACKED, ALMOSTFELL, ATTACK, ENTER, EXIT, LADDER, PUSH, HANGON, THROW, ST_END };
 							//¶³¾îÁú »·										// ¸Å´Þ¸²//´øÁö±â
@@ -140,8 +140,8 @@ private:
 	bool		m_bFirstDieCheck = true;
 	int			m_iDeathTime = 0;
 
-	int			m_iRopeCount = 0;
-	int			m_iBombCount = 0;
+	int			m_iRopeCount = 3;
+	int			m_iBombCount = 3;
 	int			m_iMoney = 0;
 
 private:

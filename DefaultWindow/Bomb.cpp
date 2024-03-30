@@ -152,7 +152,7 @@ void CBomb::SetExplodedTile(int index)
 
 bool CBomb::Gravity()
 {
-	if (!CLineMgr::Get_Instance()->Collision_Box_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, false))
+	if (!CLineMgr::Get_Instance()->Collision_Box_Line(m_tInfo.fX, m_tInfo.fY, (m_tInfo.fCX - 15.f), (m_tInfo.fCY - 15.f), false))
 	{						//if 플레이어가 충돌상태가 아니라면 + (점프상태가 아니라면)
 		m_fTime += 0.2f;
 

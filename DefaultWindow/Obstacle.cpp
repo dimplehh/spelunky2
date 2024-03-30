@@ -37,7 +37,7 @@ void CObstacle::Late_Update()
 {
 	INFO _playerInfo = CObjMgr::Get_Instance()->Get_Player()->Get_Info();
 	if (m_tInfo.fX - m_tInfo.fCX / 2 + 10.f <= _playerInfo.fX && _playerInfo.fX <= m_tInfo.fX + m_tInfo.fCX / 2 - 10.f
-		&& m_tInfo.fY - m_tInfo.fCY / 2 + 10.f <= _playerInfo.fY && _playerInfo.fY <= m_tInfo.fY + m_tInfo.fCY / 2)
+		&& m_tInfo.fY - m_tInfo.fCY / 2 + 20.f <= _playerInfo.fY && _playerInfo.fY <= m_tInfo.fY + m_tInfo.fCY / 2)
 	{
 		dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetHp(0);
 		m_iMotion = 1;

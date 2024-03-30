@@ -7,7 +7,7 @@
 #include "Item.h"
 #include "Player.h"
 
-CChest::CChest()
+CChest::CChest() : m_fTime(0.f), m_fPower(0.f)
 {
 	m_eMyObjType = OBJECT_TYPE::CHEST;
 }
@@ -37,6 +37,8 @@ int CChest::Update()
 
 void CChest::Late_Update()
 {
+	Gravity();
+
 	INFO _playerInfo = CObjMgr::Get_Instance()->Get_Player()->Get_Info();
 
 	if (((m_tInfo.fX - m_tInfo.fCX - 10 <= _playerInfo.fX && _playerInfo.fX <= m_tInfo.fX)
@@ -69,4 +71,28 @@ void CChest::Release()
 	}
 	else
 		CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CItemFactory::Create(m_tInfo.fX, m_tInfo.fY - 10.f, m_eItemID));
+}
+
+bool CChest::Gravity()
+{
+	if (!CLineMgr::Get_Instance()->Collision_Box_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, false))
+	{						//if 플레이어가 충돌상태가 아니라면 + (점프상태가 아니라면)
+		m_fTime += 0.2f;
+
+		float fGravity = m_fPower * m_fTime - ((4.9f * m_fTime * m_fTime) * 0.5f); // 중력 적용 2번 검사하기에 중력값 절반
+
+		if (fGravity < -5.f)	// 중력 속도의 최대치 설정
+			fGravity = -5.f;
+
+		if (fGravity > 5.f)	// 점프 속도의 최대치 설정
+			fGravity = 5.f;
+
+		m_tInfo.fY -= fGravity;	// y 값은 중력값만큼 변환
+		return false;
+	}
+	else	// 플레이어가 충돌 중인경우
+	{
+		m_fPower = 0.f;			// 점프력 초기화
+		return true;
+	}
 }

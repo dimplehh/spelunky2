@@ -96,7 +96,7 @@ bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool
 		return false;
 }
 
-bool CLineMgr::Collision_Box_Line(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping)
+bool CLineMgr::Collision_Box_Line(float& fX, float& fY, float fCX, float fCY, bool _Jumping)
 {
 	if (m_LineList.empty())							// 맵에 선이 없다면 
 		return false;								// 충돌 x
@@ -296,16 +296,20 @@ bool CLineMgr::Can_Hang_Line(float fPointX, float fPointY, float& fX, float& fY,
 	{
 		for (auto& iter : m_LineList)
 		{
-			if (((iter->Get_Info().tLPoint.fX == fPointX && iter->Get_Info().tLPoint.fY == fPointY) && fX < iter->Get_Info().tLPoint.fX) && iter->Get_LineType() == CLine::FLOOR)
+			if (((iter->Get_Info().tLPoint.fX == fPointX && iter->Get_Info().tLPoint.fY == fPointY) && fX < iter->Get_Info().tLPoint.fX)
+				&& fPointY - 10 <= fY - fCY / 2 & fY - fCY / 2 <= fPointY + 10
+				&& iter->Get_LineType() == CLine::FLOOR)
 			{
 				fX = iter->Get_Info().tLPoint.fX - fCX / 2 - 3;
 				fY = iter->Get_Info().tLPoint.fY + 10;
 				m_AttachedLine = iter;
 				return true;
 			}
-			else if (((iter->Get_Info().tRPoint.fX == fPointX && iter->Get_Info().tRPoint.fY == fPointY) && iter->Get_Info().tRPoint.fX - 3 < fX) && iter->Get_LineType() == CLine::FLOOR)
+			else if (((iter->Get_Info().tRPoint.fX == fPointX && iter->Get_Info().tRPoint.fY == fPointY) && iter->Get_Info().tRPoint.fX < fX)
+				&& fPointY - 10 <= fY - fCY / 2 & fY - fCY / 2 <= fPointY + 10
+				&& iter->Get_LineType() == CLine::FLOOR)
 			{
-				fX = iter->Get_Info().tRPoint.fX + fCX / 2 - 2;
+				fX = iter->Get_Info().tRPoint.fX + fCX / 2 - 3;
 				fY = iter->Get_Info().tRPoint.fY + 10;
 				m_AttachedLine = iter;
 				return true;

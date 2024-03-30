@@ -19,6 +19,12 @@ public:
 	void	SetChestItemID(CItem::ITEMID _chestItemID) { m_eItemID = _chestItemID; }
 
 private:
+	bool		Gravity();
+
+	float				m_fPower;
+	float				m_fTime;
+
+private:
 	CItem::ITEMID		m_eItemID = CItem::ITEM_END;
 };
 
