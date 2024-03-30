@@ -20,7 +20,7 @@ float g_fVolume(0.25f);
 
 CPlayer::CPlayer()
 	: m_fDistance(0.f), m_bJump(false), m_bLadder(false), m_iJumpCount(0), m_iHp(4), m_fPreY(0.f), m_fCurY(0.f), m_bCanHang(false), m_fDiffY(0.f),
-	m_fTime(0.f), m_fPower(0.f), m_ePreState(ST_END), m_eCurState(IDLE), m_bKneelDown(false), m_bAttachedBox(false), m_bIsHold(false), m_bCanHold(false),
+	m_fTime(0.f), m_fPower(0.f), m_ePreState(ST_END), m_eCurState(IDLE), m_bKneelDown(false), m_bAttachedBox(false), m_bIsHold(false), m_bCanHold(false), m_bThrow(false),
 	m_dwTime(GetTickCount()), m_fFirstX(TILECX * (21 + m_tInfo.fCX / 2)), m_fFirstY(TILECY + m_tInfo.fCY / 2)
 {
 	//ZeroMemory(&m_tPosin, sizeof(POINT));	// 나중에 총구구현에 쓸 수 있어 남겨놓음
@@ -143,7 +143,7 @@ void CPlayer::Key_Input()
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::Z) == KEY_STATE::TAP) { TapZ(); }
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::C) == KEY_STATE::TAP) { TapC(); }
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::D) == KEY_STATE::TAP) { TapD(); }
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::X) == KEY_STATE::TAP) { m_eCurState = ATTACK; CSoundMgr::Get_Instance()->PlaySound(L"Attack.wav", SOUND_EFFECT, g_fVolume); }
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::X) == KEY_STATE::TAP) { TapX(); }
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::TAP) { m_eCurState = ENTER; }
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::F) == KEY_STATE::TAP) { m_eCurState = EXIT; }
 
@@ -153,6 +153,20 @@ void CPlayer::Key_Input()
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::TAP) { if (!m_bLadder) { m_eCurState = KNEELDOWN;	m_bKneelDown = true; } }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::HOLD) { HoldDown(); }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::AWAY) { if (!m_bLadder) { m_eCurState = STANDUP;	m_bKneelDown = false; } }
+}
+
+void CPlayer::TapX()
+{
+	if (m_bIsHold == false)
+	{
+		m_eCurState = ATTACK;
+		CSoundMgr::Get_Instance()->PlaySound(L"Attack.wav", SOUND_EFFECT, g_fVolume);
+	}
+	else
+	{
+		m_eCurState = THROW;
+		m_bThrow = true;
+	}
 }
 
 void CPlayer::TapZ()

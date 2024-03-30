@@ -74,6 +74,8 @@ public:
 	}
 	bool		GetCanHold() { return m_bCanHold; }
 	void		SetIsHold(bool _isHold) { m_bIsHold = _isHold; }
+	bool		GetThrow() { return m_bThrow; }
+	void		SetThrow(bool _throw) { m_bThrow = _throw; }
 
 private:
 	void		SetRenderImage(HDC hDC);
@@ -100,6 +102,7 @@ private:
 	void		HoldRight();
 	void		HoldUp();
 	void		HoldDown();
+	void		TapX();
 	void		TapZ();
 	void		TapC();
 	void		TapD();
@@ -121,6 +124,8 @@ private:
 	bool		m_bAttachedBox;	// 상자와 닿은 상태
 	bool		m_bCanHold;		// 잡을 수 있는 상태 ( 아래키 + x)
 	bool		m_bIsHold;		// 무엇인가를 잡은 상태
+	bool		m_bThrow;
+
 	int			m_iJumpCount;
 
 	float		m_fPower;

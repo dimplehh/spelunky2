@@ -3,6 +3,12 @@
 #include "LineMgr.h"
 #include "BmpMgr.h"
 #include "ScrollMgr.h"
+#include "Player.h"
+#include "ObjMgr.h"
+#include "AbstractFactory.h"
+#include "SoundMgr.h"
+
+extern float g_fVolume;
 
 CHoldObj::CHoldObj() : m_fTime(0.f), m_fPower(0.f), m_eHoldObjID(HOLDOBJ_JAR), m_pOwner(nullptr)
 {
@@ -37,8 +43,32 @@ void CHoldObj::Late_Update()
 		Gravity();
 	else
 	{
-		m_tInfo.fX = (m_pOwner)->Get_Info().fX;
-		m_tInfo.fY = (m_pOwner)->Get_Info().fY;
+		if (dynamic_cast<CPlayer*>(m_pOwner)->GetThrow() == false)
+		{
+			m_tInfo.fX = (m_pOwner)->Get_Info().fX;
+			m_tInfo.fY = (m_pOwner)->Get_Info().fY;
+		}
+		else
+		{
+			if (!CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, false))
+			{
+				CLineMgr::Get_Instance()->Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY); //이거 작동 안하는거가튼딩;;
+
+				if (dynamic_cast<CPlayer*>(m_pOwner)->GetFlip() == true)
+					m_tInfo.fX -= 10.f;
+				else
+					m_tInfo.fX += 10.f;
+
+				m_tInfo.fY = dynamic_cast<CPlayer*>(m_pOwner)->Get_Info().fY - 40.f * m_fTime + ((9.8f * m_fTime * m_fTime) * 0.5f);
+				m_fTime += 0.5f;
+			}
+			else
+			{
+				dynamic_cast<CPlayer*>(m_pOwner)->SetIsHold(false);
+				dynamic_cast<CPlayer*>(m_pOwner)->SetThrow(false);
+				m_bDead = true;
+			}
+		}
 	}
 }
 
@@ -49,12 +79,14 @@ void CHoldObj::Render(HDC hDC)
 
 	HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
 
-	GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + 20 + iScrollY, 48, 48,
+	GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + 10 + iScrollY, 48, 48,
 		hMemDC, m_eHoldObjID * (int)m_tInfo.fCX, 0, m_tInfo.fCX, m_tInfo.fCY, RGB(255, 255, 255));
 }
 
 void CHoldObj::Release()	//항아리의 경우 던지면 보석이 나와야함
 {
+	CSoundMgr::Get_Instance()->PlaySound(L"Splash.wav", SOUND_EFFECT, g_fVolume);
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CItemFactory::Create(m_tInfo.fX, m_tInfo.fY - 10.f, CItem::ITEM_GEM));
 }
 
 bool CHoldObj::Gravity()
