@@ -415,9 +415,14 @@ void CLineMgr::MakeEtcLine()
 	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ (17 + 0.5f) * TILECX, 18 * TILECY }, LINEPOINT{ (17 + 0.5f) * TILECX, 15 * TILECY }, CLine::LADDER));				// 사다리
 	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ (3 + 0.5f) * TILECX, 18 * TILECY }, LINEPOINT{ (3 + 0.5f) * TILECX, 14 * TILECY }, CLine::LADDER));
 	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ (32 + 0.5f) * TILECX, 23 * TILECY }, LINEPOINT{ (32 + 0.5f) * TILECX, 19 * TILECY }, CLine::LADDER));
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ (4 + 0.5f) * TILECX, 6 * TILECY }, LINEPOINT{ (4 + 0.5f) * TILECX, 1 * TILECY }, CLine::LADDER));
 
-	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 4 * TILECX, 15 * TILECY + 20 }, LINEPOINT{ 5 * TILECX, 15 * TILECY + 10 }, CLine::BOARD));							// 발판
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 4 * TILECX, 15 * TILECY + 20 }, LINEPOINT{ 5 * TILECX, 15 * TILECY + 10 }, CLine::BOARD));						// 발판
 	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 5 * TILECX, 15 * TILECY + 20 }, LINEPOINT{ 6 * TILECX, 15 * TILECY + 10 }, CLine::BOARD));
+
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 6 * TILECX, 4 * TILECY }, LINEPOINT{ 7 * TILECX, 4 * TILECY }, CLine::BOARD));
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 9 * TILECX, 7 * TILECY }, LINEPOINT{ 10 * TILECX, 7 * TILECY }, CLine::BOARD));
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 10 * TILECX, 8 * TILECY }, LINEPOINT{ 11 * TILECX, 8 * TILECY }, CLine::BOARD));
 
 	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 15 * TILECX, 17 * TILECY + 15 }, LINEPOINT{ 16 * TILECX, 17 * TILECY + 15 }, CLine::BOARD));
 	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 16 * TILECX, 17 * TILECY + 15 }, LINEPOINT{ 17 * TILECX, 17 * TILECY + 15 }, CLine::BOARD));
