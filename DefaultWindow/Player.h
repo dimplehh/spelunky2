@@ -148,8 +148,8 @@ private:
 	bool		m_bFirstDieCheck = true;
 	int			m_iDeathTime = 0;
 
-	int			m_iRopeCount = 3;
-	int			m_iBombCount = 3;
+	int			m_iRopeCount = 0;
+	int			m_iBombCount = 0;
 	int			m_iMoney = 0;
 
 private:

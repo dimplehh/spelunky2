@@ -175,5 +175,5 @@ void CStage::InsertChests()
 
 void CStage::InsertHoldObjs()
 {
-	CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CAbstractFactory<CHoldObj>::Create(TILECX * (21 + 0.5f), TILECY * (6 + 0.5f)));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CAbstractFactory<CHoldObj>::Create(TILECX * (16 + 0.5f), TILECY * (4 + 0.5f)));
 }

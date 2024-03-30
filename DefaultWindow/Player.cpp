@@ -13,7 +13,6 @@
 #include "HoldObj.h"
 #include "UIMgr.h"
 #include <iostream>
-
 #include "SoundMgr.h"
 
 float g_fVolume(0.25f);
