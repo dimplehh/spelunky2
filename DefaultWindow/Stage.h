@@ -14,6 +14,9 @@ public:
 	virtual void Release() override;
 
 private:
+	void		FadeInOut(HDC hDC);
+
+private:
 	void		InsertBmps();
 	void		InsertUIs();
 	void		InsertObstacles();

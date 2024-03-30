@@ -72,6 +72,11 @@ void CStage::Render(HDC hDC)
 	CLineMgr::Get_Instance()->Render(hDC);
 
 	CObjMgr::Get_Instance()->RenderUI(hDC);	// ui 가장 마지막에 렌더
+	FadeInOut(hDC);
+}
+
+void CStage::FadeInOut(HDC hDC)
+{
 	HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"Fade");
 	if (dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetHp() == 0) //fade 효과 그보다 더 마지막에 렌더
 	{
@@ -80,7 +85,7 @@ void CStage::Render(HDC hDC)
 			m_fAlpha = 255.f;
 
 		_bf.SourceConstantAlpha = m_fAlpha;
-		
+
 		AlphaBlend(hDC, 0, 0, WINCX, WINCY, hMemDC, 0, 0, WINCX, WINCY, _bf);
 	}
 	else if (dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetRevival() == true)
@@ -89,7 +94,7 @@ void CStage::Render(HDC hDC)
 		hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"FadeIn");
 
 		GdiTransparentBlt(hDC, 0, 0, WINCX, WINCY, hMemDC, (m_fFadeIn / 2) * WINCX, 0, WINCX, WINCY, RGB(55, 55, 55));
-		
+
 		m_fFadeIn++;
 
 		if (m_fFadeIn / 2 > 9)
