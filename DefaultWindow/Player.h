@@ -73,6 +73,7 @@ public:
 		}
 	}
 	bool		GetCanHold() { return m_bCanHold; }
+	void		SetCanHold(bool _canHold) { m_bCanHold = _canHold; }
 	void		SetIsHold(bool _isHold) { m_bIsHold = _isHold; }
 	bool		GetThrow() { return m_bThrow; }
 	void		SetThrow(bool _throw) { m_bThrow = _throw; }

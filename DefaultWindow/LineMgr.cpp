@@ -176,7 +176,7 @@ bool CLineMgr::Collision_Line_Ceiling(float& fX, float& fY, float& fCX, float& f
 		return 0;
 }
 
-int		CLineMgr::Collision_Vertical_Line(float& fX, float& fY, float& fCX, float& fCY)	//벽충돌
+int		CLineMgr::Collision_Vertical_Line(float& fX, float& fY, float fCX, float fCY)	//벽충돌
 {
 	if (m_LineList.empty())
 		return 0;

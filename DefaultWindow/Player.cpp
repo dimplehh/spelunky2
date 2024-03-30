@@ -161,7 +161,7 @@ void CPlayer::TapX()
 		m_eCurState = ATTACK;
 		CSoundMgr::Get_Instance()->PlaySound(L"Attack.wav", SOUND_EFFECT, g_fVolume);
 	}
-	else
+	else if(!(CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::HOLD))
 	{
 		m_eCurState = THROW;
 		m_bThrow = true;
@@ -321,9 +321,19 @@ void CPlayer::HoldDown()
 	{
 		m_eCurState = KNEELSTAY;
 		if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::X) == KEY_STATE::HOLD)
-			m_bCanHold = true;
+		{
+			if (m_bIsHold == false)
+				m_bCanHold = true;
+			else
+				m_bCanHold = false;
+		}
 		else
-			m_bCanHold = false;
+		{
+			if (m_bIsHold == false)
+				m_bCanHold = false;
+			else
+				m_bCanHold = true;
+		}
 	}
 }
 
