@@ -152,7 +152,7 @@ void CStage::InsertUIs()
 
 void CStage::InsertObstacles()
 {
-	CObjMgr::Get_Instance()->Add_Object(OBJ_OBSTACLE, CAbstractFactory<CObstacle>::Create(TILECX * (27 + 0.5f), TILECY * (6 + 0.5f)));
+	//CObjMgr::Get_Instance()->Add_Object(OBJ_OBSTACLE, CAbstractFactory<CObstacle>::Create(TILECX * (27 + 0.5f), TILECY * (6 + 0.5f)));
 }
 
 void CStage::InsertBoxs()

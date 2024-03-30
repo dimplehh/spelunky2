@@ -128,8 +128,8 @@ void CPlayer::Key_Input()
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::TAP) { m_bFlip = true; m_pFrameKey = L"Player_FLIP";}
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::TAP) { m_bFlip = false; m_pFrameKey = L"Player_BASE";}
 
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::HOLD
-		&& CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::HOLD) {m_eCurState = IDLE;}
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::HOLD && CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::HOLD) 
+	{m_eCurState = IDLE;}
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::HOLD) { HoldLeft(); }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::HOLD) { HoldRight(); }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::AWAY) { m_eCurState = IDLE; }
@@ -232,7 +232,8 @@ void CPlayer::HoldLeft()
 		{
 			m_eCurState = WALK;
 		}
-		m_tInfo.fX -= m_fSpeed;
+		if(m_eCurState != HANGON)
+			m_tInfo.fX -= m_fSpeed;
 	}
 }
 
@@ -269,7 +270,8 @@ void CPlayer::HoldRight()
 		{
 			m_eCurState = WALK;
 		}
-		m_tInfo.fX += m_fSpeed;
+		if (m_eCurState != HANGON)
+			m_tInfo.fX += m_fSpeed;
 	}
 }
 

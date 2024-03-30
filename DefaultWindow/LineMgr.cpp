@@ -309,7 +309,7 @@ bool CLineMgr::Can_Hang_Line(float fPointX, float fPointY, float& fX, float& fY,
 				&& fPointY - 10 <= fY - fCY / 2 & fY - fCY / 2 <= fPointY + 10
 				&& iter->Get_LineType() == CLine::FLOOR)
 			{
-				fX = iter->Get_Info().tRPoint.fX + fCX / 2 - 3;
+				fX = iter->Get_Info().tRPoint.fX + fCX / 2 - 4;
 				fY = iter->Get_Info().tRPoint.fY + 10;
 				m_AttachedLine = iter;
 				return true;
