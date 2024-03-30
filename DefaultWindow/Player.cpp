@@ -320,19 +320,10 @@ void CPlayer::HoldDown()
 	else
 	{
 		m_eCurState = KNEELSTAY;
-		if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::X) == KEY_STATE::HOLD)
+		if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::X) == KEY_STATE::TAP)
 		{
-			if (m_bIsHold == false)
-				m_bCanHold = true;
-			else
-				m_bCanHold = false;
-		}
-		else
-		{
-			if (m_bIsHold == false)
-				m_bCanHold = false;
-			else
-				m_bCanHold = true;
+			if (m_bCanHold == true)
+				m_bIsHold = true;
 		}
 	}
 }

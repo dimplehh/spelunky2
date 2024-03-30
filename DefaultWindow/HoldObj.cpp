@@ -32,6 +32,9 @@ int CHoldObj::Update()
 	if (m_bDead)
 		return OBJ_DEAD;
 
+	if(m_bCollision == true	&& dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetIsHold() == true)
+		SetOwner(CObjMgr::Get_Instance()->Get_Player());
+
 	__super::Update_Rect();
 
 	return OBJ_NOEVENT;
@@ -43,11 +46,7 @@ void CHoldObj::Late_Update()
 		Gravity();
 	else
 	{
-		if (dynamic_cast<CPlayer*>(m_pOwner)->GetCanHold() == false)
-		{
-			m_pOwner = nullptr;
-		}
-		else if (dynamic_cast<CPlayer*>(m_pOwner)->GetThrow() == false)
+		if (dynamic_cast<CPlayer*>(m_pOwner)->GetThrow() == false)
 		{
 			m_tInfo.fX = (m_pOwner)->Get_Info().fX;
 			m_tInfo.fY = (m_pOwner)->Get_Info().fY  + 7.f;

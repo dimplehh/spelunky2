@@ -31,13 +31,16 @@ void CCollisionMgr::Collision_Rect(CObj* Dst, CObj* Src)
 			{
 				Dst->SetCollision(true);
 				Src->SetCollision(true);
-				if (dynamic_cast<CPlayer*>(Src)->GetCanHold() == true)
-				{
-					dynamic_cast<CHoldObj*>(Dst)->SetOwner(Src);
-					dynamic_cast<CPlayer*>(Src)->SetIsHold(true);
-				}
+
+				dynamic_cast<CPlayer*>(Src)->SetCanHold(true);
 			}
 		}
+	}
+	else
+	{
+		Dst->SetCollision(false);
+		Src->SetCollision(false);
+		dynamic_cast<CPlayer*>(Src)->SetCanHold(false);
 	}
 }
 
@@ -72,19 +75,6 @@ void CCollisionMgr::Collision_RectEx(CObj* Dst, CObj* Src)
 				if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::HOLD || 
 					CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::HOLD)
 					dynamic_cast<CPlayer*>(Src)->SetAttachedBox(true);
-			}
-		}
-		if (OBJECT_TYPE::PLAYER == Src->Get_MyObjType())
-		{
-			if (OBJECT_TYPE::HOLDOBJ == Dst->Get_MyObjType())
-			{
-				Dst->SetCollision(true);
-				Src->SetCollision(true);
-				if (dynamic_cast<CPlayer*>(Src)->GetCanHold() == true)
-				{
-					dynamic_cast<CHoldObj*>(Dst)->SetOwner(Src);
-					dynamic_cast<CPlayer*>(Src)->SetIsHold(true);
-				}
 			}
 		}
 		if (OBJECT_TYPE::PLAYER == Src->Get_MyObjType())
