@@ -92,7 +92,10 @@ void CObjMgr::Late_Update()
 	{
 		CCollisionMgr::Collision_RectEx(iter, m_ObjList[OBJ_PLAYER].front());
 	}
-
+	for (auto iter : m_ObjList[OBJ_HOLDOBJ])
+	{
+		CCollisionMgr::Collision_Rect(iter, m_ObjList[OBJ_PLAYER].front());
+	}
 	for (auto iter : m_ObjList[OBJ_BOX])
 	{
 		CCollisionMgr::Collision_RectEx(iter, m_ObjList[OBJ_PLAYER].front());

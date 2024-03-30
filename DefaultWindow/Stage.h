@@ -22,6 +22,7 @@ private:
 	void		InsertObstacles();
 	void		InsertBoxs();
 	void		InsertChests();
+	void		InsertHoldObjs();
 
 private:
 	BLENDFUNCTION	_bf = {};

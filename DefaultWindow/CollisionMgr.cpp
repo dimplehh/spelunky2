@@ -3,6 +3,7 @@
 #include "SoundMgr.h"
 #include "Player.h"
 #include "KeyMgr.h"
+#include "HoldObj.h"
 #include "Item.h"
 
 extern float g_fVolume;
@@ -15,6 +16,31 @@ CCollisionMgr::CCollisionMgr()
 CCollisionMgr::~CCollisionMgr()
 {
 }
+
+void CCollisionMgr::Collision_Rect(CObj* Dst, CObj* Src)
+{
+	float	fX(0.f), fY(0.f);
+
+	if (Check_Rect(Dst, Src, &fX, &fY))
+	{
+		Dst->SetCollision(true);
+		Src->SetCollision(true);
+		if (OBJECT_TYPE::PLAYER == Src->Get_MyObjType())
+		{
+			if (OBJECT_TYPE::HOLDOBJ == Dst->Get_MyObjType())
+			{
+				Dst->SetCollision(true);
+				Src->SetCollision(true);
+				if (dynamic_cast<CPlayer*>(Src)->GetCanHold() == true)
+				{
+					dynamic_cast<CHoldObj*>(Dst)->SetOwner(Src);
+					dynamic_cast<CPlayer*>(Src)->SetIsHold(true);
+				}
+			}
+		}
+	}
+}
+
 
 void CCollisionMgr::Collision_RectEx(CObj* Dst, CObj* Src)
 {
@@ -46,6 +72,19 @@ void CCollisionMgr::Collision_RectEx(CObj* Dst, CObj* Src)
 				if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::HOLD || 
 					CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::HOLD)
 					dynamic_cast<CPlayer*>(Src)->SetAttachedBox(true);
+			}
+		}
+		if (OBJECT_TYPE::PLAYER == Src->Get_MyObjType())
+		{
+			if (OBJECT_TYPE::HOLDOBJ == Dst->Get_MyObjType())
+			{
+				Dst->SetCollision(true);
+				Src->SetCollision(true);
+				if (dynamic_cast<CPlayer*>(Src)->GetCanHold() == true)
+				{
+					dynamic_cast<CHoldObj*>(Dst)->SetOwner(Src);
+					dynamic_cast<CPlayer*>(Src)->SetIsHold(true);
+				}
 			}
 		}
 		if (OBJECT_TYPE::PLAYER == Src->Get_MyObjType())

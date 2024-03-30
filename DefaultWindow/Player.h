@@ -5,10 +5,9 @@
 
 class CPlayer :	public CObj
 {
-public:										//기절	//위를 봄			// 엎드림			//기어감	//일어섬	//떨어짐
-	enum STATE { IDLE, WALK, JUMP, DIZZY, DIE, LOOKUP, LOOKFRONT, KNEELDOWN, KNEELSTAY, CRAWL, STANDUP,		FALLING,
-					ATTACKED, ALMOSTFELL, ATTACK, ENTER, EXIT, LADDER, PUSH, HANGON, THROW, ST_END };
-							//떨어질 뻔										// 매달림//던지기
+public:	
+	enum STATE {IDLE, WALK, JUMP, DIZZY, DIE, LOOKUP, LOOKFRONT, KNEELDOWN, KNEELSTAY, CRAWL, STANDUP,	FALLING,
+				HOLD, ATTACKED, ALMOSTFELL, ATTACK, ENTER, EXIT, LADDER, PUSH, HANGON, THROW, ST_END };
 public:
 	CPlayer();
 	virtual ~CPlayer();
@@ -73,6 +72,8 @@ public:
 			return true;
 		}
 	}
+	bool		GetCanHold() { return m_bCanHold; }
+	void		SetIsHold(bool _isHold) { m_bIsHold = _isHold; }
 
 private:
 	void		SetRenderImage(HDC hDC);
@@ -116,8 +117,10 @@ private:
 	bool		m_bJump;
 	bool		m_bLadder;
 	bool		m_bCanHang;
-	bool		m_bKneelDown; //엎드린 상태
-	bool		m_bAttachedBox;	//상자와 닿은 상태
+	bool		m_bKneelDown;	// 엎드린 상태
+	bool		m_bAttachedBox;	// 상자와 닿은 상태
+	bool		m_bCanHold;		// 잡을 수 있는 상태 ( 아래키 + x)
+	bool		m_bIsHold;		// 무엇인가를 잡은 상태
 	int			m_iJumpCount;
 
 	float		m_fPower;

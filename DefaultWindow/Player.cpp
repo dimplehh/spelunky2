@@ -1,11 +1,8 @@
 #include "stdafx.h"
 #include "Player.h"
-#include "Bullet.h"
 #include "AbstractFactory.h"
 #include "Shield.h"
-#include "ScrewBullet.h"
 #include "ObjMgr.h"
-#include "GuideBullet.h"
 #include "LineMgr.h"
 #include "KeyMgr.h"
 #include "ScrollMgr.h"
@@ -13,6 +10,7 @@
 #include "Define.h"
 #include "Rope.h"
 #include "Bomb.h"
+#include "HoldObj.h"
 #include "UIMgr.h"
 #include <iostream>
 
@@ -22,8 +20,8 @@ float g_fVolume(0.25f);
 
 CPlayer::CPlayer()
 	: m_fDistance(0.f), m_bJump(false), m_bLadder(false), m_iJumpCount(0), m_iHp(4), m_fPreY(0.f), m_fCurY(0.f), m_bCanHang(false), m_fDiffY(0.f),
-	m_fTime(0.f), m_fPower(0.f), m_ePreState(ST_END), m_eCurState(IDLE), m_bKneelDown(false), m_bAttachedBox(false), m_dwTime(GetTickCount()),
-	m_fFirstX(TILECX * (21 + m_tInfo.fCX / 2)), m_fFirstY(TILECY + m_tInfo.fCY / 2)
+	m_fTime(0.f), m_fPower(0.f), m_ePreState(ST_END), m_eCurState(IDLE), m_bKneelDown(false), m_bAttachedBox(false), m_bIsHold(false), m_bCanHold(false),
+	m_dwTime(GetTickCount()), m_fFirstX(TILECX * (21 + m_tInfo.fCX / 2)), m_fFirstY(TILECY + m_tInfo.fCY / 2)
 {
 	//ZeroMemory(&m_tPosin, sizeof(POINT));	// 나중에 총구구현에 쓸 수 있어 남겨놓음
 	m_eMyObjType = OBJECT_TYPE::PLAYER;
@@ -81,6 +79,8 @@ void CPlayer::Late_Update()	//어떤걸 Late_Update, 어떤걸 Update에 넣어야할지 잘 
 	{
 		if (m_bCanHang == true)
 			m_eCurState = HANGON;
+		else if (m_bIsHold == true)
+			m_eCurState = HOLD;
 		else
 			m_eCurState = IDLE;
 	}
@@ -89,7 +89,7 @@ void CPlayer::Late_Update()	//어떤걸 Late_Update, 어떤걸 Update에 넣어야할지 잘 
 
 	if (m_dwTime + 1000 < GetTickCount())
 	{
-		cout << m_eCurState << endl;
+		cout << m_bCanHold << endl;
 		m_dwTime = GetTickCount();
 	}
 #endif
@@ -130,8 +130,8 @@ void CPlayer::SetRenderImage(HDC hDC)
 
 void CPlayer::Key_Input()
 {
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::TAP)	{ if (m_bCanHang == true) return;	m_bFlip = true; m_pFrameKey = L"Player_FLIP";	}
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::TAP)	{ if (m_bCanHang == true) return;	m_bFlip = false; m_pFrameKey = L"Player_BASE";	}
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::TAP)	{ if (m_bCanHang == true) return;	m_bFlip = true;		m_pFrameKey = L"Player_FLIP";}
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::TAP)	{ if (m_bCanHang == true) return;	m_bFlip = false;	m_pFrameKey = L"Player_BASE";}
 
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::HOLD && CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::HOLD) 
 	{m_eCurState = IDLE;}
@@ -305,7 +305,13 @@ void CPlayer::HoldDown()
 		m_eCurState = LADDER;
 	}
 	else
+	{
 		m_eCurState = KNEELSTAY;
+		if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::X) == KEY_STATE::HOLD)
+			m_bCanHold = true;
+		else
+			m_bCanHold = false;
+	}
 }
 
 bool CPlayer::Die()
@@ -511,6 +517,7 @@ void CPlayer::Motion_Change()
 		switch (m_eCurState)
 		{
 		case CPlayer::IDLE:			Set_Frame(0, 0, 0, false,	60, 0, 15);		break;
+		case CPlayer::HOLD:			Set_Frame(11, 11, 2, false, 60, 0, 15);		break;
 		case CPlayer::WALK:			Set_Frame(1, 8, 0, true,	30, 0, 15);		break;
 		case CPlayer::JUMP:			Set_Frame(0, 11, 9, false,	15, 1, 15);		break;
 		case CPlayer::FALLING:		Set_Frame(0, 11, 9, false,	15, 1, 15);		break;

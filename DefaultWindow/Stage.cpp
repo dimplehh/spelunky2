@@ -9,6 +9,7 @@
 #include "Monster.h"
 #include "LineMgr.h"
 #include "Box.h"
+#include "HoldObj.h"
 #include "Obstacle.h"
 #include "UIIcon.h"
 #include "UIMgr.h"
@@ -34,6 +35,7 @@ void CStage::Initialize()
 	InsertObstacles();
 	InsertBoxs();
 	InsertChests();
+	InsertHoldObjs();
 	CTileMgr::Get_Instance()->Load_Tile();
 	CLineMgr::Get_Instance()->Initialize();
 	CScrollMgr::Get_Instance()->Set_ScrollXY(	WINCX / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX, 
@@ -124,6 +126,7 @@ void CStage::InsertBmps()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Item.bmp", L"Item");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Obstacle.bmp", L"Obstacle");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Chest.bmp", L"Chest");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/HoldObj.bmp", L"HoldObj");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/Monster.bmp", L"Monster");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/DecoLand.bmp", L"DecoLand");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Font/Font.bmp", L"Font");
@@ -152,7 +155,7 @@ void CStage::InsertUIs()
 
 void CStage::InsertObstacles()
 {
-	//CObjMgr::Get_Instance()->Add_Object(OBJ_OBSTACLE, CAbstractFactory<CObstacle>::Create(TILECX * (27 + 0.5f), TILECY * (6 + 0.5f)));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_OBSTACLE, CAbstractFactory<CObstacle>::Create(TILECX * (27 + 0.5f), TILECY * (6 + 0.5f)));
 }
 
 void CStage::InsertBoxs()
@@ -168,4 +171,9 @@ void CStage::InsertChests()
 	CObjMgr::Get_Instance()->Add_Object(OBJ_CHEST, CChestFactory::Create(TILECX * (22 + 0.5f), TILECY * (6.5f), CItem::ITEM_ROPE));
 	CObjMgr::Get_Instance()->Add_Object(OBJ_CHEST, CChestFactory::Create(TILECX * (24 + 0.5f), TILECY * (6.5f), CItem::ITEM_GEM));
 	CObjMgr::Get_Instance()->Add_Object(OBJ_CHEST, CChestFactory::Create(TILECX * (26 + 0.5f), TILECY * (6.5f), CItem::ITEM_GOLD));
+}
+
+void CStage::InsertHoldObjs()
+{
+	CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CAbstractFactory<CHoldObj>::Create(TILECX * (21 + 0.5f), TILECY * (6 + 0.5f)));
 }
