@@ -89,7 +89,7 @@ void CPlayer::Late_Update()	//어떤걸 Late_Update, 어떤걸 Update에 넣어야할지 잘 
 
 	if (m_dwTime + 1000 < GetTickCount())
 	{
-		cout << m_tFrame.iFrameStart <<"/" << m_tFrame.iFrameEnd <<"/" << m_tFrame.iMotion << endl;
+		cout << m_eCurState << endl;
 		m_dwTime = GetTickCount();
 	}
 #endif
@@ -130,8 +130,8 @@ void CPlayer::SetRenderImage(HDC hDC)
 
 void CPlayer::Key_Input()
 {
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::TAP) { m_bFlip = true; m_pFrameKey = L"Player_FLIP";}
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::TAP) { m_bFlip = false; m_pFrameKey = L"Player_BASE";}
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::TAP)	{ if (m_bCanHang == true) return;	m_bFlip = true; m_pFrameKey = L"Player_FLIP";	}
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::TAP)	{ if (m_bCanHang == true) return;	m_bFlip = false; m_pFrameKey = L"Player_BASE";	}
 
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::HOLD && CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::HOLD) 
 	{m_eCurState = IDLE;}
@@ -510,27 +510,27 @@ void CPlayer::Motion_Change()
 		m_iRepeatCount = 0;
 		switch (m_eCurState)
 		{
-		case CPlayer::IDLE:			Set_Frame(0, 0, 0, false, 60, 0, 15);		break;
-		case CPlayer::WALK:			Set_Frame(1, 8, 0, true, 30, 0, 15);		break;
-		case CPlayer::JUMP:			Set_Frame(0, 11, 9, false, 15, 1, 15);		break;
-		case CPlayer::FALLING:		Set_Frame(0, 11, 9, false, 15, 1, 15);		break;
+		case CPlayer::IDLE:			Set_Frame(0, 0, 0, false,	60, 0, 15);		break;
+		case CPlayer::WALK:			Set_Frame(1, 8, 0, true,	30, 0, 15);		break;
+		case CPlayer::JUMP:			Set_Frame(0, 11, 9, false,	15, 1, 15);		break;
+		case CPlayer::FALLING:		Set_Frame(0, 11, 9, false,	15, 1, 15);		break;
 		case CPlayer::DIZZY:		Set_Frame(0, 11, 13, false, 60, 3, 15);		break;
-		case CPlayer::DIE:			Set_Frame(9, 9, 0, true, 60, 0, 15);		break;
-		case CPlayer::LOOKUP:		Set_Frame(0, 3, 8, false, 60, 0, 15);		break;
-		case CPlayer::LOOKFRONT:	Set_Frame(3, 6, 8, false, 60, 1, 15);		break;
-		case CPlayer::KNEELDOWN:	Set_Frame(0, 2, 1, false, 60, 1, 15);		break;
-		case CPlayer::KNEELSTAY:	Set_Frame(2, 2, 1, false, 60, 1, 15);		break;
-		case CPlayer::CRAWL:		Set_Frame(5, 11, 1, true, 60, 0, 15);		break;
-		case CPlayer::STANDUP:		Set_Frame(2, 4, 1, false, 60, 1, 15);		break;
+		case CPlayer::DIE:			Set_Frame(9, 9, 0, true,	60, 0, 15);		break;
+		case CPlayer::LOOKUP:		Set_Frame(0, 3, 8, false,	60, 0, 15);		break;
+		case CPlayer::LOOKFRONT:	Set_Frame(3, 6, 8, false,	60, 1, 15);		break;
+		case CPlayer::KNEELDOWN:	Set_Frame(0, 2, 1, false,	60, 1, 15);		break;
+		case CPlayer::KNEELSTAY:	Set_Frame(2, 2, 1, false,	60, 1, 15);		break;
+		case CPlayer::CRAWL:		Set_Frame(5, 11, 1, true,	60, 0, 15);		break;
+		case CPlayer::STANDUP:		Set_Frame(2, 4, 1, false,	60, 1, 15);		break;
 		case CPlayer::ATTACKED:		Set_Frame(0, 11, 13, false, 60, 3, 15);		break;
-		case CPlayer::ALMOSTFELL:	Set_Frame(0, 7, 3, true, 60, 0, 15);		break;
-		case CPlayer::ATTACK:		Set_Frame(0, 7, 0, false, 60, 1, 7);		break;
-		case CPlayer::ENTER:		Set_Frame(0, 5, 5, false, 30, 2, 15);		break;
-		case CPlayer::EXIT:			Set_Frame(6, 11, 5, false, 30, 2, 15);		break;
-		case CPlayer::LADDER:		Set_Frame(0, 5, 6, true, 60, 0, 15);		break;
-		case CPlayer::PUSH:			Set_Frame(6, 11, 6, true, 60, 0, 15);		break;	// 상자가 덜덜거리지 않는 구간 - offset에 변화가 없는 구간, 차후 수정 필요
-		case CPlayer::HANGON:		Set_Frame(8, 11, 3, false, 100, 1000, 15);	break;
-		case CPlayer::THROW:		Set_Frame(6, 10, 4, false, 80, 1, 15);		break;
+		case CPlayer::ALMOSTFELL:	Set_Frame(0, 7, 3, true,	60, 0, 15);		break;
+		case CPlayer::ATTACK:		Set_Frame(0, 7, 0, false,	60, 1, 7);		break;
+		case CPlayer::ENTER:		Set_Frame(0, 5, 5, false,	30, 2, 15);		break;
+		case CPlayer::EXIT:			Set_Frame(6, 11, 5, false,	30, 2, 15);		break;
+		case CPlayer::LADDER:		Set_Frame(0, 5, 6, true,	60, 0, 15);		break;
+		case CPlayer::PUSH:			Set_Frame(6, 11, 6, true,	60, 0, 15);		break;	// 상자가 덜덜거리지 않는 구간 - offset에 변화가 없는 구간, 차후 수정 필요
+		case CPlayer::HANGON:		Set_Frame(8, 11, 3, false,	100, 1000, 15);	break;
+		case CPlayer::THROW:		Set_Frame(6, 10, 4, false,	80, 1, 15);		break;
 		}
 		m_ePreState = m_eCurState;
 	}
