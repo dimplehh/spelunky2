@@ -16,11 +16,12 @@ public:
 private:
 	void		InsertBmps();
 	void		InsertUIs();
+	void		InsertObstacles();
 	void		InsertBoxs();
 	void		InsertItems();
 
 private:
-	BLENDFUNCTION _bf = {};
+	BLENDFUNCTION	_bf = {};
 	float			m_fAlpha = 0.f; 
 	int				m_fFadeIn = 0;
 };

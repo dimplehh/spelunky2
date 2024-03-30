@@ -9,6 +9,7 @@
 #include "Monster.h"
 #include "LineMgr.h"
 #include "Box.h"
+#include "Obstacle.h"
 #include "UIIcon.h"
 #include "UIMgr.h"
 #pragma comment(lib, "msimg32.lib")
@@ -30,6 +31,7 @@ void CStage::Initialize()
 	CObjMgr::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CPlayer>::Create());
 	InsertBmps();
 	InsertUIs();
+	InsertObstacles();
 	InsertBoxs();
 	InsertItems();
 	CTileMgr::Get_Instance()->Load_Tile();
@@ -115,6 +117,8 @@ void CStage::InsertBmps()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Rope.bmp", L"Rope");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Bomb2.bmp", L"Bomb");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Item.bmp", L"Item");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Obstacle.bmp", L"Obstacle");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Chest.bmp", L"Chest");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/Monster.bmp", L"Monster");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/DecoLand.bmp", L"DecoLand");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Font/Font.bmp", L"Font");
@@ -139,6 +143,11 @@ void CStage::InsertUIs()
 	
 	CObjMgr::Get_Instance()->Add_Object(OBJ_UI, CUIFactory::Create(WINCX - TILECX * 2, 50.f, CUIIcon::UI_MAP, __super::m_iMapNum, 15, 10.f, -7.f));
 	CUIMgr::Get_Instance()->Insert_UI(CUIIcon::UI_MAP, dynamic_cast<CUIIcon*>(CObjMgr::Get_Instance()->Get_UI()));
+}
+
+void CStage::InsertObstacles()
+{
+	CObjMgr::Get_Instance()->Add_Object(OBJ_OBSTACLE, CObstacleFactory::Create(TILECX * (21 + 0.5f), TILECY * (6 + 0.5f)));
 }
 
 void CStage::InsertBoxs()

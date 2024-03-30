@@ -31,20 +31,7 @@ public:
 	void		SetRevival(bool _revival) { m_bRevival = _revival; }
 	int			GetDeathTime() { return m_iDeathTime; }
 	int			GetHp() { return m_iHp; }
-	void		SetHp(int _num)
-	{
-		if (m_iHp + _num <= 0)
-		{
-			m_iHp = 0;
-			m_dwTime = GetTickCount();
-		}
-		else
-			m_iHp += _num;
-		CUIMgr::Get_Instance()->Set_UINum(CUIIcon::UI_HP, m_iHp);
-
-		if (_num < 0)
-			m_eCurState = DIZZY;
-	}
+	void		SetHp(int _num);
 	int			GetRopeCount() { return m_iRopeCount; };
 	void		SetRopeCount() { m_iRopeCount = 0; CUIMgr::Get_Instance()->Set_UINum(CUIIcon::UI_ROPE, m_iRopeCount); }
 	bool		SetRopeCount(int _num)

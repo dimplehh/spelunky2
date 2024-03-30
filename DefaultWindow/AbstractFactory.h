@@ -4,6 +4,7 @@
 #include "LineMgr.h"
 #include "Line.h"
 #include "Box.h"
+#include "Obstacle.h"
 #include "Rope.h"
 #include "Bomb.h"
 #include "UIIcon.h"
@@ -124,6 +125,18 @@ public:
 		dynamic_cast<CItem*>(pObj)->Set_ItemID(_ItemId);
 		dynamic_cast<CItem*>(pObj)->Set_Num(_num);
 
+		return pObj;
+	}
+};
+
+class CObstacleFactory
+{
+public:
+	static CObj* Create(float _fX, float _fY)
+	{
+		CObj* pObj = new CObstacle;
+		pObj->Initialize();
+		pObj->Set_Pos(_fX, _fY);
 		return pObj;
 	}
 };

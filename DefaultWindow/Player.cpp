@@ -23,7 +23,7 @@ float g_fVolume(0.25f);
 CPlayer::CPlayer()
 	: m_fDistance(0.f), m_bJump(false), m_bLadder(false), m_iJumpCount(0), m_iHp(4), m_fPreY(0.f), m_fCurY(0.f), m_bCanHang(false), m_fDiffY(0.f),
 	m_fTime(0.f), m_fPower(0.f), m_ePreState(ST_END), m_eCurState(IDLE), m_bKneelDown(false), m_bAttachedBox(false), m_dwTime(GetTickCount()),
-	m_fFirstX(TILECX * 21), m_fFirstY(TILECY * 2)
+	m_fFirstX(TILECX * (21 + m_tInfo.fCX / 2)), m_fFirstY(TILECY + m_tInfo.fCY / 2)
 {
 	//ZeroMemory(&m_tPosin, sizeof(POINT));	// 나중에 총구구현에 쓸 수 있어 남겨놓음
 	m_eMyObjType = OBJECT_TYPE::PLAYER;
@@ -259,6 +259,30 @@ bool CPlayer::Check_Move_End()
 			return true;
 	}
 	return false;
+}
+
+void CPlayer::SetHp(int _num)
+{
+	if (_num == 0)
+	{
+		m_iHp = 0;
+		CUIMgr::Get_Instance()->Set_UINum(CUIIcon::UI_HP, m_iHp);
+		m_eCurState = DIZZY;
+		return;
+	}
+
+	if (m_iHp + _num <= 0)
+	{
+		m_iHp = 0;
+		m_dwTime = GetTickCount();
+	}
+	else
+		m_iHp += _num;
+
+	CUIMgr::Get_Instance()->Set_UINum(CUIIcon::UI_HP, m_iHp);
+
+	if (_num < 0)
+		m_eCurState = DIZZY;
 }
 
 void CPlayer::HoldLeft()
