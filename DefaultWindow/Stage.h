@@ -18,7 +18,7 @@ private:
 	void		InsertUIs();
 	void		InsertObstacles();
 	void		InsertBoxs();
-	void		InsertItems();
+	void		InsertChests();
 
 private:
 	BLENDFUNCTION	_bf = {};

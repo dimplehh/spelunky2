@@ -7,6 +7,7 @@
 #include "Obstacle.h"
 #include "Rope.h"
 #include "Bomb.h"
+#include "Chest.h"
 #include "UIIcon.h"
 #include "Item.h"
 
@@ -115,7 +116,7 @@ public:
 class CItemFactory
 {
 public:
-	static CObj* Create(float _fX, float _fY, CItem::ITEMID _ItemId, int _num)
+	static CObj* Create(float _fX, float _fY, CItem::ITEMID _ItemId)
 	{
 		CObj* pObj = new CItem;
 
@@ -123,20 +124,30 @@ public:
 		pObj->Set_Pos(_fX, _fY);
 
 		dynamic_cast<CItem*>(pObj)->Set_ItemID(_ItemId);
-		dynamic_cast<CItem*>(pObj)->Set_Num(_num);
+
+		int num = 0;
+		if (_ItemId == CItem::ITEM_BOMB || _ItemId == CItem::ITEM_ROPE)
+			num = 3;
+		else if (_ItemId == CItem::ITEM_GEM)
+			num = 500;
+		else if (_ItemId == CItem::ITEM_GOLD)
+			num = 1000;
+
+		dynamic_cast<CItem*>(pObj)->Set_Num(num);
 
 		return pObj;
 	}
 };
 
-class CObstacleFactory
+class CChestFactory
 {
 public:
-	static CObj* Create(float _fX, float _fY)
+	static CObj* Create(float _fX, float _fY, CItem::ITEMID _itemID)
 	{
-		CObj* pObj = new CObstacle;
+		CObj* pObj = new CChest;
 		pObj->Initialize();
 		pObj->Set_Pos(_fX, _fY);
+		dynamic_cast<CChest*>(pObj)->SetChestItemID(_itemID);
 		return pObj;
 	}
 };
