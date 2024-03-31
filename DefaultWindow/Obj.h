@@ -38,6 +38,8 @@ public:
 	void			SetCollision(bool _b) { m_bCollision = _b; }
 	
 	void			Set_FrameKey(TCHAR* pFrameKey) { m_pFrameKey = pFrameKey; }
+	int				Get_FrameIdx() { return m_tFrame.iFrameStart; };
+
 public:
 	virtual		void		Initialize()	PURE;
 	virtual		int			Update()		PURE;

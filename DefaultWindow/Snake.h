@@ -32,7 +32,7 @@ private:
 	STATE		m_eCurState;
 
 	bool		m_bFirstAttack = true;
-
+	bool		m_bFirstDamaged = true;
 private:
 	DWORD				m_dwTime;
 };
