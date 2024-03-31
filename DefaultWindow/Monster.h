@@ -1,5 +1,6 @@
 #pragma once
 #include "Obj.h"
+#include "Player.h"
 class CMonster : public CObj
 {
 public:

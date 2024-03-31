@@ -25,6 +25,7 @@ private:
 	void		Motion_Change();
 	void		Idle();
 	void		Attack();
+	void		Damaged();
 
 private:
 	STATE		m_ePreState;

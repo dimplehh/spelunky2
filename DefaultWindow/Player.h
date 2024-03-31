@@ -162,8 +162,3 @@ private:
 private:
 	DWORD				m_dwTime;
 };
-
-
-
-
-

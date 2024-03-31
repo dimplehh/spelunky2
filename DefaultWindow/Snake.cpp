@@ -27,11 +27,12 @@ void CSnake::Initialize()
 
 int CSnake::Update()
 {
-	if (m_iHp < 0)
+	if (m_iHp <= 0)
 		return OBJ_DEAD;
 
 	Idle();
 	Attack();
+	Damaged();
 
 	__super::Update_Rect();
 	return OBJ_NOEVENT;
@@ -115,10 +116,23 @@ void CSnake::Attack()
 	{
 		if (m_bFirstAttack == true)
 		{
-			dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetHp(-1);
+			dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetHp(-m_iAttackPower);
 			m_bFirstAttack = false;
 		}
 	}
 	else
 		m_bFirstAttack = true;
+}
+
+void CSnake::Damaged()
+{
+	INFO _playerInfo = CObjMgr::Get_Instance()->Get_Player()->Get_Info();
+
+	if (((m_tInfo.fX - m_tInfo.fCX <= _playerInfo.fX && _playerInfo.fX <= m_tInfo.fX - m_tInfo.fCX / 2)
+		|| (m_tInfo.fX + m_tInfo.fCX / 2 < _playerInfo.fX && _playerInfo.fX <= m_tInfo.fX + m_tInfo.fCX))
+		&& m_tInfo.fY - m_tInfo.fCY / 2 <= _playerInfo.fY && _playerInfo.fY <= m_tInfo.fY + m_tInfo.fCY / 2
+		&& dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetState() == CPlayer::ATTACK)
+	{
+		m_iHp -= 1;
+	}
 }
