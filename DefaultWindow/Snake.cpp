@@ -4,7 +4,7 @@
 #include "LineMgr.h"
 #include "BmpMgr.h"
 
-CSnake::CSnake()  :m_ePreState(ST_END), m_eCurState(IDLE)
+CSnake::CSnake()  :m_ePreState(ST_END), m_eCurState(IDLE), m_dwTime(GetTickCount())
 {
 }
 
@@ -30,15 +30,23 @@ int CSnake::Update()
 
 	if (CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
 	{
-		m_tInfo.fX -= m_fSpeed;
+		m_tInfo.fX += m_fSpeed;
 	}
 	else
 	{
 		m_fSpeed = -m_fSpeed;
-		if (m_fSpeed > 0)
+		if (m_fSpeed < 0)
+		{
+			m_bFlip = true; 
+			m_pFrameKey = L"SnakeFlip";
 			m_tInfo.fX -= 10;
-		else if (m_fSpeed < 0)
+		}
+		else
+		{
+			m_bFlip = false;
+			m_pFrameKey = L"Snake";
 			m_tInfo.fX += 10;
+		}
 	}
 
 	__super::Update_Rect();
@@ -62,6 +70,14 @@ void CSnake::Render(HDC hDC)
 	GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, (int)m_tInfo.fCX, (int)m_tInfo.fCY, hMemDC, 
 					m_tFrame.iFrameStart * (int)m_tInfo.fCX, m_tFrame.iMotion * (int)m_tInfo.fCY, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(53, 53,53));
 
+#ifdef _DEBUG
+
+	if (m_dwTime + 1000 < GetTickCount())
+	{
+		cout << m_bFlip << endl;
+		m_dwTime = GetTickCount();
+	}
+#endif
 }
 
 void CSnake::Release()
@@ -70,7 +86,9 @@ void CSnake::Release()
 
 void CSnake::Motion_Change()
 {
-	if (m_ePreState != m_eCurState)
+	m_bCurFlip = m_bFlip;
+
+	if (m_ePreState != m_eCurState || m_bPreFlip != m_bCurFlip)
 	{
 		m_iRepeatCount = 0;
 		switch (m_eCurState)
@@ -79,5 +97,6 @@ void CSnake::Motion_Change()
 		case CSnake::ATTACK:		Set_Frame(0, 6, 1, true, 120, 0, 10);		break;
 		}
 		m_ePreState = m_eCurState;
+		m_bPreFlip = m_bCurFlip;
 	}
 }

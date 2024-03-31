@@ -23,4 +23,7 @@ private:
 private:
 	STATE		m_ePreState;
 	STATE		m_eCurState;
+
+private:
+	DWORD				m_dwTime;
 };

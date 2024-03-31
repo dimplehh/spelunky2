@@ -65,6 +65,8 @@ protected:
 	float		m_fSpeed;
 	bool		m_bDead;
 	bool		m_bFlip;
+	bool		m_bPreFlip = false;
+	bool		m_bCurFlip = false;
 
 	float		m_fAngle;
 

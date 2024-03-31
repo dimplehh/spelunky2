@@ -83,15 +83,15 @@ void CPlayer::Late_Update()	//어떤걸 Late_Update, 어떤걸 Update에 넣어야할지 잘 
 		else
 			m_eCurState = IDLE;
 	}
-
-#ifdef _DEBUG
-
-	if (m_dwTime + 1000 < GetTickCount())
-	{
-		cout << m_bCanHold << endl;
-		m_dwTime = GetTickCount();
-	}
-#endif
+//
+//#ifdef _DEBUG
+//
+//	if (m_dwTime + 1000 < GetTickCount())
+//	{
+//		cout << m_bCanHold << endl;
+//		m_dwTime = GetTickCount();
+//	}
+//#endif
 }
 
 void CPlayer::Release()
@@ -525,7 +525,9 @@ void CPlayer::Gravity()	//숫자 의미 판단, 더 정리 필요 -> Obj로 나중에 빼야될듯
 
 void CPlayer::Motion_Change()
 {
-	if (m_ePreState != m_eCurState)
+	m_bCurFlip = m_bFlip;
+
+	if (m_ePreState != m_eCurState || m_bPreFlip != m_bCurFlip)
 	{
 		m_iRepeatCount = 0;
 		switch (m_eCurState)
@@ -554,5 +556,6 @@ void CPlayer::Motion_Change()
 		case CPlayer::THROW:		Set_Frame(6, 10, 4, false,	80, 1, 15);		break;
 		}
 		m_ePreState = m_eCurState;
+		m_bPreFlip = m_bCurFlip;
 	}
 }

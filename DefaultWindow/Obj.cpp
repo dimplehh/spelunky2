@@ -90,6 +90,7 @@ void CObj::Move_Frame()
 	if (m_tFrame.dwTime + m_tFrame.dwSpeed < GetTickCount())
 	{
 		m_tFrame.dwTime = GetTickCount();
+
 		if (m_bFlip == false)
 		{
 			++m_tFrame.iFrameStart;
