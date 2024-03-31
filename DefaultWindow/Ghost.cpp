@@ -6,6 +6,7 @@
 #include "ObjMgr.h"
 #include "Obj.h"
 #include "Player.h"
+#include "UIMgr.h"
 
 CGhost::CGhost() :m_ePreState(ST_END), m_eCurState(IDLE), m_dwTime(GetTickCount())
 {
@@ -17,19 +18,30 @@ CGhost::~CGhost()
 
 void CGhost::Initialize()
 {
-	m_tInfo = { 0.f, 0.f, 128.f, 128.f };
+	m_tInfo = { m_fFirstX, m_fFirstY, 128.f, 128.f };
 	m_fSpeed = 0.8f;
 	m_iHp = 1;
 	m_iAttackPower = 1;
 	m_pFrameKey = L"Ghost";
 	m_tFrame = { 0, 5, 0, 5, true, 60, GetTickCount(), 0 };
 	m_eRender = RENDER_GHOST;
+	__super::Update_Rect();
 }
 
 int CGhost::Update()
 {
-	if (m_iHp <= 0)
+	if (m_bDead == true)
 		return OBJ_DEAD;
+
+	if (CUIMgr::Get_Instance()->Get_Time() == 0)
+	{
+		m_tInfo.fX = m_fFirstX;
+		m_tInfo.fY = m_fFirstY;
+		__super::Update_Rect();
+	}
+
+	if (CUIMgr::Get_Instance()->Get_Time() < 10)
+		return OBJ_NOEVENT;
 
 	Follow();
 
@@ -41,21 +53,6 @@ void CGhost::Late_Update()
 {
 	Motion_Change();
 	__super::Move_Frame();
-
-
-	#ifdef _DEBUG
-	
-		if (m_dwTime + 1000 < GetTickCount())
-		{			
-			INFO _playerInfo = CObjMgr::Get_Instance()->Get_Player()->Get_Info();
-			float _playerScreenX = _playerInfo.fX + CScrollMgr::Get_Instance()->Get_ScrollX();
-			float _playerScreenY = _playerInfo.fY + CScrollMgr::Get_Instance()->Get_ScrollY();
-			
-			cout << m_tInfo.fX << "/" << m_tInfo.fY << "/" << _playerScreenX << "/" << _playerScreenY << endl;
-			
-			m_dwTime = GetTickCount();
-		}
-	#endif
 }
 
 void CGhost::Render(HDC hDC)
@@ -100,10 +97,16 @@ void CGhost::Follow()
 	{
 		m_bFlip = false;
 		m_pFrameKey = L"GhostUp";
-		if (_playerScreenY < m_tInfo.fY)
+		if (_playerScreenY - 10.f < m_tInfo.fY && m_tInfo.fY < _playerScreenY + 10.f)
+		{
+			dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetHp(0);
+		}
+		else if (_playerScreenY < m_tInfo.fY)
 			m_tInfo.fY -= m_fSpeed;
 		else
 			m_tInfo.fY += m_fSpeed;
+
+
 	}
 	else if (_playerScreenX < m_tInfo.fX)
 	{

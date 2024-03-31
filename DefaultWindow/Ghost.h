@@ -34,6 +34,9 @@ private:
 
 	bool		m_bFirstAttack = true;
 	bool		m_bFirstDamaged = true;
+
+	float		m_fFirstX = WINCX + 50.f;
+	float		m_fFirstY = -50.f;
 private:
 	DWORD				m_dwTime;
 };
