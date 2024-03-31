@@ -59,7 +59,8 @@ void CCollisionMgr::Collision_RectMon(CObj* Dst, CObj* Src)
 			{
 				Dst->SetCollision(true);
 				Src->SetCollision(true);
-				dynamic_cast<CSnake*>(Dst)->SetCurState(CSnake::ATTACK);
+				if(dynamic_cast<CMonster*>(Dst)->GetMonsterID() == CMonster::SNAKE)
+					dynamic_cast<CSnake*>(Dst)->SetCurState(CSnake::ATTACK);
 			}
 		}
 	}
@@ -67,7 +68,8 @@ void CCollisionMgr::Collision_RectMon(CObj* Dst, CObj* Src)
 	{
 		Dst->SetCollision(false);
 		Src->SetCollision(false);
-		dynamic_cast<CSnake*>(Dst)->SetCurState(CSnake::IDLE);
+		if (dynamic_cast<CMonster*>(Dst)->GetMonsterID() == CMonster::SNAKE)
+			dynamic_cast<CSnake*>(Dst)->SetCurState(CSnake::IDLE);
 	}
 }
 

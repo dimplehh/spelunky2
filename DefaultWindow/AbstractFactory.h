@@ -12,6 +12,7 @@
 #include "Item.h"
 #include "Monster.h"
 #include "Snake.h"
+#include "Ghost.h"
 #include "HoldObj.h"
 
 template<typename T>
@@ -174,8 +175,11 @@ public:
 	static CObj* Create(float _fX, float _fY, CMonster::MONSTERID _monsterID)
 	{
 		CObj* pObj = nullptr;
-		if(_monsterID == CMonster::MONSTER_SNAKE)
+		/*if (_monsterID == CMonster::SNAKE)
 			pObj = new CSnake;
+		else*/ if (_monsterID == CMonster::GHOST)
+			pObj = new CGhost;
+
 		pObj->Initialize();
 		pObj->Set_Pos(_fX, _fY);
 		dynamic_cast<CMonster*>(pObj)->SetMonsterID(_monsterID);

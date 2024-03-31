@@ -4,15 +4,16 @@
 class CMonster : public CObj
 {
 public:
-	enum MONSTERID {MONSTER_SNAKE, MONSTER_GHOST, MONSTER_END};
+	enum MONSTERID {SNAKE, GHOST, MONSTER_END};
 
 public:
 	CMonster();
 	virtual ~CMonster();
 
 public:
-	int		GetAttackPower() { return m_iAttackPower; }
-	void	SetMonsterID(MONSTERID _monsterID) { m_eMonsterID = _monsterID; }
+	int			GetAttackPower() { return m_iAttackPower; }
+	void		SetMonsterID(MONSTERID _monsterID) { m_eMonsterID = _monsterID; }
+	MONSTERID	GetMonsterID() { return m_eMonsterID; }
 
 protected:
 	int			m_iAttackPower;		// °ø°Ý·Â

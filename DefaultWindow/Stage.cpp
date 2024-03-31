@@ -73,9 +73,9 @@ void CStage::Render(HDC hDC)
 	CObjMgr::Get_Instance()->Render(hDC);
 	CTileMgr::Get_Instance()->Render(hDC);
 	CLineMgr::Get_Instance()->Render(hDC);
-
-	CObjMgr::Get_Instance()->RenderUI(hDC);	// ui 가장 마지막에 렌더
-	FadeInOut(hDC);							 //fade 효과 그보다 더 마지막에 렌더
+	CObjMgr::Get_Instance()->RenderGhost(hDC);	// ui 전에 유령 렌더
+	CObjMgr::Get_Instance()->RenderUI(hDC);		// ui 가장 마지막에 렌더
+	FadeInOut(hDC);								// fade 효과 그보다 더 마지막에 렌더
 }
 
 void CStage::FadeInOut(HDC hDC)
@@ -132,6 +132,8 @@ void CStage::InsertBmps()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/HoldObj.bmp",		L"HoldObj");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/Snake.bmp",		L"Snake");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/SnakeFlip.bmp",	L"SnakeFlip");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/Ghost.bmp",		L"Ghost");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/GhostFlip.bmp",	L"GhostFlip");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/DecoLand.bmp",		L"DecoLand");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Font/Font.bmp",			L"Font");
 }
@@ -159,7 +161,9 @@ void CStage::InsertUIs()
 
 void CStage::InsertMonsters()
 {
-	CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(TILECX * (21 + 0.5f), TILECY * (6.5f), CMonster::MONSTER_SNAKE));
+	//CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(TILECX * (21 + 0.5f), TILECY * (6.5f), CMonster::SNAKE));
+	//CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(WINCX * 0.5f - 200.f, WINCY * 0.5f, CMonster::GHOST));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(WINCX * 0.5f - 200.f, WINCY * 0.5f, CMonster::GHOST));
 }
 
 void CStage::InsertObstacles()

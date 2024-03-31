@@ -46,14 +46,14 @@ void CSnake::Late_Update()
 	__super::Move_Frame();
 
 	
-#ifdef _DEBUG
-
-	if (m_dwTime + 1000 < GetTickCount())
-	{
-		cout << m_iHp << endl;
-		m_dwTime = GetTickCount();
-	}
-#endif
+//#ifdef _DEBUG
+//
+//	if (m_dwTime + 1000 < GetTickCount())
+//	{
+//		cout << m_iHp << endl;
+//		m_dwTime = GetTickCount();
+//	}
+//#endif
 }
 
 void CSnake::Render(HDC hDC)

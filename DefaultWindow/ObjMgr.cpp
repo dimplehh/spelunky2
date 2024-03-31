@@ -116,7 +116,7 @@ void CObjMgr::Render(HDC hDC)
 
 	for (size_t i = 0; i < RENDER_END; ++i)
 	{
-		if (i == RENDER_UI)
+		if (i == RENDER_UI || i == RENDER_GHOST)
 			continue;
 
 		for (auto& iter : m_RenderList[i])
@@ -124,6 +124,14 @@ void CObjMgr::Render(HDC hDC)
 
 		m_RenderList[i].clear();
 	}
+}
+
+void CObjMgr::RenderGhost(HDC hDC)
+{
+	for (auto& iter : m_RenderList[RENDER_GHOST])
+		iter->Render(hDC);
+
+	m_RenderList[RENDER_GHOST].clear();
 }
 
 void CObjMgr::RenderUI(HDC hDC)
