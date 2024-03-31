@@ -78,6 +78,8 @@ public:
 	bool		GetIsHold(){ return m_bIsHold; }
 	bool		GetThrow() { return m_bThrow; }
 	void		SetThrow(bool _throw) { m_bThrow = _throw; }
+	bool		GetCheckFirstInit(){ return m_bCheckFirstInit; }
+	void		SetCheckFirstInit(bool _checkFirstInit) { m_bCheckFirstInit = _checkFirstInit; }
 
 private:
 	void		SetRenderImage(HDC hDC);
@@ -153,6 +155,8 @@ private:
 	int			m_iRopeCount = 0;
 	int			m_iBombCount = 0;
 	int			m_iMoney = 0;
+
+	bool		m_bCheckFirstInit = false;
 
 private:
 	DWORD				m_dwTime;

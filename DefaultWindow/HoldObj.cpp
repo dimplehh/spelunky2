@@ -24,7 +24,7 @@ void CHoldObj::Initialize()
 {
 	m_tInfo = { 0, 0, 48.f , 48.f };
 	m_pFrameKey = L"HoldObj";
-	m_eRender = RENDER_GAMEOBJECT;
+	m_eRender = RENDER_HOLDOBJ;
 }
 
 int CHoldObj::Update()

@@ -90,7 +90,8 @@ void CStage::FadeInOut(HDC hDC)
 
 		AlphaBlend(hDC, 0, 0, WINCX, WINCY, hMemDC, 0, 0, WINCX, WINCY, _bf);
 	}
-	else if (dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetRevival() == true)
+	else if (dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetRevival() == true
+		|| dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetCheckFirstInit() == true)
 	{
 		m_fAlpha = 0.f;
 		hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"FadeIn");
@@ -102,6 +103,7 @@ void CStage::FadeInOut(HDC hDC)
 		if (m_fFadeIn / 2 > 9)
 		{
 			dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetRevival(false);
+			dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetCheckFirstInit(false);
 			m_fFadeIn = 0;
 		}
 	}

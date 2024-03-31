@@ -39,6 +39,8 @@ void CPlayer::Initialize()
 	m_fDistance = 100.f;
 	m_fPower = 1.5f;
 
+	m_bCheckFirstInit = true;
+
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_base2.bmp",  L"Player_BASE");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_flip2.bmp", L"Player_FLIP");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_Attack.bmp", L"Player_ATTACK_BASE");
