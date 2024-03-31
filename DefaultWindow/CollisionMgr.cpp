@@ -71,6 +71,35 @@ void CCollisionMgr::Collision_RectMon(CObj* Dst, CObj* Src)
 	}
 }
 
+void CCollisionMgr::Collision_RectHoldMon(list<CObj*> _Dst, list<CObj*> _Src)
+{
+	float	fX(0.f), fY(0.f);
+
+	for (auto& Dst : _Dst)
+	{
+		for (auto& Src : _Src)
+		{
+			if (Check_Rect(Dst, Src, &fX, &fY))
+			{
+				Dst->SetCollision(true);
+				Src->SetCollision(true);
+				if (OBJECT_TYPE::HOLDOBJ == Src->Get_MyObjType())
+				{
+					if (OBJECT_TYPE::MONSTER == Dst->Get_MyObjType())
+					{
+						Dst->SetCollision(true);
+						Src->SetCollision(true);
+						if (dynamic_cast<CHoldObj*>(Src)->GetThrowing() == true)
+						{
+							dynamic_cast<CSnake*>(Dst)->SetHp(-1);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
 void CCollisionMgr::Collision_RectEx(CObj* Dst, CObj* Src)
 {
 	float	fX(0.f), fY(0.f);

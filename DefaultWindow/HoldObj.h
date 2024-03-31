@@ -24,6 +24,8 @@ public:
 	void		SetOwner(CObj* _pOwner) { m_pOwner = _pOwner; }
 	CObj*		GetOwner() { return m_pOwner; }
 
+	bool		GetThrowing() { return m_bThrowing; }
+
 private:
 	bool		Gravity();
 
@@ -33,6 +35,7 @@ private:
 private:
 	HOLDOBJID			m_eHoldObjID;
 	bool				m_bIsActive = false;
+	bool				m_bThrowing = false;
 
 	CObj* m_pOwner;
 };

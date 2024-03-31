@@ -19,7 +19,7 @@ void CSnake::Initialize()
 {
 	m_tInfo = { 0.f, 0.f, TILECX, TILECY };
 	m_fSpeed = 1.5f;
-	m_iHp = 100;
+	m_iHp = 1;
 	m_iAttackPower = 1;
 	m_pFrameKey = L"Snake"; 
 	m_tFrame = { 0, 10, 0, 10, true, 60, GetTickCount(), 0 };
@@ -44,6 +44,16 @@ void CSnake::Late_Update()
 	Gravity();
 	Motion_Change();
 	__super::Move_Frame();
+
+	
+#ifdef _DEBUG
+
+	if (m_dwTime + 1000 < GetTickCount())
+	{
+		cout << m_iHp << endl;
+		m_dwTime = GetTickCount();
+	}
+#endif
 }
 
 void CSnake::Render(HDC hDC)

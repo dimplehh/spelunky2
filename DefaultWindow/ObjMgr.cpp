@@ -87,6 +87,7 @@ void CObjMgr::Late_Update()
 			m_RenderList[eID].push_back(iter);
 		}
 	}
+
 	for (auto iter : m_ObjList[OBJ_MONSTER])
 	{
 		CCollisionMgr::Collision_RectMon(iter, m_ObjList[OBJ_PLAYER].front());
@@ -107,6 +108,7 @@ void CObjMgr::Late_Update()
 		if (dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetCanHold() == true)
 			break;
 	}
+	CCollisionMgr::Collision_RectHoldMon(m_ObjList[OBJ_MONSTER], m_ObjList[OBJ_HOLDOBJ]);
 }
 
 void CObjMgr::Render(HDC hDC)

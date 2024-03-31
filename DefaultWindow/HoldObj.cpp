@@ -59,6 +59,7 @@ void CHoldObj::Late_Update()
 			CLineMgr::Get_Instance()->Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY);
 			if (!CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, false))
 			{
+				m_bThrowing = true;
 				if (dynamic_cast<CPlayer*>(m_pOwner)->GetFlip() == true)
 					m_tInfo.fX -= 10.f;
 				else
@@ -69,6 +70,7 @@ void CHoldObj::Late_Update()
 			}
 			else
 			{
+				m_bThrowing = false;
 				dynamic_cast<CPlayer*>(m_pOwner)->SetIsHold(false);
 				dynamic_cast<CPlayer*>(m_pOwner)->SetThrow(false);
 				m_pOwner = nullptr;
@@ -93,7 +95,7 @@ void CHoldObj::Render(HDC hDC)
 		hMemDC, m_eHoldObjID * (int)m_tInfo.fCX, 0, m_tInfo.fCX, m_tInfo.fCY, RGB(255, 255, 255));
 }
 
-void CHoldObj::Release()	//항아리의 경우 던지면 금 or 보석이 나와야함
+void CHoldObj::Release()	//항아리의 경우 던지면 깨지면서 금 or 보석이 나와야함
 {
 	CSoundMgr::Get_Instance()->PlaySound(L"Splash.wav", SOUND_EFFECT, g_fVolume);
 	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CItemFactory::Create(m_tInfo.fX, m_tInfo.fY - 10.f, CItem::ITEM_GOLD));

@@ -21,6 +21,8 @@ public:
 	STATE		GetCurState() { return m_eCurState; }
 	void		SetCurState(STATE _curState) { m_eCurState = _curState; }
 
+	void		SetHp(int _hp) { m_iHp += _hp; };
+
 private:
 	void		Motion_Change();
 	void		Idle();
