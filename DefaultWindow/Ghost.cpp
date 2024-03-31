@@ -18,7 +18,7 @@ CGhost::~CGhost()
 void CGhost::Initialize()
 {
 	m_tInfo = { 0.f, 0.f, 128.f, 128.f };
-	m_fSpeed = 1.5f;
+	m_fSpeed = 0.8f;
 	m_iHp = 1;
 	m_iAttackPower = 1;
 	m_pFrameKey = L"Ghost";
@@ -31,7 +31,7 @@ int CGhost::Update()
 	if (m_iHp <= 0)
 		return OBJ_DEAD;
 
-	Idle();
+	Follow();
 
 	__super::Update_Rect();
 	return OBJ_NOEVENT;
@@ -39,24 +39,32 @@ int CGhost::Update()
 
 void CGhost::Late_Update()
 {
-	Gravity();
 	Motion_Change();
 	__super::Move_Frame();
 
 
-	//#ifdef _DEBUG
-	//
-	//	if (m_dwTime + 1000 < GetTickCount())
-	//	{
-	//		cout << m_iHp << endl;
-	//		m_dwTime = GetTickCount();
-	//	}
-	//#endif
+	#ifdef _DEBUG
+	
+		if (m_dwTime + 1000 < GetTickCount())
+		{			
+			INFO _playerInfo = CObjMgr::Get_Instance()->Get_Player()->Get_Info();
+			float _playerScreenX = _playerInfo.fX + CScrollMgr::Get_Instance()->Get_ScrollX();
+			float _playerScreenY = _playerInfo.fY + CScrollMgr::Get_Instance()->Get_ScrollY();
+			
+			cout << m_tInfo.fX << "/" << m_tInfo.fY << "/" << _playerScreenX << "/" << _playerScreenY << endl;
+			
+			m_dwTime = GetTickCount();
+		}
+	#endif
 }
 
 void CGhost::Render(HDC hDC)
 {
 	HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
+
+	if(m_pFrameKey == L"GhostUp")
+		GdiTransparentBlt(hDC, m_tRect.left, m_tRect.top, (int)m_tInfo.fCX, (int)m_tInfo.fCY, hMemDC,
+			0, 0, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(61, 61, 61));
 
 	GdiTransparentBlt(hDC, m_tRect.left , m_tRect.top, (int)m_tInfo.fCX, (int)m_tInfo.fCY, hMemDC,
 		m_tFrame.iFrameStart * (int)m_tInfo.fCX, m_tFrame.iMotion * (int)m_tInfo.fCY, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(61, 61, 61));
@@ -76,33 +84,47 @@ void CGhost::Motion_Change()
 		switch (m_eCurState)
 		{
 		case CGhost::IDLE:			Set_Frame(0, 5, 0, true, 120, 0, 5);		break;
-		case CGhost::ATTACK:		Set_Frame(0, 5, 1, true, 120, 0, 5);		break;
 		}
 		m_ePreState = m_eCurState;
 		m_bPreFlip = m_bCurFlip;
 	}
 }
 
-void CGhost::Idle()
+void CGhost::Follow()
 {
-	if (CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
+	INFO _playerInfo = CObjMgr::Get_Instance()->Get_Player()->Get_Info();
+	float _playerScreenX = _playerInfo.fX + CScrollMgr::Get_Instance()->Get_ScrollX();
+	float _playerScreenY = _playerInfo.fY + CScrollMgr::Get_Instance()->Get_ScrollY();
+
+	if (_playerScreenX - 10.f < m_tInfo.fX && m_tInfo.fX < _playerScreenX + 10.f)
 	{
-		m_tInfo.fX += m_fSpeed;
-	}
-	else
-	{
-		m_fSpeed = -m_fSpeed;
-		if (m_fSpeed < 0)
-		{
-			m_bFlip = true;
-			m_pFrameKey = L"GhostFlip";
-			m_tInfo.fX -= 10;
-		}
+		m_bFlip = false;
+		m_pFrameKey = L"GhostUp";
+		if (_playerScreenY < m_tInfo.fY)
+			m_tInfo.fY -= m_fSpeed;
 		else
-		{
-			m_bFlip = false;
-			m_pFrameKey = L"Ghost";
-			m_tInfo.fX += 10;
-		}
+			m_tInfo.fY += m_fSpeed;
+	}
+	else if (_playerScreenX < m_tInfo.fX)
+	{
+		m_bFlip = true;
+		m_pFrameKey = L"GhostFlip";
+		m_tInfo.fX -= m_fSpeed;
+
+		if (_playerScreenY < m_tInfo.fY)
+			m_tInfo.fY -= m_fSpeed;
+		else
+			m_tInfo.fY += m_fSpeed;
+	}
+	else if (_playerScreenX > m_tInfo.fX)
+	{	
+		m_bFlip = false;
+		m_pFrameKey = L"Ghost";
+		m_tInfo.fX += m_fSpeed;
+
+		if (_playerScreenY < m_tInfo.fY)
+			m_tInfo.fY -= m_fSpeed;
+		else
+			m_tInfo.fY += m_fSpeed;
 	}
 }

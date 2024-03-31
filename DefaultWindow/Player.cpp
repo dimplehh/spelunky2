@@ -83,12 +83,14 @@ void CPlayer::Late_Update()	//어떤걸 Late_Update, 어떤걸 Update에 넣어야할지 잘 
 		else
 			m_eCurState = IDLE;
 	}
-//
 //#ifdef _DEBUG
 //
 //	if (m_dwTime + 1000 < GetTickCount())
 //	{
-//		cout << m_bCanHold << endl;
+//		int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
+//		int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
+//
+//		cout << m_tInfo.fX + iScrollX  << "/" << m_tInfo.fY + iScrollY << endl;
 //		m_dwTime = GetTickCount();
 //	}
 //#endif

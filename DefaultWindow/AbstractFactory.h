@@ -175,9 +175,9 @@ public:
 	static CObj* Create(float _fX, float _fY, CMonster::MONSTERID _monsterID)
 	{
 		CObj* pObj = nullptr;
-		/*if (_monsterID == CMonster::SNAKE)
+		if (_monsterID == CMonster::SNAKE)
 			pObj = new CSnake;
-		else*/ if (_monsterID == CMonster::GHOST)
+		else if (_monsterID == CMonster::GHOST)
 			pObj = new CGhost;
 
 		pObj->Initialize();
