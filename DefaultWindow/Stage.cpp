@@ -31,6 +31,7 @@ void CStage::Initialize()
 
 	CObjMgr::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CPlayer>::Create());
 	InsertBmps();
+	InsertMonsters();
 	InsertUIs();
 	InsertObstacles();
 	InsertBoxs();
@@ -74,13 +75,13 @@ void CStage::Render(HDC hDC)
 	CLineMgr::Get_Instance()->Render(hDC);
 
 	CObjMgr::Get_Instance()->RenderUI(hDC);	// ui 가장 마지막에 렌더
-	FadeInOut(hDC);
+	FadeInOut(hDC);							 //fade 효과 그보다 더 마지막에 렌더
 }
 
 void CStage::FadeInOut(HDC hDC)
 {
 	HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"Fade");
-	if (dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetHp() == 0) //fade 효과 그보다 더 마지막에 렌더
+	if (dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetHp() == 0)								//FADEOUT
 	{
 		m_fAlpha += 2.f;
 		if (m_fAlpha >= 255.f)
@@ -90,8 +91,8 @@ void CStage::FadeInOut(HDC hDC)
 
 		AlphaBlend(hDC, 0, 0, WINCX, WINCY, hMemDC, 0, 0, WINCX, WINCY, _bf);
 	}
-	else if (dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetRevival() == true
-		|| dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetCheckFirstInit() == true)
+	else if (	dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetRevival() == true
+			||	dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetCheckFirstInit() == true)			// FADEIN
 	{
 		m_fAlpha = 0.f;
 		hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"FadeIn");
@@ -116,22 +117,22 @@ void CStage::Release()
 
 void CStage::InsertBmps()
 {
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Ground.bmp", L"Ground");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Fade.bmp", L"Fade");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/FadeIn.bmp", L"FadeIn");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette.bmp", L"Tile");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette2.bmp", L"Tile2");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/UIIcon.bmp", L"UIIcon");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Box.bmp", L"Box");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Rope.bmp", L"Rope");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Bomb2.bmp", L"Bomb");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Item.bmp", L"Item");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Obstacle.bmp", L"Obstacle");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Chest.bmp", L"Chest");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/HoldObj.bmp", L"HoldObj");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/Monster.bmp", L"Monster");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/DecoLand.bmp", L"DecoLand");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Font/Font.bmp", L"Font");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Ground.bmp",	L"Ground");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Fade.bmp",	L"Fade");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/FadeIn.bmp",	L"FadeIn");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette.bmp",		L"Tile");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette2.bmp",		L"Tile2");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/UIIcon.bmp",		L"UIIcon");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Box.bmp",			L"Box");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Rope.bmp",		L"Rope");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Bomb2.bmp",		L"Bomb");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Item.bmp",		L"Item");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Obstacle.bmp",	L"Obstacle");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Chest.bmp",		L"Chest");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/HoldObj.bmp",		L"HoldObj");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/Snake.bmp",		L"Snake");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/DecoLand.bmp",		L"DecoLand");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Font/Font.bmp",			L"Font");
 }
 
 void CStage::InsertUIs()
@@ -153,6 +154,11 @@ void CStage::InsertUIs()
 	
 	CObjMgr::Get_Instance()->Add_Object(OBJ_UI, CUIFactory::Create(WINCX - TILECX * 2, 50.f, CUIIcon::UI_MAP, __super::m_iMapNum, 15, 10.f, -7.f));
 	CUIMgr::Get_Instance()->Insert_UI(CUIIcon::UI_MAP, dynamic_cast<CUIIcon*>(CObjMgr::Get_Instance()->Get_UI()));
+}
+
+void CStage::InsertMonsters()
+{
+	CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(TILECX * (21 + 0.5f), TILECY * (6.5f), CMonster::MONSTER_SNAKE));
 }
 
 void CStage::InsertObstacles()

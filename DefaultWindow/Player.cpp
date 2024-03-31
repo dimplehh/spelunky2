@@ -22,7 +22,6 @@ CPlayer::CPlayer()
 	m_fTime(0.f), m_fPower(0.f), m_ePreState(ST_END), m_eCurState(IDLE), m_bKneelDown(false), m_bAttachedBox(false), m_bIsHold(false), m_bCanHold(false), m_bThrow(false),
 	m_dwTime(GetTickCount()), m_fFirstX(TILECX * (21 + m_tInfo.fCX / 2)), m_fFirstY(TILECY * (2 + m_tInfo.fCY / 2))
 {
-	//ZeroMemory(&m_tPosin, sizeof(POINT));	// 나중에 총구구현에 쓸 수 있어 남겨놓음
 	m_eMyObjType = OBJECT_TYPE::PLAYER;
 }
 

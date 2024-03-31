@@ -17,6 +17,7 @@ private:
 	void		FadeInOut(HDC hDC);
 
 private:
+	void		InsertMonsters();
 	void		InsertBmps();
 	void		InsertUIs();
 	void		InsertObstacles();

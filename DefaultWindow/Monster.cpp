@@ -4,66 +4,12 @@
 #include "ScrollMgr.h"
 #include "LineMgr.h"
 
-CMonster::CMonster() : m_fTime(0.f), m_fPower(0.f)
+CMonster::CMonster() : m_fTime(0.f), m_fPower(0.f), m_iHp(1), m_iAttackPower(1), m_eMonsterID(MONSTER_END)
 {
 	m_eMyObjType = OBJECT_TYPE::MONSTER;
 }
 
 CMonster::~CMonster()
-{
-	Release();
-}
-
-void CMonster::Initialize()
-{
-	m_tInfo = { WINCX * 0.5f, WINCY * 0.5f, 50.f, 50.f };
-	m_fSpeed = 3.f;
-
-	m_pFrameKey = L"Monster";
-	m_eRender = RENDER_GAMEOBJECT;
-}
-
-int CMonster::Update()
-{
-	if (m_bDead)
-		return OBJ_DEAD;
-
-
-	__super::Update_Rect();
-
-	return OBJ_NOEVENT;
-}
-
-void CMonster::Late_Update()
-{
-	Gravity();
-}
-
-void CMonster::Render(HDC hDC)
-{
-	int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
-	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
-
-	Rectangle(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, m_tRect.right + iScrollX, m_tRect.bottom + iScrollY);
-	//HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
-
-	//int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
-	//int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
-	//
-	//GdiTransparentBlt(hDC, 
-	//	m_tRect.left + iScrollX,
-	//	m_tRect.top + iScrollY,
-	//	(int)m_tInfo.fCX,
-	//	(int)m_tInfo.fCY,
-	//	hMemDC,			
-	//	0,
-	//	0,
-	//	(int)m_tInfo.fCX,
-	//	(int)m_tInfo.fCY,
-	//	RGB(255, 255, 255));	
-}
-
-void CMonster::Release()
 {
 }
 

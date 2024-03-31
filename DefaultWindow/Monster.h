@@ -3,20 +3,24 @@
 class CMonster : public CObj
 {
 public:
+	enum MONSTERID {MONSTER_SNAKE, MONSTER_GHOST, MONSTER_END};
+
+public:
 	CMonster();
 	virtual ~CMonster();
 
 public:
-	virtual void Initialize() override;
-	virtual int Update() override;
-	virtual void Late_Update() override;
-	virtual void Render(HDC hDC) override;
-	virtual void Release() override;
+	int		GetAttackPower() { return m_iAttackPower; }
+	void	SetMonsterID(MONSTERID _monsterID) { m_eMonsterID = _monsterID; }
 
-private:
+protected:
+	int			m_iAttackPower;		// 공격력
+	int			m_iHp;				// 체력
+
 	void		Gravity();
 
-	float				m_fPower;
-	float				m_fTime;
-};
+	float		m_fPower;
+	float		m_fTime;
 
+	MONSTERID	m_eMonsterID;
+};

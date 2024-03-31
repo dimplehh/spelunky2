@@ -113,8 +113,6 @@ private:
 	
 
 private:
-
-	// POINT		m_tPosin; // 나중에 총 구현할때 사용할 수 있을듯
 	float		m_fFirstX;
 	float		m_fFirstY;
 

@@ -96,6 +96,34 @@ bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool
 		return false;
 }
 
+bool CLineMgr::Collision_Line(float& fX, float& fY, float fCX, float fCY)
+{
+	if (m_LineList.empty())							// 맵에 선이 없다면 
+		return false;								// 충돌 x
+
+	m_AttachedLine = nullptr;
+
+	for (auto& iter : m_LineList)
+	{
+		if ((iter->Get_LineType() == CLine::FLOOR || iter->Get_LineType() == CLine::BOARD)
+			&& iter->Get_Info().tLPoint.fX <= fX && fX < iter->Get_Info().tRPoint.fX
+			&& fY >= iter->Get_Info().tLPoint.fY - fCY / 2)
+		{
+			m_fY = iter->Get_Info().tLPoint.fY;										//플레이어 위치를 변경시켜주는 부분
+
+			if (((fY + (fCY / 6.f)) <= m_fY) && (m_fY <= (fY + (fCY / 2.f))))		// 하단 부분 충돌 범위 지정 전체 사이즈의 1/6 가량
+			{
+				m_AttachedLine = iter;
+				fY = m_fY - (fCY / 2);
+				return true;
+			}
+		}
+	}
+
+	if (!m_AttachedLine)
+		return false;
+}
+
 bool CLineMgr::Collision_Box_Line(float& fX, float& fY, float fCX, float fCY, bool _Jumping)
 {
 	if (m_LineList.empty())							// 맵에 선이 없다면 
