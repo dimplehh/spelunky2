@@ -17,12 +17,20 @@ public:
 	virtual void Render(HDC hDC) override;
 	virtual void Release() override;
 
+public:
+	STATE		GetCurState() { return m_eCurState; }
+	void		SetCurState(STATE _curState) { m_eCurState = _curState; }
+
 private:
 	void		Motion_Change();
+	void		Idle();
+	void		Attack();
 
 private:
 	STATE		m_ePreState;
 	STATE		m_eCurState;
+
+	bool		m_bFirstAttack = true;
 
 private:
 	DWORD				m_dwTime;

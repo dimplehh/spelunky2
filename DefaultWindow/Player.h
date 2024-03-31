@@ -80,6 +80,8 @@ public:
 	void		SetThrow(bool _throw) { m_bThrow = _throw; }
 	bool		GetCheckFirstInit(){ return m_bCheckFirstInit; }
 	void		SetCheckFirstInit(bool _checkFirstInit) { m_bCheckFirstInit = _checkFirstInit; }
+	bool		GetAttacked() { return m_bAttacked; }
+	void		SetAttacked(bool _attacked) { m_bAttacked = _attacked; }
 
 private:
 	void		SetRenderImage(HDC hDC);
@@ -127,6 +129,7 @@ private:
 	bool		m_bCanHold;		// 잡을 수 있는 상태 ( 아래키 + x)
 	bool		m_bIsHold;		// 무엇인가를 잡은 상태
 	bool		m_bThrow;
+	bool		m_bAttacked;
 
 	int			m_iJumpCount;
 

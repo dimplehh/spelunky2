@@ -5,6 +5,7 @@
 #include "KeyMgr.h"
 #include "HoldObj.h"
 #include "Item.h"
+#include "Snake.h"
 
 extern float g_fVolume;
 
@@ -44,6 +45,31 @@ void CCollisionMgr::Collision_Rect(CObj* Dst, CObj* Src)
 	}
 }
 
+void CCollisionMgr::Collision_RectMon(CObj* Dst, CObj* Src)
+{
+	float	fX(0.f), fY(0.f);
+
+	if (Check_Rect(Dst, Src, &fX, &fY))
+	{
+		Dst->SetCollision(true);
+		Src->SetCollision(true);
+		if (OBJECT_TYPE::PLAYER == Src->Get_MyObjType())
+		{
+			if (OBJECT_TYPE::MONSTER == Dst->Get_MyObjType())
+			{
+				Dst->SetCollision(true);
+				Src->SetCollision(true);
+				dynamic_cast<CSnake*>(Dst)->SetCurState(CSnake::ATTACK);
+			}
+		}
+	}
+	else
+	{
+		Dst->SetCollision(false);
+		Src->SetCollision(false);
+		dynamic_cast<CSnake*>(Dst)->SetCurState(CSnake::IDLE);
+	}
+}
 
 void CCollisionMgr::Collision_RectEx(CObj* Dst, CObj* Src)
 {
