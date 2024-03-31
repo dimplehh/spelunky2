@@ -10,7 +10,7 @@
 
 extern float g_fVolume;
 
-CHoldObj::CHoldObj() : m_fTime(0.f), m_fPower(0.f), m_eHoldObjID(HOLDOBJ_JAR), m_pOwner(nullptr)
+CHoldObj::CHoldObj() : m_fTime(0.f), m_fPower(0.f), m_eHoldObjID(HOLDOBJ_END), m_pOwner(nullptr)
 {
 	m_eMyObjType = OBJECT_TYPE::HOLDOBJ;
 }
@@ -32,8 +32,11 @@ int CHoldObj::Update()
 	if (m_bDead)
 		return OBJ_DEAD;
 
-	if(m_bCollision == true	&& dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetIsHold() == true)
+	if (m_bCollision == true && dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetIsHold() == true)
+	{
 		SetOwner(CObjMgr::Get_Instance()->Get_Player());
+		m_bIsActive = true;
+	}
 
 	__super::Update_Rect();
 
@@ -44,7 +47,7 @@ void CHoldObj::Late_Update()
 {
 	if(m_pOwner == nullptr)
 		Gravity();
-	else
+	else if(m_bIsActive == true)
 	{
 		if (dynamic_cast<CPlayer*>(m_pOwner)->GetThrow() == false)
 		{
@@ -53,10 +56,9 @@ void CHoldObj::Late_Update()
 		}
 		else
 		{
+			CLineMgr::Get_Instance()->Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY);
 			if (!CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, false))
 			{
-				CLineMgr::Get_Instance()->Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX , m_tInfo.fCY);
-
 				if (dynamic_cast<CPlayer*>(m_pOwner)->GetFlip() == true)
 					m_tInfo.fX -= 10.f;
 				else
@@ -69,7 +71,11 @@ void CHoldObj::Late_Update()
 			{
 				dynamic_cast<CPlayer*>(m_pOwner)->SetIsHold(false);
 				dynamic_cast<CPlayer*>(m_pOwner)->SetThrow(false);
-				m_bDead = true;
+				m_pOwner = nullptr;
+				m_bIsActive = false;
+				m_fTime = 0.f;
+
+				//m_bDead = true;
 			}
 		}
 	}

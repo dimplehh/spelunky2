@@ -32,6 +32,7 @@ private:
 
 private:
 	HOLDOBJID			m_eHoldObjID;
+	bool				m_bIsActive = false;
 
 	CObj* m_pOwner;
 };

@@ -10,6 +10,7 @@
 #include "Chest.h"
 #include "UIIcon.h"
 #include "Item.h"
+#include "HoldObj.h"
 
 template<typename T>
 class CAbstractFactory
@@ -148,6 +149,19 @@ public:
 		pObj->Initialize();
 		pObj->Set_Pos(_fX, _fY);
 		dynamic_cast<CChest*>(pObj)->SetChestItemID(_itemID);
+		return pObj;
+	}
+};
+
+class CHoldObjFactory
+{
+public:
+	static CObj* Create(float _fX, float _fY, CHoldObj::HOLDOBJID _holdObjID)
+	{
+		CObj* pObj = new CHoldObj;
+		pObj->Initialize();
+		pObj->Set_Pos(_fX, _fY);
+		dynamic_cast<CHoldObj*>(pObj)->Set_HoldObjID(_holdObjID);
 		return pObj;
 	}
 };
