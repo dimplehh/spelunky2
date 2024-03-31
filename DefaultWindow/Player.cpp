@@ -20,7 +20,7 @@ float g_fVolume(0.25f);
 CPlayer::CPlayer()
 	: m_fDistance(0.f), m_bJump(false), m_bLadder(false), m_iJumpCount(0), m_iHp(4), m_fPreY(0.f), m_fCurY(0.f), m_bCanHang(false), m_fDiffY(0.f),
 	m_fTime(0.f), m_fPower(0.f), m_ePreState(ST_END), m_eCurState(IDLE), m_bKneelDown(false), m_bAttachedBox(false), m_bIsHold(false), m_bCanHold(false), m_bThrow(false),
-	m_dwTime(GetTickCount()), m_fFirstX(TILECX * (21 + m_tInfo.fCX / 2)), m_fFirstY(TILECY + m_tInfo.fCY / 2)
+	m_dwTime(GetTickCount()), m_fFirstX(TILECX * (21 + m_tInfo.fCX / 2)), m_fFirstY(TILECY * (2 + m_tInfo.fCY / 2))
 {
 	//ZeroMemory(&m_tPosin, sizeof(POINT));	// 나중에 총구구현에 쓸 수 있어 남겨놓음
 	m_eMyObjType = OBJECT_TYPE::PLAYER;
@@ -43,7 +43,6 @@ void CPlayer::Initialize()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_flip2.bmp", L"Player_FLIP");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_Attack.bmp", L"Player_ATTACK_BASE");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_Attack_Flip.bmp", L"Player_ATTACK_FLIP");
-	m_eCurState = IDLE;
 	m_tFrame = { 0, 0, 0, 15, false, 60, GetTickCount(), 0};
 	m_pFrameKey = L"Player_BASE";
 
@@ -143,7 +142,7 @@ void CPlayer::Key_Input()
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::C) == KEY_STATE::TAP) { TapC(); }
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::D) == KEY_STATE::TAP) { TapD(); }
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::X) == KEY_STATE::TAP) { TapX(); }
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::E) == KEY_STATE::TAP) { m_eCurState = ENTER; }
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::A) == KEY_STATE::TAP) { m_eCurState = ENTER; }
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::F) == KEY_STATE::TAP) { m_eCurState = EXIT; }
 
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::UP) == KEY_STATE::HOLD) { HoldUp(); }

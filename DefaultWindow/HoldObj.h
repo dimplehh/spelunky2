@@ -4,7 +4,7 @@
 class CHoldObj : public CObj
 {
 public:
-	enum HOLDOBJID { HOLDOBJ_JAR, HOLDOBJ_KEY, HOLDOBJ_GUN, HOLDOBJ_END };
+	enum HOLDOBJID { HOLDOBJ_JAR, HOLDOBJ_KEY, HOLDOBJ_STONE, HOLDOBJ_END };
 
 public:
 	CHoldObj();

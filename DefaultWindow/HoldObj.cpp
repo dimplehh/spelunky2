@@ -75,7 +75,8 @@ void CHoldObj::Late_Update()
 				m_bIsActive = false;
 				m_fTime = 0.f;
 
-				//m_bDead = true;
+				if(m_eHoldObjID == HOLDOBJ_JAR)
+					m_bDead = true;
 			}
 		}
 	}
