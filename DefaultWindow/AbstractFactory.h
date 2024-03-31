@@ -10,6 +10,8 @@
 #include "Chest.h"
 #include "UIIcon.h"
 #include "Item.h"
+#include "Monster.h"
+#include "Snake.h"
 #include "HoldObj.h"
 
 template<typename T>
@@ -162,6 +164,21 @@ public:
 		pObj->Initialize();
 		pObj->Set_Pos(_fX, _fY);
 		dynamic_cast<CHoldObj*>(pObj)->Set_HoldObjID(_holdObjID);
+		return pObj;
+	}
+};
+
+class CMonsterFactory
+{
+public:
+	static CObj* Create(float _fX, float _fY, CMonster::MONSTERID _monsterID)
+	{
+		CObj* pObj = nullptr;
+		if(_monsterID == CMonster::MONSTER_SNAKE)
+			pObj = new CSnake;
+		pObj->Initialize();
+		pObj->Set_Pos(_fX, _fY);
+		dynamic_cast<CMonster*>(pObj)->SetMonsterID(_monsterID);
 		return pObj;
 	}
 };
