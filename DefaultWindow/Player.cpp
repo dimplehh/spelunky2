@@ -83,17 +83,14 @@ void CPlayer::Late_Update()	//어떤걸 Late_Update, 어떤걸 Update에 넣어야할지 잘 
 		else
 			m_eCurState = IDLE;
 	}
-//#ifdef _DEBUG
-//
-//	if (m_dwTime + 1000 < GetTickCount())
-//	{
-//		int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
-//		int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
-//
-//		cout << m_tInfo.fX + iScrollX  << "/" << m_tInfo.fY + iScrollY << endl;
-//		m_dwTime = GetTickCount();
-//	}
-//#endif
+#ifdef _DEBUG
+
+	if (m_dwTime + 1000 < GetTickCount())
+	{
+		cout << m_eCurState << endl;
+		m_dwTime = GetTickCount();
+	}
+#endif
 }
 
 void CPlayer::Release()
@@ -306,6 +303,10 @@ void CPlayer::HoldUp()
 	if (m_bLadder)
 	{
 		m_tInfo.fY -= m_fSpeed;
+		
+		if (!CLineMgr::Get_Instance()->Ladder_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
+			m_tInfo.fY += m_fSpeed;
+
 		m_eCurState = LADDER;
 	}
 	else
@@ -375,7 +376,7 @@ void CPlayer::FallDamage()
 {
 	if (m_bJump == false && !CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump) && m_eCurState != DIZZY)
 	{
-		m_eCurState = FALLING;
+		//m_eCurState = FALLING;
 	}
 	else if (m_fDiffY >= TILECY * 6)
 	{

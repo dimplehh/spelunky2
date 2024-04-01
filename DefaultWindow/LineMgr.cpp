@@ -385,8 +385,7 @@ bool CLineMgr::Ladder_Line(float& fX, float& fY, float& fCX, float& fCY)
 		{
 			if ((fX - (fCX / 2.f) < iter->Get_Info().tLPoint.fX) && (iter->Get_Info().tLPoint.fX < fX + (fCX / 2.f)))
 			{
-				if ((iter->Get_Info().tLPoint.fY >= fY - (fCY / 2.f)) && (fY - (fCY / 2.f) >= iter->Get_Info().tRPoint.fY) ||
-					(iter->Get_Info().tLPoint.fY >= fY + (fCY / 2.f)) && (fY + (fCY / 2.f) > iter->Get_Info().tRPoint.fY))
+				if ((iter->Get_Info().tLPoint.fY >= fY) && (fY >  iter->Get_Info().tRPoint.fY))
 				{  
 					fX = iter->Get_Info().tLPoint.fX;
 					
@@ -443,6 +442,10 @@ void CLineMgr::MakeEtcLine()
 	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 2 * TILECX, (TILEY - 2) * TILECY }, LINEPOINT{ (TILEX - 2) * TILECX, (TILEY - 2) * TILECY }, CLine::FLOOR));		// 바닥
 	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 2 * TILECX, 1 * TILECY }, LINEPOINT{ 2 * TILECX, (TILEY - 2) * TILECY }, CLine::LEFTWALL));						// 왼쪽 벽
 	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ (TILEX - 2) * TILECX, 1 * TILECY }, LINEPOINT{ (TILEX - 2) * TILECX, (TILEY - 2) * TILECY }, CLine::RIGHTWALL));	// 오른쪽 벽
+
+
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ (19 + 0.5f) * TILECX, 7 * TILECY }, LINEPOINT{ (19 + 0.5f) * TILECX, 4 * TILECY }, CLine::LADDER));
+
 
 	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ (17 + 0.5f) * TILECX, 18 * TILECY }, LINEPOINT{ (17 + 0.5f) * TILECX, 15 * TILECY }, CLine::LADDER));				// 사다리
 	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ (3 + 0.5f) * TILECX, 18 * TILECY }, LINEPOINT{ (3 + 0.5f) * TILECX, 14 * TILECY }, CLine::LADDER));
