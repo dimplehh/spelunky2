@@ -23,8 +23,9 @@ public:
 	void		Render(HDC hDC);
 	void		RenderUI(HDC hDC);
 	void		RenderGhost(HDC hDC);
+	
 	void		Release();
-
+	void		ReleaseWithoutPlayer();
 	void		Delete_ID(OBJID eID);
 
 private:

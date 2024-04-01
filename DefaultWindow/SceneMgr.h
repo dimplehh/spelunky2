@@ -7,6 +7,8 @@
 
 #include "MyMenu.h"
 #include "Stage.h"
+#include "Stage2.h"
+#include "Stage3.h"
 
 class CSceneMgr
 {
@@ -33,6 +35,7 @@ public:
 
 public:
 	SCENEID			Get_Scene() { return m_eCurScene; }
+	CScene* GetRealScene() { return m_pScene; }
 
 public:
 	void			Scene_Change(SCENEID eID);

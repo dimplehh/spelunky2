@@ -160,3 +160,15 @@ void CObjMgr::Delete_ID(OBJID eID)
 
 	m_ObjList[eID].clear();
 }
+
+void CObjMgr::ReleaseWithoutPlayer()
+{
+	for (size_t i = 0; i < OBJ_END; ++i)
+	{
+		if (i == OBJ_PLAYER)
+			continue;
+
+		for_each(m_ObjList[i].begin(), m_ObjList[i].end(), Safe_Delete<CObj*>);
+		m_ObjList[i].clear();
+	}
+}

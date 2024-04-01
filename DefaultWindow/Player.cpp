@@ -14,6 +14,7 @@
 #include "UIMgr.h"
 #include <iostream>
 #include "SoundMgr.h"
+#include "SceneMgr.h"
 
 float g_fVolume(0.25f);
 
@@ -142,7 +143,21 @@ void CPlayer::Key_Input()
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::C) == KEY_STATE::TAP) { TapC(); }
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::D) == KEY_STATE::TAP) { TapD(); }
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::X) == KEY_STATE::TAP) { TapX(); }
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::A) == KEY_STATE::TAP) { m_eCurState = ENTER; }
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::A) == KEY_STATE::TAP) 
+	{ 
+		m_eCurState = ENTER; 
+		switch (dynamic_cast<CScene*>(CSceneMgr::Get_Instance()->GetRealScene())->GetMapNum())
+		{
+		case 1:
+			CSceneMgr::Get_Instance()->Scene_Change(SC_STAGE2);
+			break;
+		case 2:
+			CSceneMgr::Get_Instance()->Scene_Change(SC_STAGE3);
+			break;
+		default:
+			break;
+		}
+	}
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::F) == KEY_STATE::TAP) { m_eCurState = EXIT; }
 
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::UP) == KEY_STATE::HOLD) { HoldUp(); }
