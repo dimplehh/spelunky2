@@ -7,6 +7,7 @@
 #include "Obj.h"
 #include "Player.h"
 #include "UIMgr.h"
+#pragma comment(lib, "msimg32.lib")
 
 CGhost::CGhost() :m_ePreState(ST_END), m_eCurState(IDLE), m_dwTime(GetTickCount())
 {
@@ -19,7 +20,7 @@ CGhost::~CGhost()
 void CGhost::Initialize()
 {
 	m_tInfo = { m_fFirstX, m_fFirstY, 128.f, 128.f };
-	m_fSpeed = 0.8f;
+	m_fSpeed = 0.6f;
 	m_iHp = 1;
 	m_iAttackPower = 1;
 	m_pFrameKey = L"Ghost";
@@ -40,7 +41,7 @@ int CGhost::Update()
 		__super::Update_Rect();
 	}
 
-	if (CUIMgr::Get_Instance()->Get_Time() < 10)
+	if (CUIMgr::Get_Instance()->Get_Time() < 10) //일단 10초 지나면 등장함
 		return OBJ_NOEVENT;
 
 	Follow();
@@ -59,12 +60,19 @@ void CGhost::Render(HDC hDC)
 {
 	HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
 
-	if(m_pFrameKey == L"GhostUp")
-		GdiTransparentBlt(hDC, m_tRect.left, m_tRect.top, (int)m_tInfo.fCX, (int)m_tInfo.fCY, hMemDC,
-			0, 0, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(61, 61, 61));
+	BLENDFUNCTION	_bf = {};
+	_bf.BlendOp = AC_SRC_OVER;
+	_bf.BlendFlags = 0;
+	_bf.AlphaFormat = AC_SRC_ALPHA;
+	_bf.SourceConstantAlpha = 0;
+	_bf.SourceConstantAlpha = 180.f;
 
-	GdiTransparentBlt(hDC, m_tRect.left , m_tRect.top, (int)m_tInfo.fCX, (int)m_tInfo.fCY, hMemDC,
-		m_tFrame.iFrameStart * (int)m_tInfo.fCX, m_tFrame.iMotion * (int)m_tInfo.fCY, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(61, 61, 61));
+	if (m_pFrameKey == L"GhostUp")
+		AlphaBlend(hDC, m_tRect.left, m_tRect.top, (int)m_tInfo.fCX, (int)m_tInfo.fCY, hMemDC,
+			0, 0, (int)m_tInfo.fCX, (int)m_tInfo.fCY, _bf);
+	else
+		AlphaBlend(hDC, m_tRect.left, m_tRect.top, (int)m_tInfo.fCX, (int)m_tInfo.fCY, hMemDC, 
+		m_tFrame.iFrameStart * (int)m_tInfo.fCX, m_tFrame.iMotion * (int)m_tInfo.fCY, (int)m_tInfo.fCX, (int)m_tInfo.fCY, _bf);
 }
 
 void CGhost::Release()
@@ -97,14 +105,14 @@ void CGhost::Follow()
 	{
 		m_bFlip = false;
 		m_pFrameKey = L"GhostUp";
-		if (_playerScreenY - 10.f < m_tInfo.fY && m_tInfo.fY < _playerScreenY + 10.f)
+		if (_playerScreenY - 5.f < m_tInfo.fY && m_tInfo.fY < _playerScreenY + 5.f)
 		{
 			dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetHp(0);
 		}
 		else if (_playerScreenY < m_tInfo.fY)
-			m_tInfo.fY -= m_fSpeed;
+			m_tInfo.fY -= m_fSpeed * 0.5f;
 		else
-			m_tInfo.fY += m_fSpeed;
+			m_tInfo.fY += m_fSpeed * 0.5f;
 
 
 	}
@@ -115,9 +123,9 @@ void CGhost::Follow()
 		m_tInfo.fX -= m_fSpeed;
 
 		if (_playerScreenY < m_tInfo.fY)
-			m_tInfo.fY -= m_fSpeed;
+			m_tInfo.fY -= m_fSpeed * 0.5f;
 		else
-			m_tInfo.fY += m_fSpeed;
+			m_tInfo.fY += m_fSpeed * 0.5f;
 	}
 	else if (_playerScreenX > m_tInfo.fX)
 	{	
@@ -126,8 +134,8 @@ void CGhost::Follow()
 		m_tInfo.fX += m_fSpeed;
 
 		if (_playerScreenY < m_tInfo.fY)
-			m_tInfo.fY -= m_fSpeed;
+			m_tInfo.fY -= m_fSpeed * 0.5f;
 		else
-			m_tInfo.fY += m_fSpeed;
+			m_tInfo.fY += m_fSpeed * 0.5f;
 	}
 }
