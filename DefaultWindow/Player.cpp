@@ -15,6 +15,7 @@
 #include <iostream>
 #include "SoundMgr.h"
 #include "SceneMgr.h"
+#include "TileMgr.h"
 
 float g_fVolume(0.25f);
 
@@ -84,14 +85,14 @@ void CPlayer::Late_Update()	//어떤걸 Late_Update, 어떤걸 Update에 넣어야할지 잘 
 		else
 			m_eCurState = IDLE;
 	}
-#ifdef _DEBUG
-
-	if (m_dwTime + 1000 < GetTickCount())
-	{
-		cout << m_eCurState << endl;
-		m_dwTime = GetTickCount();
-	}
-#endif
+//#ifdef _DEBUG
+//
+//	if (m_dwTime + 1000 < GetTickCount())
+//	{
+//		cout << m_eCurState << endl;
+//		m_dwTime = GetTickCount();
+//	}
+//#endif
 }
 
 void CPlayer::Release()
@@ -129,41 +130,26 @@ void CPlayer::SetRenderImage(HDC hDC)
 
 void CPlayer::Key_Input()
 {
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::TAP)	{ if (m_bCanHang == true) return;	m_bFlip = true;		m_pFrameKey = L"Player_FLIP";}
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::TAP)	{ if (m_bCanHang == true) return;	m_bFlip = false;	m_pFrameKey = L"Player_BASE";}
-
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::HOLD && CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::HOLD) 
-	{m_eCurState = IDLE;}
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::TAP)		{ if (m_bCanHang == true) return;	m_bFlip = true;		m_pFrameKey = L"Player_FLIP";}
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::TAP)		{ if (m_bCanHang == true) return;	m_bFlip = false;	m_pFrameKey = L"Player_BASE";}
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::HOLD 
+		&& CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::HOLD)	{m_eCurState = IDLE;}
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::HOLD) { HoldLeft(); }
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::HOLD) { HoldRight(); }
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::HOLD){ HoldRight(); }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::AWAY) { m_eCurState = IDLE; }
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::AWAY) { m_eCurState = IDLE; }
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::AWAY){ m_eCurState = IDLE; }
 
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::Z) == KEY_STATE::TAP) { TapZ(); }
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::C) == KEY_STATE::TAP) { TapC(); }
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::D) == KEY_STATE::TAP) { TapD(); }
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::X) == KEY_STATE::TAP) { TapX(); }
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::A) == KEY_STATE::TAP) 
-	{ 
-		m_eCurState = ENTER; 
-		switch (dynamic_cast<CScene*>(CSceneMgr::Get_Instance()->GetRealScene())->GetMapNum())
-		{
-		case 1:
-			CSceneMgr::Get_Instance()->Scene_Change(SC_STAGE2);
-			break;
-		case 2:
-			CSceneMgr::Get_Instance()->Scene_Change(SC_STAGE3);
-			break;
-		default:
-			break;
-		}
-	}
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::F) == KEY_STATE::TAP) { m_eCurState = EXIT; }
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::Z) == KEY_STATE::TAP)			{ TapZ(); }
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::C) == KEY_STATE::TAP)			{ TapC(); }
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::D) == KEY_STATE::TAP)			{ TapD(); }
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::X) == KEY_STATE::TAP)			{ TapX(); }
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::A) == KEY_STATE::TAP)			{ TapA(); }
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::F) == KEY_STATE::TAP)			{ m_eCurState = EXIT; }
 
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::UP) == KEY_STATE::HOLD) { HoldUp(); }
-	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::UP) == KEY_STATE::AWAY) { if (!m_bLadder)		m_eCurState = LOOKFRONT; }
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::UP) == KEY_STATE::HOLD)		{ HoldUp(); }
+	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::UP) == KEY_STATE::AWAY)	{ if (!m_bLadder)		m_eCurState = LOOKFRONT; }
 
-	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::TAP) { if (!m_bLadder) { m_eCurState = KNEELDOWN;	m_bKneelDown = true; } }
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::TAP)		{ if (!m_bLadder) { m_eCurState = KNEELDOWN;	m_bKneelDown = true; } }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::HOLD) { HoldDown(); }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::AWAY) { if (!m_bLadder) { m_eCurState = STANDUP;	m_bKneelDown = false; } }
 }
@@ -234,6 +220,22 @@ void CPlayer::TapD()
 	}
 	else
 		CSoundMgr::Get_Instance()->PlaySound(L"Empty.wav", SOUND_EFFECT, g_fVolume);
+}
+
+void CPlayer::TapA()
+{
+	m_eCurState = ENTER;
+	switch (dynamic_cast<CScene*>(CSceneMgr::Get_Instance()->GetRealScene())->GetMapNum())
+	{
+	case 1:
+		CSceneMgr::Get_Instance()->Scene_Change(SC_STAGE2);
+		break;
+	case 2:
+		CSceneMgr::Get_Instance()->Scene_Change(SC_STAGE3);
+		break;
+	default:
+		break;
+	}
 }
 
 void CPlayer::HoldLeft()
@@ -366,19 +368,26 @@ bool CPlayer::Die()
 
 			if (m_iDeathTime + 3 <= CUIMgr::Get_Instance()->Get_Time())
 			{
-				m_tInfo.fX = m_fFirstX;
-				m_tInfo.fY = m_fFirstY;
+				if (m_bResetFirstTime == true)
+				{
+					m_tInfo.fX = m_fFirstX;
+					m_tInfo.fY = m_fFirstY;
 
-				CScrollMgr::Get_Instance()->Set_ScrollXY(WINCX / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX,
-					WINCY - -CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY);
+					CScrollMgr::Get_Instance()->Set_ScrollXY(WINCX / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX,
+						WINCY - -CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY);
 
-				m_eCurState = IDLE;
-				SetHp(4);
-				ResetNum();
-				CUIMgr::Get_Instance()->Reset_Time();
-				m_iDeathTime = CUIMgr::Get_Instance()->Get_Time();
-				m_bRevival = true;
-				m_bFirstDieCheck = true;
+					m_eCurState = IDLE;
+					SetHp(4);
+					ResetNum();
+					CUIMgr::Get_Instance()->Reset_Time();
+					m_iDeathTime = CUIMgr::Get_Instance()->Get_Time();
+					m_bRevival = true;
+					m_bFirstDieCheck = true;
+					m_bResetFirstTime = false;
+					CTileMgr::Get_Instance()->Load_Tile(1);
+					CLineMgr::Get_Instance()->Release();
+					CLineMgr::Get_Instance()->SetLine();
+				}
 				return false;
 			}
 		}
@@ -391,7 +400,7 @@ void CPlayer::FallDamage()
 {
 	if (m_bJump == false && !CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump) && m_eCurState != DIZZY)
 	{
-		//m_eCurState = FALLING;
+		m_eCurState = FALLING;
 	}
 	else if (m_fDiffY >= TILECY * 6)
 	{

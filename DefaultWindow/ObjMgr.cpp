@@ -46,7 +46,7 @@ CObj * CObjMgr::Get_Target(OBJID eID, CObj * pObj)
 
 void CObjMgr::Add_Object(OBJID eID, CObj * pObj)
 {
-	if (OBJ_END <= eID || nullptr == pObj)
+	if (OBJ_END <= eID || nullptr == pObj || eID == OBJ_PLAYER && m_ObjList[eID].empty() == false)
 		return;
 
 	m_ObjList[eID].push_back(pObj);
@@ -108,6 +108,7 @@ void CObjMgr::Late_Update()
 		if (dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetCanHold() == true)
 			break;
 	}
+	if(m_ObjList[OBJ_MONSTER].empty() == false && m_ObjList[OBJ_HOLDOBJ].empty() == false)
 	CCollisionMgr::Collision_RectHoldMon(m_ObjList[OBJ_MONSTER], m_ObjList[OBJ_HOLDOBJ]);
 }
 

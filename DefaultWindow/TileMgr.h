@@ -23,6 +23,7 @@ public:
 
 	void		Save_Tile();
 	void		Load_Tile();
+	void		Load_Tile(int _idx);
 
 
 public:

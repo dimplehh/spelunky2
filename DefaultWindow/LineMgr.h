@@ -62,6 +62,7 @@ public:
 
 private:
 	static CLineMgr*		m_pInstance;
+	list<CLine*>			m_FirstLineList;
 	list<CLine*>			m_LineList;
 	list<CLine*>			m_BoxLineList;
 

@@ -32,12 +32,12 @@ void CStage::Initialize()
 	CObjMgr::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CPlayer>::Create());
 	InsertBmps();
 	InsertMonsters();
-	//InsertObstacles();
+	InsertObstacles();
 	InsertBoxs();
 	InsertChests();
 	InsertHoldObjs();
 	InsertUIs();
-	CTileMgr::Get_Instance()->Load_Tile();
+	CTileMgr::Get_Instance()->Load_Tile(1);
 	CLineMgr::Get_Instance()->Initialize();
 	CScrollMgr::Get_Instance()->Set_ScrollXY(	WINCX / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX, 
 												WINCY - -CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY);
@@ -103,15 +103,17 @@ void CStage::FadeInOut(HDC hDC)
 		m_fAlpha = 0.f;
 		hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"FadeIn");
 
-		GdiTransparentBlt(hDC, 0, 0, WINCX, WINCY, hMemDC, (m_fFadeIn / 2) * WINCX, 0, WINCX, WINCY, RGB(55, 55, 55));
+		GdiTransparentBlt(hDC, 0, 0, WINCX, WINCY, hMemDC, (m_iFadeIn / 2) * WINCX, 0, WINCX, WINCY, RGB(55, 55, 55));
 
-		m_fFadeIn++;
+		m_iFadeIn++;
 
-		if (m_fFadeIn / 2 > 9)
+		if (m_iFadeIn / 2 > 9)
 		{
 			dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetRevival(false);
 			dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetCheckFirstInit(false);
-			m_fFadeIn = 0;
+			dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetResetFirstTime(true);
+
+			m_iFadeIn = 0;
 		}
 	}
 }

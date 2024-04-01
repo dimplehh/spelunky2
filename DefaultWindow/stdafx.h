@@ -23,7 +23,7 @@
 #include <list>
 #include <map>
 #include <algorithm>
-
+#include <string>
 #include <Vfw.h>
 #pragma comment(lib, "vfw32.lib")
 

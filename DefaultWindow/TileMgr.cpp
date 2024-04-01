@@ -163,14 +163,8 @@ void CTileMgr::Save_Tile()
 
 void CTileMgr::Load_Tile()
 {
-	HANDLE hFile = CreateFile(L"../Data/Tile.dat",		// 파일 경로(이름을 포함)
-		GENERIC_READ,			// 파일 접근 모드(GENERIC_READ : 읽기 전용)
-		NULL,					// 공유 방식, 파일이 열려 있는 상태에서 다른 프로세서에서 오픈하고자 할 때 허용할 지에 대한 여부(NULL인 경우 공유하지 않음)
-		NULL,					// 보안 모드(NULL인 경우 기본 보안 상태)
-		OPEN_EXISTING,			// 생성 방식(CREATE_ALWAYS : 파일이 없으면 생성, 있으면 덮어쓰기), (OPEN_EXISTING : 파일이 있을 때만 열기)
-		FILE_ATTRIBUTE_NORMAL,  // 파일 속성(아무런 특수 속성이 없는 파일 생성)
-		NULL);					// 생성될 파일의 속성을 제공할 템플릿 파일(우리는 사용 안하기 때문에 NULL)
-	
+	HANDLE hFile = CreateFile(L"../Data/Tile.dat", GENERIC_READ, NULL, NULL, OPEN_EXISTING,	FILE_ATTRIBUTE_NORMAL, NULL);
+
 	if (INVALID_HANDLE_VALUE == hFile)
 	{
 		MessageBox(g_hWnd, _T("Load File"), L"Fail", MB_OK);
@@ -198,10 +192,43 @@ void CTileMgr::Load_Tile()
 
 		m_vecTile.push_back(dynamic_cast<CTile*>(pObj));
 	}
-
 	CloseHandle(hFile);
+}
 
-	//MessageBox(g_hWnd, _T("Load 완료"), L"성공", MB_OK);
+void CTileMgr::Load_Tile(int _idx)
+{
+	wstring fileStr = L"../Data/Tile" + to_wstring(_idx) + L".dat";
+	const wchar_t* fileName = fileStr.c_str();
+	HANDLE hFile = CreateFile(fileName, GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	if (INVALID_HANDLE_VALUE == hFile)
+	{
+		MessageBox(g_hWnd, _T("Load File"), L"Fail", MB_OK);
+		return;
+	}
+
+	DWORD	dwByte(0);	// 예외 처리 변수
+	int		iDrawID(0), iOption(0);
+	INFO	tInfo{};
+
+	Release();
+
+	while (true)
+	{
+		ReadFile(hFile, &iDrawID, sizeof(int), &dwByte, nullptr);
+		ReadFile(hFile, &iOption, sizeof(int), &dwByte, nullptr);
+		ReadFile(hFile, &tInfo, sizeof(INFO), &dwByte, nullptr);
+
+		if (0 == dwByte)
+			break;
+
+		CObj* pObj = CAbstractFactory<CTile>::Create(tInfo.fX, tInfo.fY);
+		dynamic_cast<CTile*>(pObj)->Set_DrawID(iDrawID);
+		dynamic_cast<CTile*>(pObj)->Set_Option(iOption);
+
+		m_vecTile.push_back(dynamic_cast<CTile*>(pObj));
+	}
+	CloseHandle(hFile);
 }
 
 

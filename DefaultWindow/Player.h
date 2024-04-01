@@ -82,6 +82,7 @@ public:
 	void		SetCheckFirstInit(bool _checkFirstInit) { m_bCheckFirstInit = _checkFirstInit; }
 	bool		GetAttacked() { return m_bAttacked; }
 	void		SetAttacked(bool _attacked) { m_bAttacked = _attacked; }
+	void		SetResetFirstTime(bool _resetFirstTime) { m_bResetFirstTime = _resetFirstTime; }
 
 private:
 	void		SetRenderImage(HDC hDC);
@@ -112,7 +113,7 @@ private:
 	void		TapZ();
 	void		TapC();
 	void		TapD();
-	
+	void		TapA();
 
 private:
 	float		m_fFirstX;
@@ -153,11 +154,12 @@ private:
 	bool		m_bFirstDieCheck = true;
 	int			m_iDeathTime = 0;
 
-	int			m_iRopeCount = 10;
-	int			m_iBombCount = 10;
+	int			m_iRopeCount = 0;
+	int			m_iBombCount = 0;
 	int			m_iMoney = 0;
 
 	bool		m_bCheckFirstInit = false;
+	bool		m_bResetFirstTime = true;
 
 private:
 	DWORD				m_dwTime;
