@@ -158,15 +158,18 @@ void CPlayer::Key_Input()
 
 void CPlayer::TapX()
 {
-	if (m_bIsHold == false)
+	if(!(CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::HOLD))
 	{
-		m_eCurState = ATTACK;
-		CSoundMgr::Get_Instance()->PlaySound(L"Attack.wav", SOUND_EFFECT, g_fVolume);
-	}
-	else if(!(CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::DOWN) == KEY_STATE::HOLD))
-	{
-		m_eCurState = THROW;
-		m_bThrow = true;
+		if (m_bIsHold == true)
+		{
+			m_eCurState = THROW;
+			m_bThrow = true;
+		}
+		else
+		{
+			m_eCurState = ATTACK;
+			CSoundMgr::Get_Instance()->PlaySound(L"Attack.wav", SOUND_EFFECT, g_fVolume);
+		}
 	}
 }
 

@@ -94,7 +94,7 @@ void CObjMgr::Late_Update()
 	}
 	for (auto iter : m_ObjList[OBJ_ITEM])
 	{
-		CCollisionMgr::Collision_RectEx(iter, m_ObjList[OBJ_PLAYER].front());
+		CCollisionMgr::Collision_RectChest(iter, m_ObjList[OBJ_PLAYER].front());
 	}
 	for (auto iter : m_ObjList[OBJ_BOX])
 	{

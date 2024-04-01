@@ -32,11 +32,11 @@ void CStage::Initialize()
 	CObjMgr::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CPlayer>::Create());
 	InsertBmps();
 	InsertMonsters();
-	InsertUIs();
-	InsertObstacles();
+	//InsertObstacles();
 	InsertBoxs();
 	InsertChests();
 	InsertHoldObjs();
+	InsertUIs();
 	CTileMgr::Get_Instance()->Load_Tile();
 	CLineMgr::Get_Instance()->Initialize();
 	CScrollMgr::Get_Instance()->Set_ScrollXY(	WINCX / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX, 
@@ -165,8 +165,8 @@ void CStage::InsertUIs()
 void CStage::InsertMonsters()
 {
 	CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(TILECX * (21 + 0.5f), TILECY * (6.5f), CMonster::SNAKE));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(TILECX * (23 + 0.5f), TILECY * (6.5f), CMonster::FROG));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(WINCX + 50.f, -50.f , CMonster::GHOST));
+	//CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(TILECX * (23 + 0.5f), TILECY * (6.5f), CMonster::FROG));
+	//CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(WINCX + 50.f, -50.f , CMonster::GHOST));
 }
 
 void CStage::InsertObstacles()

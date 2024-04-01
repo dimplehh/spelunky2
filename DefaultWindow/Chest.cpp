@@ -39,10 +39,11 @@ void CChest::Late_Update()
 {
 	Gravity();
 
-	INFO _playerInfo = CObjMgr::Get_Instance()->Get_Player()->Get_Info();
+	CPlayer* player = dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player());
+	INFO _playerInfo = player->Get_Info();
 
-	if (((m_tInfo.fX - m_tInfo.fCX <= _playerInfo.fX && _playerInfo.fX <= m_tInfo.fX - m_tInfo.fCX / 2)
-		|| (m_tInfo.fX + m_tInfo.fCX / 2 < _playerInfo.fX && _playerInfo.fX <= m_tInfo.fX + m_tInfo.fCX))
+	if (((m_tInfo.fX - m_tInfo.fCX <= _playerInfo.fX && _playerInfo.fX <= m_tInfo.fX) && player->GetFlip() == false
+	|| ((m_tInfo.fX < _playerInfo.fX && _playerInfo.fX <= m_tInfo.fX + m_tInfo.fCX) && player->GetFlip() == true))
 		&& m_tInfo.fY - m_tInfo.fCY / 2 <= _playerInfo.fY && _playerInfo.fY <= m_tInfo.fY + m_tInfo.fCY / 2
 		&& dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetState() == CPlayer::ATTACK)
 	{

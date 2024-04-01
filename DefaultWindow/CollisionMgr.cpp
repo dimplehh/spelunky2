@@ -73,6 +73,22 @@ void CCollisionMgr::Collision_RectMon(CObj* Dst, CObj* Src)
 	}
 }
 
+bool CCollisionMgr::Check_RectChest(CObj* pDst, CObj* pSrc)
+{
+	float	dstRealFCX = pDst->Get_Info().fCX * 0.1f;
+	float	dstRealFCY = pDst->Get_Info().fCY * 0.1f;
+
+	float	fWidth = abs(pDst->Get_Info().fX - pSrc->Get_Info().fX);
+	float	fHeight = abs(pDst->Get_Info().fY - pSrc->Get_Info().fY);
+
+	float	fRadiusX = (dstRealFCX + pSrc->Get_Info().fCX) * 0.5f;
+	float	fRadiusY = (dstRealFCY + pSrc->Get_Info().fCY) * 0.5f;
+
+	if ((fRadiusX >= fWidth) && (fRadiusY >= fHeight))
+		return true;
+	return false;
+}
+
 void CCollisionMgr::Collision_RectHoldMon(list<CObj*> _Dst, list<CObj*> _Src)
 {
 	float	fX(0.f), fY(0.f);
@@ -91,7 +107,8 @@ void CCollisionMgr::Collision_RectHoldMon(list<CObj*> _Dst, list<CObj*> _Src)
 					{
 						Dst->SetCollision(true);
 						Src->SetCollision(true);
-						if (dynamic_cast<CHoldObj*>(Src)->GetThrowing() == true)
+						if (dynamic_cast<CHoldObj*>(Src)->GetThrowing() == true
+							&& dynamic_cast<CHoldObj*>(Src)->Get_HoldObjID() == CHoldObj::HOLDOBJ_STONE)
 						{
 							dynamic_cast<CSnake*>(Dst)->SetHp(-1);
 						}
@@ -134,6 +151,17 @@ void CCollisionMgr::Collision_RectEx(CObj* Dst, CObj* Src)
 					dynamic_cast<CPlayer*>(Src)->SetAttachedBox(true);
 			}
 		}
+	}
+	else
+		dynamic_cast<CPlayer*>(Src)->SetAttachedBox(false);
+}
+
+void CCollisionMgr::Collision_RectChest(CObj* Dst, CObj* Src)
+{
+	if (Check_RectChest(Dst, Src))
+	{
+		Dst->SetCollision(true);
+		Src->SetCollision(true);
 		if (OBJECT_TYPE::PLAYER == Src->Get_MyObjType())
 		{
 			if (OBJECT_TYPE::ITEM == Dst->Get_MyObjType())
@@ -170,20 +198,18 @@ void CCollisionMgr::Collision_RectEx(CObj* Dst, CObj* Src)
 			}
 		}
 	}
-	else
-		dynamic_cast<CPlayer*>(Src)->SetAttachedBox(false);
 }
 
-bool CCollisionMgr::Check_Rect(CObj * pDst, CObj * pSrc, float * pX, float * pY)
+bool CCollisionMgr::Check_Rect(CObj* pDst, CObj* pSrc, float* pX, float* pY)
 {
 	float srcRealX;
 
-	if(pDst->Get_Info().fX < pSrc->Get_Info().fX)
+	if (pDst->Get_Info().fX < pSrc->Get_Info().fX)
 		srcRealX = pSrc->Get_Info().fX + 15;
 	else
 		srcRealX = pSrc->Get_Info().fX - 15;
 
-	float	fWidth  = abs(pDst->Get_Info().fX - srcRealX);
+	float	fWidth = abs(pDst->Get_Info().fX - srcRealX);
 	float	fHeight = abs(pDst->Get_Info().fY - pSrc->Get_Info().fY);
 
 	float	fRadiusX = (pDst->Get_Info().fCX + pSrc->Get_Info().fCX) * 0.5f;
