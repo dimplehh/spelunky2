@@ -13,6 +13,7 @@
 #include "Monster.h"
 #include "Snake.h"
 #include "Ghost.h"
+#include "Frog.h"
 #include "HoldObj.h"
 
 template<typename T>
@@ -179,6 +180,8 @@ public:
 			pObj = new CSnake;
 		else if (_monsterID == CMonster::GHOST)
 			pObj = new CGhost;
+		else if (_monsterID == CMonster::FROG)
+			pObj = new CFrog;
 
 		pObj->Initialize();
 		pObj->Set_Pos(_fX, _fY);

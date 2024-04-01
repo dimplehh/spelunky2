@@ -132,6 +132,8 @@ void CStage::InsertBmps()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/HoldObj.bmp",		L"HoldObj");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/Snake.bmp",		L"Snake");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/SnakeFlip.bmp",	L"SnakeFlip");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/Frog.bmp",		L"Frog");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/FrogFlip.bmp",	L"FrogFlip");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/Ghost.bmp",		L"Ghost");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/GhostFlip.bmp",	L"GhostFlip");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/GhostUp.bmp",	L"GhostUp");
@@ -163,6 +165,7 @@ void CStage::InsertUIs()
 void CStage::InsertMonsters()
 {
 	CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(TILECX * (21 + 0.5f), TILECY * (6.5f), CMonster::SNAKE));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(TILECX * (23 + 0.5f), TILECY * (6.5f), CMonster::FROG));
 	CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(WINCX + 50.f, -50.f , CMonster::GHOST));
 }
 

@@ -40,8 +40,8 @@ void CPlayer::Initialize()
 
 	m_bCheckFirstInit = true;
 
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_base2.bmp",  L"Player_BASE");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_flip2.bmp", L"Player_FLIP");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_base.bmp",  L"Player_BASE");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_flip.bmp", L"Player_FLIP");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_Attack.bmp", L"Player_ATTACK_BASE");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Player/Crump_Attack_Flip.bmp", L"Player_ATTACK_FLIP");
 	m_tFrame = { 0, 0, 0, 15, false, 60, GetTickCount(), 0};
