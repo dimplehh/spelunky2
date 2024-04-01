@@ -35,8 +35,8 @@ int CFrog::Update()
 
 	Idle();
 	Jump();
-	//Attack();
-	//Damaged();
+	Attack();
+	Damaged();
 
 	__super::Update_Rect();
 	return OBJ_NOEVENT;
@@ -112,6 +112,19 @@ void CFrog::Jump()
 			m_bCanJump = false;
 			m_fTime = 0.f;
 			m_bFirstGrounded = true;
+
+			m_iMoveX = -m_iMoveX;
+			
+			if (m_bFlip == true)
+			{
+				m_bFlip = false;
+				m_pFrameKey = L"Frog";
+			}
+			else
+			{
+				m_bFlip = true;
+				m_pFrameKey = L"FrogFlip";
+			}
 		}
 	}
 }
