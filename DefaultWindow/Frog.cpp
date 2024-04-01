@@ -7,7 +7,7 @@
 #include "Obj.h"
 #include "Player.h"
 
-CFrog::CFrog() :m_ePreState(ST_END), m_eCurState(JUMP), m_dwTime(GetTickCount())
+CFrog::CFrog() :m_ePreState(ST_END), m_eCurState(IDLE), m_dwTime(GetTickCount())
 {
 }
 
@@ -19,8 +19,10 @@ void CFrog::Initialize()
 {
 	m_tInfo = { 0.f, 0.f, TILECX, TILECY };
 	m_fSpeed = 1.5f;
+	//m_fPower = 40.f;
 	m_iHp = 1;
 	m_iAttackPower = 1;
+	m_iMoveX = 6.f;
 	m_pFrameKey = L"Frog";
 	m_tFrame = { 0, 0, 0, 5, true, 60, GetTickCount(), 0 };
 	m_eRender = RENDER_GAMEOBJECT;
@@ -32,8 +34,9 @@ int CFrog::Update()
 		return OBJ_DEAD;
 
 	Idle();
-	Attack();
-	Damaged();
+	Jump();
+	//Attack();
+	//Damaged();
 
 	__super::Update_Rect();
 	return OBJ_NOEVENT;
@@ -41,7 +44,9 @@ int CFrog::Update()
 
 void CFrog::Late_Update()
 {
-	Gravity();
+	if(m_bCanJump == false)
+		Gravity();
+	
 	Motion_Change();
 	__super::Move_Frame();
 }
@@ -82,29 +87,38 @@ void CFrog::Idle()
 {
 	if (CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
 	{
-		m_tInfo.fX += m_fSpeed;
-	}
-	else
-	{
-		m_fSpeed = -m_fSpeed;
-		if (m_fSpeed < 0)
+		if (m_bFirstGrounded == true)
 		{
-			m_bFlip = true;
-			m_pFrameKey = L"FrogFlip";
-			m_tInfo.fX -= 10;
+			m_iFirstGroundTime = CUIMgr::Get_Instance()->Get_Time();
+			m_bFirstGrounded = false;
+			m_fPreY = m_tInfo.fY;
 		}
-		else
+
+		if (CUIMgr::Get_Instance()->Get_Time() == m_iFirstGroundTime + m_iJumpCycle)
+			m_bCanJump = true;
+	}
+}
+
+void CFrog::Jump()
+{
+	if (m_bCanJump == true)
+	{
+		m_tInfo.fX += m_iMoveX;
+
+		m_tInfo.fY = m_fPreY - 40.f * m_fTime + ((9.8f * m_fTime * m_fTime) * 0.5f);
+		m_fTime += 0.5f;
+		if (m_fTime > 5.f && CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
 		{
-			m_bFlip = false;
-			m_pFrameKey = L"Frog";
-			m_tInfo.fX += 10;
+			m_bCanJump = false;
+			m_fTime = 0.f;
+			m_bFirstGrounded = true;
 		}
 	}
 }
 
 void CFrog::Attack()
 {
-	if (m_eCurState == JUMP)
+	if (m_bCollision == true)
 	{
 		if (m_bFirstAttack == true)
 		{
