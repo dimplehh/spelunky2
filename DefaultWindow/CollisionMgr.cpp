@@ -76,7 +76,7 @@ void CCollisionMgr::Collision_RectMon(CObj* Dst, CObj* Src)
 bool CCollisionMgr::Check_RectChest(CObj* pDst, CObj* pSrc)
 {
 	float	dstRealFCX = pDst->Get_Info().fCX * 0.1f;
-	float	dstRealFCY = pDst->Get_Info().fCY * 0.1f;
+	float	dstRealFCY = pDst->Get_Info().fCY * 0.1f; 
 
 	float	fWidth = abs(pDst->Get_Info().fX - pSrc->Get_Info().fX);
 	float	fHeight = abs(pDst->Get_Info().fY - pSrc->Get_Info().fY);
