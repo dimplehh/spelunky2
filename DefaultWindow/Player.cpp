@@ -224,17 +224,22 @@ void CPlayer::TapD()
 
 void CPlayer::TapA()
 {
-	m_eCurState = ENTER;
-	switch (dynamic_cast<CScene*>(CSceneMgr::Get_Instance()->GetRealScene())->GetMapNum())
+	if (CObjMgr::Get_Instance()->GetHoldObjID(m_iHoldObjIdx) != CHoldObj::HOLDOBJ_KEY)
+		return;
+	if ((TILECX * 9 <= m_tInfo.fX && m_tInfo.fX <= TILECX * 11) && (TILECY * 12 <= m_tInfo.fY && m_tInfo.fY <= TILECY * 14)) // 동굴 입구 위치
 	{
-	case 1:
-		CSceneMgr::Get_Instance()->Scene_Change(SC_STAGE2);
-		break;
-	case 2:
-		CSceneMgr::Get_Instance()->Scene_Change(SC_STAGE3);
-		break;
-	default:
-		break;
+		m_eCurState = ENTER;
+		switch (dynamic_cast<CScene*>(CSceneMgr::Get_Instance()->GetRealScene())->GetMapNum())
+		{
+		case 1:
+			CSceneMgr::Get_Instance()->Scene_Change(SC_STAGE2);
+			break;
+		case 2:
+			CSceneMgr::Get_Instance()->Scene_Change(SC_STAGE3);
+			break;
+		default:
+			break;
+		}
 	}
 }
 
@@ -370,23 +375,8 @@ bool CPlayer::Die()
 			{
 				if (m_bResetFirstTime == true)
 				{
-					m_tInfo.fX = m_fFirstX;
-					m_tInfo.fY = m_fFirstY;
-
-					CScrollMgr::Get_Instance()->Set_ScrollXY(WINCX / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX,
-						WINCY - -CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY);
-
-					m_eCurState = IDLE;
-					SetHp(4);
-					ResetNum();
-					CUIMgr::Get_Instance()->Reset_Time();
-					m_iDeathTime = CUIMgr::Get_Instance()->Get_Time();
-					m_bRevival = true;
-					m_bFirstDieCheck = true;
-					m_bResetFirstTime = false;
-					CTileMgr::Get_Instance()->Load_Tile(1);
-					CLineMgr::Get_Instance()->Release();
-					CLineMgr::Get_Instance()->SetLine();
+					ResetPlayer();
+					ResetScene();
 				}
 				return false;
 			}
@@ -394,6 +384,50 @@ bool CPlayer::Die()
 		return true;
 	}
 	return false;
+}
+
+void CPlayer::ResetPlayer()
+{
+	m_tInfo.fX = m_fFirstX;
+	m_tInfo.fY = m_fFirstY;
+
+	CScrollMgr::Get_Instance()->Set_ScrollXY(WINCX / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX,
+		WINCY - -CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY);
+
+	m_eCurState = IDLE;
+	SetHp(4);
+	ResetNum();
+	CUIMgr::Get_Instance()->Reset_Time();
+	m_iDeathTime = CUIMgr::Get_Instance()->Get_Time();
+	m_bRevival = true;
+	m_bFirstDieCheck = true;
+	m_bResetFirstTime = false;
+}
+
+void CPlayer::ResetScene()
+{
+	CTileMgr::Get_Instance()->Load_Tile(1);
+	CLineMgr::Get_Instance()->Release();
+	CLineMgr::Get_Instance()->SetLine();
+
+	CScene* pScene = nullptr;
+	switch (CSceneMgr::Get_Instance()->GetRealScene()->GetMapNum()) //더 좋은 코드가 있을 수 있음..
+	{
+	case 1:
+		dynamic_cast<CStage*>(CSceneMgr::Get_Instance()->GetRealScene())->ReleaseGimics();
+		dynamic_cast<CStage*>(CSceneMgr::Get_Instance()->GetRealScene())->InsertGimics();
+		break;
+	//case 2:
+	//	dynamic_cast<CStage2*>(CSceneMgr::Get_Instance()->GetRealScene())->ReleaseGimics();
+	//	dynamic_cast<CStage2*>(CSceneMgr::Get_Instance()->GetRealScene())->InsertGimics();
+	//	break;
+	//case 3:
+	//	dynamic_cast<CStage3*>(CSceneMgr::Get_Instance()->GetRealScene())->ReleaseGimics();
+	//	dynamic_cast<CStage3*>(CSceneMgr::Get_Instance()->GetRealScene())->InsertGimics();
+	//	break;
+	default:
+		break;
+	}
 }
 
 void CPlayer::FallDamage()

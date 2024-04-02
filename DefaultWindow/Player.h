@@ -117,6 +117,9 @@ private:
 	void		TapD();
 	void		TapA();
 
+	void		ResetPlayer();
+	void		ResetScene(); //여기서 만드는거 아닐거같긴한데..
+
 private:
 	float		m_fFirstX;
 	float		m_fFirstY;
@@ -134,7 +137,7 @@ private:
 	bool		m_bThrow;
 	bool		m_bAttacked;
 
-	int			m_iHoldObjIdx = 0;
+	int			m_iHoldObjIdx = -1;
 
 	int			m_iJumpCount;
 

@@ -13,6 +13,10 @@ public:
 	virtual void Render(HDC hDC) override;
 	virtual void Release() override;
 
+
+	void		InsertGimics();
+	void		ReleaseGimics();
+
 private:
 	void		FadeInOut(HDC hDC);
 

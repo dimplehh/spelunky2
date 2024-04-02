@@ -67,6 +67,7 @@ void CHoldObj::Late_Update()
 		{
 			dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetIsHold(false);
 			dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetThrow(false);
+			dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetHoldObjIdx(-1);
 			m_bCollision = false;
 
 			m_fThrowTime = 0.f;

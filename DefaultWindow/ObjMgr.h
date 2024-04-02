@@ -3,6 +3,7 @@
 #include "Obj.h"
 #include "Define.h"
 #include "UIIcon.h"
+#include "HoldObj.h"
 
 class CObjMgr
 {
@@ -16,6 +17,19 @@ public:
 	CObj*		Get_UI() { return m_ObjList[OBJ_UI].back(); }
 	CObj*		Get_Target(OBJID eID, CObj* pObj);
 	int			GetHoldObjSize() { return m_ObjList[OBJ_HOLDOBJ].size(); }
+	CHoldObj::HOLDOBJID GetHoldObjID(int _idx) 
+	{
+		if (_idx == -1)
+			return CHoldObj::HOLDOBJ_END;
+
+		int  i = 0;
+		for (auto iter : m_ObjList[OBJ_HOLDOBJ])
+		{
+			if (i == _idx)
+				return dynamic_cast<CHoldObj*>(iter)->Get_HoldObjID();
+			i++;
+		}
+	}
 
 public:
 	void		Add_Object(OBJID eID, CObj* pObj);

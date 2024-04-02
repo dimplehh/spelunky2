@@ -31,12 +31,8 @@ void CStage::Initialize()
 
 	CObjMgr::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CPlayer>::Create());
 	InsertBmps();
-	InsertMonsters();
-	InsertObstacles();
-	InsertBoxs();
-	InsertChests();
-	InsertHoldObjs();
 	InsertUIs();
+	InsertGimics();
 	CTileMgr::Get_Instance()->Load_Tile(1);
 	CLineMgr::Get_Instance()->Initialize();
 	CScrollMgr::Get_Instance()->Set_ScrollXY(	WINCX / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX, 
@@ -197,8 +193,26 @@ void CStage::InsertChests()
 
 void CStage::InsertHoldObjs()
 {
-	//CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(TILECX * (16 + 0.5f), TILECY * (4 + 0.5f), CHoldObj::HOLDOBJ_JAR, 0));
-	//CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(TILECX * (18 + 0.5f), TILECY * (4 + 0.5f), CHoldObj::HOLDOBJ_KEY, 1));
-	//CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(TILECX * (17 + 0.5f), TILECY * (4 + 0.5f), CHoldObj::HOLDOBJ_STONE, 2));
 	CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(TILECX * (50 + 0.5f), TILECY * (13 + 0.7f), CHoldObj::HOLDOBJ_STONE));
+}
+
+void CStage::InsertGimics()
+{
+	InsertMonsters();
+	InsertObstacles();
+	InsertBoxs();
+	InsertChests();
+	InsertHoldObjs();
+}
+
+void CStage::ReleaseGimics()
+{
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_BOX);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_ROPE);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_CHEST);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_HOLDOBJ);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_OBSTACLE);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_ITEM);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_MONSTER);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_BOMB);
 }
