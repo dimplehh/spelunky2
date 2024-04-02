@@ -131,11 +131,6 @@ void CStage::InsertBmps()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/HoldObj.bmp",		L"HoldObj");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/Snake.bmp",		L"Snake");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/SnakeFlip.bmp",	L"SnakeFlip");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/Frog.bmp",		L"Frog");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/FrogFlip.bmp",	L"FrogFlip");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/Ghost.bmp",		L"Ghost");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/GhostFlip.bmp",	L"GhostFlip");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/GhostUp.bmp",	L"GhostUp");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/DecoLand.bmp",		L"DecoLand");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Font/Font.bmp",			L"Font");
 }

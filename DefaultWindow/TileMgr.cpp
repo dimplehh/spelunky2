@@ -2,6 +2,7 @@
 #include "TileMgr.h"
 #include "AbstractFactory.h"
 #include "ScrollMgr.h"
+#include "SceneMgr.h"
 #include "BmpMgr.h"
 
 CTileMgr*		CTileMgr::m_pInstance = nullptr;
@@ -77,7 +78,23 @@ void CTileMgr::SetDecoLand(HDC hDC, int iScrollX, int iScrollY, int i, int j, in
 
 	iterInfo = m_vecTile[iIndex]->Get_Info();
 
-	HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"DecoLand");
+	HDC	hMemDC = NULL;
+
+	switch (CSceneMgr::Get_Instance()->GetRealScene()->GetMapNum()) //임시..
+	{
+	case 1:
+		hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"DecoLand");
+		break;
+	case 2:
+		hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"DecoLand2");
+		break;
+	//case 3:
+	//	hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"DecoLand3");
+	//	break;
+	default:
+		hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"DecoLand");
+		break;
+	}
 
 	if (2 < j && m_vecTile[iIndex]->Get_Option() == 1 && m_vecTile[iIndex - 1]->Get_Option() == 0) //왼쪽 벽
 	{

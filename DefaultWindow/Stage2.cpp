@@ -66,7 +66,7 @@ void CStage2::Late_Update()
 
 void CStage2::Render(HDC hDC)
 {
-	HDC	hGroundDC = CBmpMgr::Get_Instance()->Find_Image(L"Ground");
+	HDC	hGroundDC = CBmpMgr::Get_Instance()->Find_Image(L"Ground2");
 	// 비트맵 출력 함수
 	int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
 	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
@@ -120,28 +120,15 @@ void CStage2::FadeInOut(HDC hDC)
 
 void CStage2::InsertBmps()
 {
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Ground.bmp", L"Ground");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Fade.bmp", L"Fade");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/FadeIn.bmp", L"FadeIn");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette.bmp", L"Tile");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette2.bmp", L"Tile2");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/UIIcon.bmp", L"UIIcon");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Box.bmp", L"Box");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Rope.bmp", L"Rope");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Bomb2.bmp", L"Bomb");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Item.bmp", L"Item");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Obstacle.bmp", L"Obstacle");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Chest.bmp", L"Chest");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/HoldObj.bmp", L"HoldObj");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/Snake.bmp", L"Snake");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/SnakeFlip.bmp", L"SnakeFlip");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette3.bmp", L"Tile3");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette4.bmp", L"Tile4");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/DecoLand2.bmp", L"DecoLand2");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Ground2.bmp", L"Ground2");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/Frog.bmp", L"Frog");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/FrogFlip.bmp", L"FrogFlip");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/Ghost.bmp", L"Ghost");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/GhostFlip.bmp", L"GhostFlip");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/GhostUp.bmp", L"GhostUp");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/DecoLand.bmp", L"DecoLand");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Font/Font.bmp", L"Font");
 }
 
 void CStage2::InsertUIs()
@@ -197,4 +184,25 @@ void CStage2::InsertHoldObjs()
 	CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(TILECX * (16 + 0.5f), TILECY * (4 + 0.5f), CHoldObj::HOLDOBJ_JAR));
 	CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(TILECX * (18 + 0.5f), TILECY * (4 + 0.5f), CHoldObj::HOLDOBJ_KEY));
 	CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(TILECX * (19 + 0.5f), TILECY * (6 + 0.5f), CHoldObj::HOLDOBJ_STONE));
+}
+
+void CStage2::InsertGimics()
+{
+	InsertMonsters();
+	InsertObstacles();
+	InsertBoxs();
+	InsertChests();
+	InsertHoldObjs();
+}
+
+void CStage2::ReleaseGimics()
+{
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_BOX);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_ROPE);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_CHEST);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_HOLDOBJ);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_OBSTACLE);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_ITEM);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_MONSTER);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_BOMB);
 }
