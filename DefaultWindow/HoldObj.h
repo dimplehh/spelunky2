@@ -21,9 +21,6 @@ public:
 	void		Set_HoldObjID(HOLDOBJID _eId) { m_eHoldObjID = _eId; }
 	HOLDOBJID	Get_HoldObjID() { return m_eHoldObjID; }
 
-	void		SetOwner(CObj* _pOwner) { m_pOwner = _pOwner; }
-	CObj*		GetOwner() { return m_pOwner; }
-
 	bool		GetThrowing() { return m_bThrowing; }
 
 private:
@@ -32,10 +29,13 @@ private:
 	float				m_fPower;
 	float				m_fTime;
 
+	float				m_fThrowTime;
+
 private:
 	HOLDOBJID			m_eHoldObjID;
 	bool				m_bIsActive = false;
 	bool				m_bThrowing = false;
 
-	CObj* m_pOwner;
+private:
+	DWORD				m_dwTime;
 };

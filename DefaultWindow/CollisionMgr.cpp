@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CollisionMgr.h"
 #include "SoundMgr.h"
+#include "ObjMgr.h"
 #include "Player.h"
 #include "KeyMgr.h"
 #include "HoldObj.h"
@@ -39,7 +40,6 @@ void CCollisionMgr::Collision_Rect(CObj* Dst, CObj* Src)
 	}
 	else
 	{
-		Dst->SetCollision(false);
 		Src->SetCollision(false);
 		dynamic_cast<CPlayer*>(Src)->SetCanHold(false);
 	}
@@ -107,13 +107,18 @@ void CCollisionMgr::Collision_RectHoldMon(list<CObj*> _Dst, list<CObj*> _Src)
 					{
 						Dst->SetCollision(true);
 						Src->SetCollision(true);
-						if (dynamic_cast<CHoldObj*>(Src)->GetThrowing() == true
+						if (dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetThrow() == true
 							&& dynamic_cast<CHoldObj*>(Src)->Get_HoldObjID() == CHoldObj::HOLDOBJ_STONE)
 						{
 							dynamic_cast<CSnake*>(Dst)->SetHp(-1);
 						}
 					}
 				}
+			}
+			else
+			{
+				//Dst->SetCollision(false);
+				//Src->SetCollision(false);
 			}
 		}
 	}

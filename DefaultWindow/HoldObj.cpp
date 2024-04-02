@@ -10,7 +10,7 @@
 
 extern float g_fVolume;
 
-CHoldObj::CHoldObj() : m_fTime(0.f), m_fPower(0.f), m_eHoldObjID(HOLDOBJ_END), m_pOwner(nullptr)
+CHoldObj::CHoldObj() : m_fTime(0.f), m_fPower(0.f), m_eHoldObjID(HOLDOBJ_END), m_dwTime(GetTickCount()), m_fThrowTime(0.f)
 {
 	m_eMyObjType = OBJECT_TYPE::HOLDOBJ;
 }
@@ -24,6 +24,7 @@ void CHoldObj::Initialize()
 {
 	m_tInfo = { 0, 0, 48.f , 48.f };
 	m_pFrameKey = L"HoldObj";
+	m_fTime = 0.f;
 	m_eRender = RENDER_HOLDOBJ;
 }
 
@@ -32,12 +33,6 @@ int CHoldObj::Update()
 	if (m_bDead)
 		return OBJ_DEAD;
 
-	if (m_bCollision == true && dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetIsHold() == true)
-	{
-		SetOwner(CObjMgr::Get_Instance()->Get_Player());
-		m_bIsActive = true;
-	}
-
 	__super::Update_Rect();
 
 	return OBJ_NOEVENT;
@@ -45,42 +40,42 @@ int CHoldObj::Update()
 
 void CHoldObj::Late_Update()
 {
-	if(m_pOwner == nullptr)
-		Gravity();
-	else if(m_bIsActive == true)
+	// 중력 적용을 받지 않을 때 : 플레이어가 들고 있을 때, 포물선 그려서 던져지다가 지면에 착지하기 전까지
+	// 중력 적용을 받을 때 : 플레이어가 들고있지 않을 때
+
+	if (dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetThrow() == true)
 	{
-		if (dynamic_cast<CPlayer*>(m_pOwner)->GetThrow() == false)
+		CLineMgr::Get_Instance()->Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY);
+
+		if (!CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
 		{
-			m_tInfo.fX = (m_pOwner)->Get_Info().fX;
-			m_tInfo.fY = (m_pOwner)->Get_Info().fY  + 7.f;
-		}
-		else
-		{
-			CLineMgr::Get_Instance()->Collision_Vertical_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY);
-			if (!CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, false))
+			if (!Gravity())
 			{
-				m_bThrowing = true;
-				if (dynamic_cast<CPlayer*>(m_pOwner)->GetFlip() == true)
+				if (dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetFlip() == true)
 					m_tInfo.fX -= 10.f;
 				else
 					m_tInfo.fX += 10.f;
 
-				m_tInfo.fY = dynamic_cast<CPlayer*>(m_pOwner)->Get_Info().fY - 40.f * m_fTime + ((9.8f * m_fTime * m_fTime) * 0.5f);
-				m_fTime += 0.5f;
-			}
-			else
-			{
-				m_bThrowing = false;
-				dynamic_cast<CPlayer*>(m_pOwner)->SetIsHold(false);
-				dynamic_cast<CPlayer*>(m_pOwner)->SetThrow(false);
-				m_pOwner = nullptr;
-				m_bIsActive = false;
-				m_fTime = 0.f;
-
-				if(m_eHoldObjID == HOLDOBJ_JAR)
-					m_bDead = true;
+				m_tInfo.fY = (CObjMgr::Get_Instance()->Get_Player())->Get_Info().fY - 40.f * m_fThrowTime + ((9.8f * m_fThrowTime * m_fThrowTime) * 0.5f);
+				m_fThrowTime += 0.5f;
 			}
 		}
+		else
+		{
+			dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetIsHold(false);
+			dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetThrow(false);
+			m_bCollision = false;
+
+			m_fThrowTime = 0.f;
+
+			if (m_eHoldObjID == HOLDOBJ_JAR)
+				m_bDead = true;
+		}
+	}
+	else if (m_bCollision == true && dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetIsHold() == true)
+	{
+		m_tInfo.fX = (CObjMgr::Get_Instance()->Get_Player())->Get_Info().fX;
+		m_tInfo.fY = (CObjMgr::Get_Instance()->Get_Player())->Get_Info().fY + 7.f;
 	}
 }
 
@@ -103,7 +98,7 @@ void CHoldObj::Release()	//항아리의 경우 던지면 깨지면서 금 or 보석이 나와야함
 
 bool CHoldObj::Gravity()
 {
-	if (!CLineMgr::Get_Instance()->Collision_Box_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, false))
+	if (!CLineMgr::Get_Instance()->Collision_Box_Line(m_tInfo.fX, m_tInfo.fY, (m_tInfo.fCX - 15.f), (m_tInfo.fCY - 15.f), false))
 	{						//if 플레이어가 충돌상태가 아니라면 + (점프상태가 아니라면)
 		m_fTime += 0.2f;
 

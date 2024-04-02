@@ -40,7 +40,7 @@ void CStage::Initialize()
 	CTileMgr::Get_Instance()->Load_Tile(1);
 	CLineMgr::Get_Instance()->Initialize();
 	CScrollMgr::Get_Instance()->Set_ScrollXY(	WINCX / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX, 
-												WINCY - -CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY);
+												WINCY / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY);
 	_bf.BlendOp = AC_SRC_OVER;
 	_bf.BlendFlags = 0;
 	_bf.AlphaFormat = AC_SRC_ALPHA;
@@ -192,10 +192,10 @@ void CStage::InsertChests()
 	CObjMgr::Get_Instance()->Add_Object(OBJ_CHEST, CChestFactory::Create(TILECX * (26 + 0.5f), TILECY * (6.5f), CItem::ITEM_GOLD));
 }
 
-void CStage::InsertHoldObjs()
+void CStage::InsertHoldObjs()	// 지금 문제:맵 내에 하나일때만 잘됨;
 {
-	CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(TILECX * (16 + 0.5f), TILECY * (4 + 0.5f), CHoldObj::HOLDOBJ_JAR));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(TILECX * (18 + 0.5f), TILECY * (4 + 0.5f), CHoldObj::HOLDOBJ_KEY));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(TILECX * (17 + 0.5f), TILECY * (4 + 0.5f), CHoldObj::HOLDOBJ_STONE));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(TILECX * (50 + 0.5f), TILECY * (10 + 0.5f), CHoldObj::HOLDOBJ_STONE));
+	//CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(TILECX * (16 + 0.5f), TILECY * (4 + 0.5f), CHoldObj::HOLDOBJ_JAR));
+	//CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(TILECX * (18 + 0.5f), TILECY * (4 + 0.5f), CHoldObj::HOLDOBJ_KEY));
+	//CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(TILECX * (17 + 0.5f), TILECY * (4 + 0.5f), CHoldObj::HOLDOBJ_STONE));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(TILECX * (50 + 0.5f), TILECY * (13 + 0.7f), CHoldObj::HOLDOBJ_STONE));
 }

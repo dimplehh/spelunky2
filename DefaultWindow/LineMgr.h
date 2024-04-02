@@ -13,6 +13,7 @@ private:
 public:
 	bool		Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping);			// 밟는 땅
 	bool		Collision_Line(float& fX, float& fY, float fCX, float fCY);
+	float		Collision_LineY(float& fX, float& fY, float fCX, float fCY);
 	bool		Collision_Board_Line(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping);		// 상향, 하향점프 가능한 발판
 	bool		Collision_Box_Line(float& fX, float& fY, float fCX, float fCY, bool _Jumping);		// 상자의 중력 적용용 함수
 	int			Collision_Vertical_Line(float& fX, float& fY, float fCX, float fCY);					// 벽 ( 반환값으로 왼쪽벽, 오른쪽벽, 충돌  x 구분 )
