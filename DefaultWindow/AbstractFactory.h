@@ -160,12 +160,13 @@ public:
 class CHoldObjFactory
 {
 public:
-	static CObj* Create(float _fX, float _fY, CHoldObj::HOLDOBJID _holdObjID)
+	static CObj* Create(float _fX, float _fY, CHoldObj::HOLDOBJID _holdObjID, int _idx)
 	{
 		CObj* pObj = new CHoldObj;
 		pObj->Initialize();
 		pObj->Set_Pos(_fX, _fY);
 		dynamic_cast<CHoldObj*>(pObj)->Set_HoldObjID(_holdObjID);
+		dynamic_cast<CHoldObj*>(pObj)->SetIdx(_idx);
 		return pObj;
 	}
 };

@@ -35,6 +35,9 @@ void CCollisionMgr::Collision_Rect(CObj* Dst, CObj* Src)
 				Src->SetCollision(true);
 
 				dynamic_cast<CPlayer*>(Src)->SetCanHold(true);
+
+				int idx = dynamic_cast<CHoldObj*>(Dst)->GetIdx();
+				dynamic_cast<CPlayer*>(Src)->SetHoldObjIdx(idx);
 			}
 		}
 	}
@@ -101,7 +104,8 @@ void CCollisionMgr::Collision_RectHoldMon(list<CObj*> _Dst, list<CObj*> _Src)
 			{
 				Dst->SetCollision(true);
 				Src->SetCollision(true);
-				if (OBJECT_TYPE::HOLDOBJ == Src->Get_MyObjType())
+				if (OBJECT_TYPE::HOLDOBJ == Src->Get_MyObjType() 
+					&& dynamic_cast<CHoldObj*>(Src)->GetIdx() == dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetHoldObjIdx())
 				{
 					if (OBJECT_TYPE::MONSTER == Dst->Get_MyObjType())
 					{
@@ -114,11 +118,6 @@ void CCollisionMgr::Collision_RectHoldMon(list<CObj*> _Dst, list<CObj*> _Src)
 						}
 					}
 				}
-			}
-			else
-			{
-				//Dst->SetCollision(false);
-				//Src->SetCollision(false);
 			}
 		}
 	}

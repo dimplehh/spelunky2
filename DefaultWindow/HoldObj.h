@@ -22,6 +22,8 @@ public:
 	HOLDOBJID	Get_HoldObjID() { return m_eHoldObjID; }
 
 	bool		GetThrowing() { return m_bThrowing; }
+	void		SetIdx(int _idx) { m_iIdx = _idx; }
+	int			GetIdx() { return m_iIdx; }
 
 private:
 	bool		Gravity();
@@ -30,6 +32,8 @@ private:
 	float				m_fTime;
 
 	float				m_fThrowTime;
+
+	int					m_iIdx = 0;
 
 private:
 	HOLDOBJID			m_eHoldObjID;

@@ -30,6 +30,9 @@ void CHoldObj::Initialize()
 
 int CHoldObj::Update()
 {
+	if (dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetHoldObjIdx() != m_iIdx)
+		return OBJ_NOEVENT;
+
 	if (m_bDead)
 		return OBJ_DEAD;
 
@@ -38,10 +41,13 @@ int CHoldObj::Update()
 	return OBJ_NOEVENT;
 }
 
+// 중력 적용을 받지 않을 때 : 플레이어가 들고 있을 때, 포물선 그려서 던져지다가 지면에 착지하기 전까지
+// 중력 적용을 받을 때 : 플레이어가 들고있지 않을 때
+
 void CHoldObj::Late_Update()
 {
-	// 중력 적용을 받지 않을 때 : 플레이어가 들고 있을 때, 포물선 그려서 던져지다가 지면에 착지하기 전까지
-	// 중력 적용을 받을 때 : 플레이어가 들고있지 않을 때
+	if (dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetHoldObjIdx() != m_iIdx)
+		return ;
 
 	if (dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetThrow() == true)
 	{

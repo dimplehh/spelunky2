@@ -83,6 +83,8 @@ public:
 	bool		GetAttacked() { return m_bAttacked; }
 	void		SetAttacked(bool _attacked) { m_bAttacked = _attacked; }
 	void		SetResetFirstTime(bool _resetFirstTime) { m_bResetFirstTime = _resetFirstTime; }
+	int			GetHoldObjIdx() { return m_iHoldObjIdx; }
+	void		SetHoldObjIdx(int _idx) { m_iHoldObjIdx = _idx; }
 
 private:
 	void		SetRenderImage(HDC hDC);
@@ -131,6 +133,8 @@ private:
 	bool		m_bIsHold;		// 무엇인가를 잡은 상태
 	bool		m_bThrow;
 	bool		m_bAttacked;
+
+	int			m_iHoldObjIdx = 0;
 
 	int			m_iJumpCount;
 
