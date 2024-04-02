@@ -224,10 +224,10 @@ void CPlayer::TapD()
 
 void CPlayer::TapA()
 {
-	//if (CObjMgr::Get_Instance()->GetHoldObjID(m_iHoldObjIdx) != CHoldObj::HOLDOBJ_KEY)
-	//	return;
-	//if ((TILECX * 9 <= m_tInfo.fX && m_tInfo.fX <= TILECX * 11) && (TILECY * 12 <= m_tInfo.fY && m_tInfo.fY <= TILECY * 14)) // 동굴 입구 위치 ( 매 스테이지마다 바껴야 할 것)
-	//{
+	if (CObjMgr::Get_Instance()->GetHoldObjID(m_iHoldObjIdx) != CHoldObj::HOLDOBJ_KEY)
+		return;
+	if ((TILECX * 9 <= m_tInfo.fX && m_tInfo.fX <= TILECX * 11) && (TILECY * 12 <= m_tInfo.fY && m_tInfo.fY <= TILECY * 14)) // 동굴 입구 위치 ( 매 스테이지마다 바껴야 할 것)
+	{
 		m_eCurState = ENTER;
 		ResetPlayer();
 		ResetScene();
@@ -242,7 +242,7 @@ void CPlayer::TapA()
 		default:
 			break;
 		}
-	//}
+	}
 }
 
 void CPlayer::HoldLeft()
