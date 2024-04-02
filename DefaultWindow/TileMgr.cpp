@@ -80,21 +80,10 @@ void CTileMgr::SetDecoLand(HDC hDC, int iScrollX, int iScrollY, int i, int j, in
 
 	HDC	hMemDC = NULL;
 
-	switch (CSceneMgr::Get_Instance()->GetRealScene()->GetMapNum()) //임시..
-	{
-	case 1:
-		hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"DecoLand");
-		break;
-	case 2:
-		hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"DecoLand2");
-		break;
-	//case 3:
-	//	hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"DecoLand3");
-	//	break;
-	default:
-		hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"DecoLand");
-		break;
-	}
+	wstring wStr = L"DecoLand" + to_wstring(CSceneMgr::Get_Instance()->GetRealScene()->GetMapNum());
+
+	const wchar_t* name = wStr.c_str();
+	hMemDC = CBmpMgr::Get_Instance()->Find_Image((TCHAR*)name);
 
 	if (2 < j && m_vecTile[iIndex]->Get_Option() == 1 && m_vecTile[iIndex - 1]->Get_Option() == 0) //왼쪽 벽
 	{

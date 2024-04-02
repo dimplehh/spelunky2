@@ -118,7 +118,7 @@ void CStage::InsertBmps()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Ground.bmp",	L"Ground");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Fade.bmp",	L"Fade");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/FadeIn.bmp",	L"FadeIn");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette.bmp",		L"Tile");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette1.bmp",		L"Tile1");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette2.bmp",		L"Tile2");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/UIIcon.bmp",		L"UIIcon");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Box.bmp",			L"Box");
@@ -130,7 +130,7 @@ void CStage::InsertBmps()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/HoldObj.bmp",		L"HoldObj");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/Snake.bmp",		L"Snake");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/SnakeFlip.bmp",	L"SnakeFlip");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/DecoLand.bmp",		L"DecoLand");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/DecoLand1.bmp",		L"DecoLand1");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Font/Font.bmp",			L"Font");
 }
 

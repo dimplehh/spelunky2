@@ -434,10 +434,10 @@ void CPlayer::ResetScene()
 		dynamic_cast<CStage2*>(CSceneMgr::Get_Instance()->GetRealScene())->ReleaseGimics();
 		dynamic_cast<CStage2*>(CSceneMgr::Get_Instance()->GetRealScene())->InsertGimics();
 		break;
-	//case 3:
-	//	dynamic_cast<CStage3*>(CSceneMgr::Get_Instance()->GetRealScene())->ReleaseGimics();
-	//	dynamic_cast<CStage3*>(CSceneMgr::Get_Instance()->GetRealScene())->InsertGimics();
-	//	break;
+	case 3:
+		dynamic_cast<CStage3*>(CSceneMgr::Get_Instance()->GetRealScene())->ReleaseGimics();
+		dynamic_cast<CStage3*>(CSceneMgr::Get_Instance()->GetRealScene())->InsertGimics();
+		break;
 	default:
 		break;
 	}

@@ -115,11 +115,11 @@ void CStage3::FadeInOut(HDC hDC)
 
 void CStage3::InsertBmps()
 {
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Ground.bmp", L"Ground");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Ground3.bmp", L"Ground3");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Fade.bmp", L"Fade");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/FadeIn.bmp", L"FadeIn");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette.bmp", L"Tile");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette2.bmp", L"Tile2");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette5.bmp", L"Tile5");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette6.bmp", L"Tile6");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/UIIcon.bmp", L"UIIcon");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Box.bmp", L"Box");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Rope.bmp", L"Rope");
@@ -135,7 +135,7 @@ void CStage3::InsertBmps()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/Ghost.bmp", L"Ghost");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/GhostFlip.bmp", L"GhostFlip");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/GhostUp.bmp", L"GhostUp");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/DecoLand.bmp", L"DecoLand");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/DecoLand3.bmp", L"DecoLand3");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Font/Font.bmp", L"Font");
 }
 
