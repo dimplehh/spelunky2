@@ -15,6 +15,7 @@ public:
 	CObj*		Get_Bomb() { return m_ObjList[OBJ_BOMB].back(); }
 	CObj*		Get_UI() { return m_ObjList[OBJ_UI].back(); }
 	CObj*		Get_Target(OBJID eID, CObj* pObj);
+	int			GetHoldObjSize() { return m_ObjList[OBJ_HOLDOBJ].size(); }
 
 public:
 	void		Add_Object(OBJID eID, CObj* pObj);

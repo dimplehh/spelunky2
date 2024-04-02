@@ -1,6 +1,7 @@
 #pragma once
 #include "Obj.h"
 #include "Item.h"
+#include "HoldObj.h"
 
 class CChest : public CObj
 {
@@ -17,6 +18,7 @@ public:
 
 public:
 	void	SetChestItemID(CItem::ITEMID _chestItemID) { m_eItemID = _chestItemID; }
+	void	SetHoldObjID(CHoldObj::HOLDOBJID _holdObjID) { m_eHoldObjID = _holdObjID; }
 
 private:
 	bool		Gravity();
@@ -26,5 +28,6 @@ private:
 
 private:
 	CItem::ITEMID		m_eItemID = CItem::ITEM_END;
+	CHoldObj::HOLDOBJID	m_eHoldObjID = CHoldObj::HOLDOBJ_END;
 };
 

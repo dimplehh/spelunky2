@@ -15,6 +15,7 @@
 #include "Ghost.h"
 #include "Frog.h"
 #include "HoldObj.h"
+#include "ObjMgr.h"
 
 template<typename T>
 class CAbstractFactory
@@ -155,18 +156,30 @@ public:
 		dynamic_cast<CChest*>(pObj)->SetChestItemID(_itemID);
 		return pObj;
 	}
+
+	static CObj* CreateHoldChest(float _fX, float _fY, CHoldObj::HOLDOBJID _holdObjID)
+	{
+		CObj* pObj = new CChest;
+		pObj->Initialize();
+		pObj->Set_Pos(_fX, _fY);
+		dynamic_cast<CChest*>(pObj)->SetHoldObjID(_holdObjID);
+		return pObj;
+	}
 };
 
 class CHoldObjFactory
 {
 public:
-	static CObj* Create(float _fX, float _fY, CHoldObj::HOLDOBJID _holdObjID, int _idx)
+	static CObj* Create(float _fX, float _fY, CHoldObj::HOLDOBJID _holdObjID)
 	{
 		CObj* pObj = new CHoldObj;
 		pObj->Initialize();
 		pObj->Set_Pos(_fX, _fY);
 		dynamic_cast<CHoldObj*>(pObj)->Set_HoldObjID(_holdObjID);
+
+		int _idx = CObjMgr::Get_Instance()->GetHoldObjSize();
 		dynamic_cast<CHoldObj*>(pObj)->SetIdx(_idx);
+		
 		return pObj;
 	}
 };

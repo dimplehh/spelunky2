@@ -192,7 +192,7 @@ void CStage::InsertChests()
 	CObjMgr::Get_Instance()->Add_Object(OBJ_CHEST, CChestFactory::Create(TILECX * (42 + 0.5f), TILECY * (15.5f), CItem::ITEM_BOMB));
 	CObjMgr::Get_Instance()->Add_Object(OBJ_CHEST, CChestFactory::Create(TILECX * (30 + 0.5f), TILECY * (19.5f), CItem::ITEM_ROPE));
 	CObjMgr::Get_Instance()->Add_Object(OBJ_CHEST, CChestFactory::Create(TILECX * (52 + 0.5f), TILECY * (20.5f), CItem::ITEM_GEM));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_CHEST, CChestFactory::Create(TILECX * (14 + 0.5f), TILECY * (1.5f), CItem::ITEM_GOLD));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_CHEST, CChestFactory::CreateHoldChest(TILECX * (14 + 0.5f), TILECY * (1.5f), CHoldObj::HOLDOBJ_KEY));
 }
 
 void CStage::InsertHoldObjs()
@@ -200,5 +200,5 @@ void CStage::InsertHoldObjs()
 	//CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(TILECX * (16 + 0.5f), TILECY * (4 + 0.5f), CHoldObj::HOLDOBJ_JAR, 0));
 	//CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(TILECX * (18 + 0.5f), TILECY * (4 + 0.5f), CHoldObj::HOLDOBJ_KEY, 1));
 	//CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(TILECX * (17 + 0.5f), TILECY * (4 + 0.5f), CHoldObj::HOLDOBJ_STONE, 2));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(TILECX * (50 + 0.5f), TILECY * (13 + 0.7f), CHoldObj::HOLDOBJ_STONE, 0));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(TILECX * (50 + 0.5f), TILECY * (13 + 0.7f), CHoldObj::HOLDOBJ_STONE));
 }

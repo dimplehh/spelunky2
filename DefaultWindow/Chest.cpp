@@ -56,8 +56,16 @@ void CChest::Render(HDC hDC)
 	int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
 	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
 	HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
-	GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, (int)m_tInfo.fCX, (int)m_tInfo.fCY,
-		hMemDC, (m_eItemID / 2) * (int)m_tInfo.fCX, 0, TILECX, TILECY, RGB(55, 55, 55));
+	if (m_eItemID != CItem::ITEM_END)
+	{
+		GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, (int)m_tInfo.fCX, (int)m_tInfo.fCY,
+			hMemDC, (m_eItemID / 2) * (int)m_tInfo.fCX, 0, TILECX, TILECY, RGB(55, 55, 55));
+	}
+	else if (m_eHoldObjID != CHoldObj::HOLDOBJ_END)
+	{
+		GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, (int)m_tInfo.fCX, (int)m_tInfo.fCY,
+			hMemDC, 0, 0, TILECX, TILECY, RGB(55, 55, 55));
+	}
 }
 
 void CChest::Release()
@@ -70,8 +78,10 @@ void CChest::Release()
 			CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CItemFactory::Create(m_tInfo.fX + 8.f * i, m_tInfo.fY - 10.f, m_eItemID));
 		}
 	}
-	else
+	else if (m_eItemID != CItem::ITEM_END)
 		CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CItemFactory::Create(m_tInfo.fX, m_tInfo.fY - 10.f, m_eItemID));
+	else if (m_eHoldObjID != CHoldObj::HOLDOBJ_END)
+		CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(m_tInfo.fX, m_tInfo.fY - 10.f, m_eHoldObjID));
 }
 
 bool CChest::Gravity()
