@@ -187,7 +187,7 @@ void CStage3::InsertChests()
 {
 	CObjMgr::Get_Instance()->Add_Object(OBJ_CHEST, CChestFactory::Create(TILECX * (20 + 0.5f), TILECY * (6.5f), CItem::ITEM_BOMB));
 	CObjMgr::Get_Instance()->Add_Object(OBJ_CHEST, CChestFactory::Create(TILECX * (22 + 0.5f), TILECY * (6.5f), CItem::ITEM_ROPE));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_CHEST, CChestFactory::Create(TILECX * (24 + 0.5f), TILECY * (6.5f), CItem::ITEM_GEM));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_CHEST, CChestFactory::Create(TILECX * (55 + 0.5f), TILECY * (23.5f), CItem::ITEM_GEM));
 	CObjMgr::Get_Instance()->Add_Object(OBJ_CHEST, CChestFactory::Create(TILECX * (26 + 0.5f), TILECY * (6.5f), CItem::ITEM_GOLD));
 }
 

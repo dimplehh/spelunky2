@@ -30,9 +30,6 @@ void CHoldObj::Initialize()
 
 int CHoldObj::Update()
 {
-	if (dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetHoldObjIdx() != m_iIdx)
-		return OBJ_NOEVENT;
-
 	if (m_bDead)
 		return OBJ_DEAD;
 
