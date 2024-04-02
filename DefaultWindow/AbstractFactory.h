@@ -14,6 +14,7 @@
 #include "Snake.h"
 #include "Ghost.h"
 #include "Frog.h"
+#include "Olmec.h"
 #include "HoldObj.h"
 #include "ObjMgr.h"
 
@@ -196,6 +197,8 @@ public:
 			pObj = new CGhost;
 		else if (_monsterID == CMonster::FROG)
 			pObj = new CFrog;
+		else if (_monsterID == CMonster::OLMEC)
+			pObj = new COlmec;
 
 		pObj->Initialize();
 		pObj->Set_Pos(_fX, _fY);

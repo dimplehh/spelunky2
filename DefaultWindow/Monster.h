@@ -4,7 +4,7 @@
 class CMonster : public CObj
 {
 public:
-	enum MONSTERID {SNAKE, GHOST, FROG, LAMASSU, MONSTER_END};
+	enum MONSTERID {SNAKE, GHOST, FROG, LAMASSU, OLMEC, MONSTER_END};
 
 public:
 	CMonster();
