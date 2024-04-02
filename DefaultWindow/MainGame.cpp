@@ -39,7 +39,7 @@ void CMainGame::Initialize()
 //#endif // _DEBUG
 	m_hDC = GetDC(g_hWnd);
 	CKeyMgr::CreateSingleTonInst()->init();
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Ground.bmp", L"Back");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Ground1.bmp", L"Back");
 	CSoundMgr::Get_Instance()->Initialize();
 	CSceneMgr::Get_Instance()->Scene_Change(SC_LOGO);
 

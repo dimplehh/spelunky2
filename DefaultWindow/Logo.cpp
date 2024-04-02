@@ -37,7 +37,7 @@ void CLogo::Late_Update()
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::ENTER) == KEY_STATE::TAP)
 	{
 		CSoundMgr::Get_Instance()->StopSound(SOUND_BGM);
-		CSceneMgr::Get_Instance()->Scene_Change(SC_STAGE);
+		CSceneMgr::Get_Instance()->Scene_Change(SC_EDIT);
 		return;
 	}
 }

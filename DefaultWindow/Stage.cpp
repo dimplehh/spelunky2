@@ -59,7 +59,7 @@ void CStage::Late_Update()
 
 void CStage::Render(HDC hDC)
 {
-	HDC	hGroundDC = CBmpMgr::Get_Instance()->Find_Image(L"Ground");
+	HDC	hGroundDC = CBmpMgr::Get_Instance()->Find_Image(L"Ground1");
 	// 비트맵 출력 함수
 	int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
 	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
@@ -115,7 +115,7 @@ void CStage::FadeInOut(HDC hDC)
 
 void CStage::InsertBmps()
 {
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Ground.bmp",	L"Ground");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Ground1.bmp",	L"Ground1");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Fade.bmp",	L"Fade");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/FadeIn.bmp",	L"FadeIn");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette1.bmp",		L"Tile1");

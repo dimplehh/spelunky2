@@ -20,7 +20,7 @@ void CTile::Initialize()
 	m_tInfo.fCX = TILECX;
 	m_tInfo.fCY = TILECY;
 
-	m_pFrameKey = L"Tile";
+	m_pFrameKey = L"Tile1";
 	m_eRender = RENDER_TILE;
 }
 
@@ -38,19 +38,28 @@ void CTile::Late_Update()
 
 void CTile::Render(HDC hDC)
 {
-	HDC	hMemDC = NULL;
-
-	if (m_iOption == 1 || m_iOption == 2)
+	if (CSceneMgr::Get_Instance()->Get_Scene() == SC_EDIT)
 	{
-		int idx = (CSceneMgr::Get_Instance()->GetRealScene()->GetMapNum() - 1) * 2 + m_iOption;
-		wstring wStr = L"Tile" + to_wstring(idx);
-		const wchar_t* name = wStr.c_str();
-
-		m_pFrameKey = name;
-
-		hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
+		if (m_iOption == 1) m_pFrameKey = L"Tile1";
+		else if (m_iOption == 2) m_pFrameKey = L"Tile2";
+	}
+	else if (CSceneMgr::Get_Instance()->Get_Scene() == SC_STAGE)
+	{
+		if (m_iOption == 1) m_pFrameKey = L"Tile1";
+		else if (m_iOption == 2) m_pFrameKey = L"Tile2";
+	}
+	else if (CSceneMgr::Get_Instance()->Get_Scene() == SC_STAGE2)
+	{
+		if (m_iOption == 1) m_pFrameKey = L"Tile3";
+		else if (m_iOption == 2) m_pFrameKey = L"Tile4";
+	}
+	else if (CSceneMgr::Get_Instance()->Get_Scene() == SC_STAGE3)
+	{
+		if (m_iOption == 1) m_pFrameKey = L"Tile5";
+		else if (m_iOption == 2) m_pFrameKey = L"Tile6";
 	}
 
+	HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
 	int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
 	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
 
