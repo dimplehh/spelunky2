@@ -76,8 +76,7 @@ void CStage::Render(HDC hDC)
 
 void CStage::Release()
 {
-	//CObjMgr::Get_Instance()->Delete_ID(OBJ_UI);
-	CObjMgr::Get_Instance()->ReleaseWithoutPlayer();
+	CObjMgr::Get_Instance()->ReleaseWithoutPlayerAndUI();
 }
 
 void CStage::FadeInOut(HDC hDC)

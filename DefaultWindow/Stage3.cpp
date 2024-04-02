@@ -82,7 +82,7 @@ void CStage3::Render(HDC hDC)
 
 void CStage3::Release()
 {
-	CObjMgr::Get_Instance()->ReleaseWithoutPlayer();
+	CObjMgr::Get_Instance()->ReleaseWithoutPlayerAndUI();
 }
 
 void CStage3::FadeInOut(HDC hDC)

@@ -40,7 +40,7 @@ public:
 	void		RenderGhost(HDC hDC);
 	
 	void		Release();
-	void		ReleaseWithoutPlayer();
+	void		ReleaseWithoutPlayerAndUI();
 	void		Delete_ID(OBJID eID);
 
 private:

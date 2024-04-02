@@ -85,14 +85,14 @@ void CPlayer::Late_Update()	//어떤걸 Late_Update, 어떤걸 Update에 넣어야할지 잘 
 		else
 			m_eCurState = IDLE;
 	}
-//#ifdef _DEBUG
-//
-//	if (m_dwTime + 1000 < GetTickCount())
-//	{
-//		cout << m_eCurState << endl;
-//		m_dwTime = GetTickCount();
-//	}
-//#endif
+#ifdef _DEBUG
+
+	if (m_dwTime + 1000 < GetTickCount())
+	{
+		cout << m_iHp << endl;
+		m_dwTime = GetTickCount();
+	}
+#endif
 }
 
 void CPlayer::Release()

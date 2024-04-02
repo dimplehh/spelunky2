@@ -137,7 +137,6 @@ void CObjMgr::RenderGhost(HDC hDC)
 
 void CObjMgr::RenderUI(HDC hDC)
 {
-
 	for (auto& iter : m_RenderList[RENDER_UI])
 		iter->Render(hDC);
 
@@ -162,11 +161,11 @@ void CObjMgr::Delete_ID(OBJID eID)
 	m_ObjList[eID].clear();
 }
 
-void CObjMgr::ReleaseWithoutPlayer()
+void CObjMgr::ReleaseWithoutPlayerAndUI()
 {
 	for (size_t i = 0; i < OBJ_END; ++i)
 	{
-		if (i == OBJ_PLAYER)
+		if (i == OBJ_PLAYER || i == OBJ_UI)
 			continue;
 
 		for_each(m_ObjList[i].begin(), m_ObjList[i].end(), Safe_Delete<CObj*>);
