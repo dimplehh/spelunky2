@@ -77,6 +77,7 @@ void CLineMgr::MakeEtcLine()
 
 	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ (17 + 0.5f) * TILECX, 19 * TILECY }, LINEPOINT{ (17 + 0.5f) * TILECX, 15 * TILECY }, CLine::LADDER));				// »ç´Ù¸®
 	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ (3 + 0.5f) * TILECX, 19 * TILECY }, LINEPOINT{ (3 + 0.5f) * TILECX, 14 * TILECY }, CLine::LADDER));
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ (7 + 0.5f) * TILECX, 14 * TILECY }, LINEPOINT{ (7 + 0.5f) * TILECX, 11 * TILECY }, CLine::LADDER));
 	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ (32 + 0.5f) * TILECX, 23 * TILECY }, LINEPOINT{ (32 + 0.5f) * TILECX, 19 * TILECY }, CLine::LADDER));
 	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ (4 + 0.5f) * TILECX, 6 * TILECY }, LINEPOINT{ (4 + 0.5f) * TILECX, 1 * TILECY }, CLine::LADDER));
 

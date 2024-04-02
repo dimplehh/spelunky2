@@ -159,7 +159,7 @@ private:
 	int			m_iDeathTime = 0;
 
 	int			m_iRopeCount = 0;
-	int			m_iBombCount = 0;
+	int			m_iBombCount = 10;
 	int			m_iMoney = 0;
 
 	bool		m_bCheckFirstInit = false;
