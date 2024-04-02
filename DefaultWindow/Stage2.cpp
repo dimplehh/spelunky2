@@ -33,6 +33,7 @@ void CStage2::Initialize()
 	CLineMgr::Get_Instance()->Initialize();
 	CScrollMgr::Get_Instance()->Set_ScrollXY(WINCX / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX,
 		WINCY / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY);
+	CUIMgr::Get_Instance()->Set_UINum(CUIIcon::UI_MAP, __super::m_iMapNum);
 	_bf.BlendOp = AC_SRC_OVER;
 	_bf.BlendFlags = 0;
 	_bf.AlphaFormat = AC_SRC_ALPHA;

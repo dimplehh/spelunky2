@@ -50,8 +50,11 @@ void CPlayer::Initialize()
 	m_pFrameKey = L"Player_BASE";
 
 	m_eRender = RENDER_GAMEOBJECT;
+	
+	wstring wStr = L"Stage" + to_wstring(CSceneMgr::Get_Instance()->GetRealScene()->GetMapNum()) + L".wav";
+	const wchar_t* soundName = wStr.c_str();
 
-	CSoundMgr::Get_Instance()->PlayBGM(L"Stage1.wav", g_fVolume);
+	CSoundMgr::Get_Instance()->PlayBGM((TCHAR*)soundName, g_fVolume);
 }
 
 int CPlayer::Update()
@@ -224,13 +227,19 @@ void CPlayer::TapD()
 
 void CPlayer::TapA()
 {
-	if (CObjMgr::Get_Instance()->GetHoldObjID(m_iHoldObjIdx) != CHoldObj::HOLDOBJ_KEY)
-		return;
-	if ((TILECX * 9 <= m_tInfo.fX && m_tInfo.fX <= TILECX * 11) && (TILECY * 12 <= m_tInfo.fY && m_tInfo.fY <= TILECY * 14)) // 동굴 입구 위치 ( 매 스테이지마다 바껴야 할 것)
-	{
+	//if (CObjMgr::Get_Instance()->GetHoldObjID(m_iHoldObjIdx) != CHoldObj::HOLDOBJ_KEY)
+	//	return;
+	//if ((TILECX * 9 <= m_tInfo.fX && m_tInfo.fX <= TILECX * 11) && (TILECY * 12 <= m_tInfo.fY && m_tInfo.fY <= TILECY * 14)) // 동굴 입구 위치 ( 매 스테이지마다 바껴야 할 것)
+	//{
 		m_eCurState = ENTER;
 		ResetPlayer();
 		ResetScene();
+		
+		CSoundMgr::Get_Instance()->StopSound(SOUND_BGM);
+		wstring wStr = L"Stage" + to_wstring(CSceneMgr::Get_Instance()->GetRealScene()->GetMapNum() + 1) + L".wav";
+		const wchar_t* soundName = wStr.c_str();
+		CSoundMgr::Get_Instance()->PlayBGM((TCHAR*)soundName, g_fVolume);
+
 		switch (dynamic_cast<CScene*>(CSceneMgr::Get_Instance()->GetRealScene())->GetMapNum())
 		{
 		case 1:
@@ -242,7 +251,7 @@ void CPlayer::TapA()
 		default:
 			break;
 		}
-	}
+	//}
 }
 
 void CPlayer::HoldLeft()

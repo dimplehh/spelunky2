@@ -29,19 +29,14 @@ void CStage3::Initialize()
 	__super::m_iMapNum = 3;
 
 	InsertBmps();
-	InsertMonsters();
-	InsertObstacles();
-	InsertBoxs();
-	InsertChests();
-	InsertHoldObjs();
-	InsertUIs();
+	InsertGimics();
 
-	CObjMgr::Get_Instance()->Get_Player();
 	CTileMgr::Get_Instance()->Load_Tile(3);
 	CLineMgr::Get_Instance()->Initialize();
 
 	CScrollMgr::Get_Instance()->Set_ScrollXY(WINCX / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX,
 		WINCY - -CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY);
+	CUIMgr::Get_Instance()->Set_UINum(CUIIcon::UI_MAP, __super::m_iMapNum);
 
 	_bf.BlendOp = AC_SRC_OVER;
 	_bf.BlendFlags = 0;
@@ -197,4 +192,25 @@ void CStage3::InsertHoldObjs()
 	CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(TILECX * (16 + 0.5f), TILECY * (4 + 0.5f), CHoldObj::HOLDOBJ_JAR));
 	CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(TILECX * (18 + 0.5f), TILECY * (4 + 0.5f), CHoldObj::HOLDOBJ_KEY));
 	CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(TILECX * (19 + 0.5f), TILECY * (6 + 0.5f), CHoldObj::HOLDOBJ_STONE));
+}
+
+void CStage3::InsertGimics()
+{
+	InsertMonsters();
+	InsertObstacles();
+	InsertBoxs();
+	InsertChests();
+	InsertHoldObjs();
+}
+
+void CStage3::ReleaseGimics()
+{
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_BOX);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_ROPE);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_CHEST);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_HOLDOBJ);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_OBSTACLE);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_ITEM);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_MONSTER);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_BOMB);
 }
