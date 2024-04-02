@@ -60,7 +60,7 @@ void CStage3::Late_Update()
 
 void CStage3::Render(HDC hDC)
 {
-	HDC	hGroundDC = CBmpMgr::Get_Instance()->Find_Image(L"Ground");
+	HDC	hGroundDC = CBmpMgr::Get_Instance()->Find_Image(L"Ground3");
 	// 비트맵 출력 함수
 	int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
 	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
