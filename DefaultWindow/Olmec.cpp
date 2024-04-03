@@ -9,7 +9,7 @@
 #include "TileMgr.h"
 #include "Player.h"
 
-COlmec::COlmec() : m_ePreState(ST_END), m_eCurState(IDLE), m_dwTime(GetTickCount())
+COlmec::COlmec() : m_ePreState(ST_END), m_eCurState(IDLE), m_dwTime(GetTickCount()), m_pVecTile(nullptr), m_headLine(nullptr)
 {
 }
 
@@ -50,6 +50,15 @@ void COlmec::Late_Update()
 		Gravity();
 
 	m_headLine->Set_Info(LINE(LINEPOINT{ m_tInfo.fX - TILECX * 1.6f , m_tInfo.fY - TILECY * 1.2f}, LINEPOINT{ m_tInfo.fX + TILECX * 1.6f, m_tInfo.fY - TILECY * 1.2f}));
+
+	#ifdef _DEBUG
+
+	if (m_dwTime + 1000 < GetTickCount())
+	{
+		cout << "CanRise:" << m_bCanRise << "/ CanSmash:" << m_bCanSmash << "/ CheckOneTime:" << m_bCheckOneTime << endl;
+		m_dwTime = GetTickCount();
+	}
+#endif
 }
 
 void COlmec::Render(HDC hDC)
@@ -69,7 +78,7 @@ void COlmec::Release()
 
 void COlmec::Idle()
 {
-	if (CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
+	if (CLineMgr::Get_Instance()->Collision_Olmec_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
 	{
 		m_fPreY = m_tInfo.fY;
 		m_fPreX = m_tInfo.fX;
@@ -86,7 +95,7 @@ void COlmec::Rise()
 {
 	if (m_bCanRise == true)
 	{
-		if (m_tInfo.fY > m_fPreY - TILECY * 3.f)
+		if (m_tInfo.fY >= m_fPreY - TILECY * 3.f)
 		{
 			m_tInfo.fY -= 5.f;
 			if (abs(m_fPrePlayerX - m_tInfo.fX) >= 5)
@@ -110,15 +119,17 @@ void COlmec::Smash()
 	if (m_bCanSmash)
 	{
 		m_bCanRise = false;
-		if (CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
+		if (CLineMgr::Get_Instance()->Collision_Olmec_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
 		{
 			if (m_bCheckOneTime == true)
 			{
 				Break();
 				m_bCheckOneTime = false;
 			}
-			if (CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
+			if (CLineMgr::Get_Instance()->Collision_Olmec_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
+			{
 				m_bCanSmash = false;
+			}
 		}
 	}
 }
@@ -127,26 +138,40 @@ void COlmec::Break() //타일 깨뜨리는 함수
 {
 	int index = CTileMgr::Get_Instance()->Get_Tile_Idx(m_tInfo.fX, m_tInfo.fY);
 
+	if (0 > index || (size_t)index >= (*m_pVecTile).size())
+		return;
+
 	for (int _add = -1; _add <= 1; _add++)
 	{
 		SetBrokenTile(index + _add + TILEX * 2);
 	}
-	//if (GetUpNoBrokenTile(index) == true)
-	//{
-	//	for (int _add = -1; _add <= 1; _add++)
-	//	{
-	//		SetBrokenTile(index + _add + TILEX);
-	//	}
-	//}
-	//else if(0 <= index && (size_t)index < (*m_pVecTile).size())
-	//{
-	//	for (int _add = -1; _add <= 1; _add++)
-	//	{
-	//		SetBrokenTile(index + _add + TILEX * 2);
-	//	}
-	//}
+/*	if (GetUpNoBrokenTile(index) == true)
+	{
+		for (int _add = -1; _add <= 1; _add++)
+		{
+			SetBrokenTile(index + _add + TILEX);
+		}
+	}
+	else if(0 <= index && (size_t)index < (*m_pVecTile).size())
+	{
+		for (int _add = -1; _add <= 1; _add++)
+		{
+			SetBrokenTile(index + _add + TILEX * 2);
+	}
+	}*/
+
 	CLineMgr::Get_Instance()->Release();
 	CLineMgr::Get_Instance()->SetLine(); //라인 재세팅
+}
+
+void COlmec::SetBrokenTile(int index)
+{
+	if (0 > index || (size_t)index >= (*m_pVecTile).size())
+		return;
+
+	(*m_pVecTile)[index]->Set_FrameKey(L"Tile6");
+	(*m_pVecTile)[index]->Set_Option(0);
+	(*m_pVecTile)[index]->Set_DrawID(0);
 }
 
 bool COlmec::GetUpNoBrokenTile(int index)
@@ -162,16 +187,6 @@ bool COlmec::GetUpNoBrokenTile(int index)
 		}
 	}
 	return false;
-}
-
-void COlmec::SetBrokenTile(int index)
-{
-	if (0 > index || (size_t)index >= (*m_pVecTile).size())
-		return;
-
-	(*m_pVecTile)[index]->Set_FrameKey(L"Tile6");
-	(*m_pVecTile)[index]->Set_Option(0);
-	(*m_pVecTile)[index]->Set_DrawID(0);
 }
 
 void COlmec::Motion_Change() //차후 폭탄 발사 시 울맥 벌어질 때 필요
