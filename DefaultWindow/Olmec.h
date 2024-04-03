@@ -68,6 +68,7 @@ private:
 
 	bool		m_bCanRise2 = false;
 	bool		m_bCanMove = false;
+	bool		m_bFirstChangeCheck = true;
 
 	STATE		m_ePreState;
 	STATE		m_eCurState;

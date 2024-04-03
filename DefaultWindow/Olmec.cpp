@@ -61,7 +61,7 @@ void COlmec::Late_Update()
 	if (m_bCanSmash == true)
 		Gravity();
 
-	m_headLine->Set_Info(LINE(LINEPOINT{ m_tInfo.fX - TILECX * 1.6f , m_tInfo.fY - TILECY * 1.2f}, LINEPOINT{ m_tInfo.fX + TILECX * 1.6f, m_tInfo.fY - TILECY * 1.2f}));
+	m_headLine->Set_Info(LINE(LINEPOINT{ m_tInfo.fX - TILECX * 1.6f , m_tInfo.fY - TILECY * 0.7f}, LINEPOINT{ m_tInfo.fX + TILECX * 1.6f, m_tInfo.fY - TILECY * 0.7f}));
 }
 
 void COlmec::Render(HDC hDC)
@@ -214,11 +214,11 @@ bool COlmec::GetUpNoBrokenTile(int index)
 
 void COlmec::Idle2()
 {
-	if (m_tInfo.fX - TILECX * 5.f <= CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX
-		&& CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX < m_tInfo.fX + TILECX * 5.f
+	if (CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX < m_tInfo.fX - TILECX * 5.f ||
+		m_tInfo.fX + TILECX * 5.f < CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX
 		&& CLineMgr::Get_Instance()->Collision_Olmec_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
 	{
-		m_fPreY2 = m_tInfo.fY;
+		m_bCanSmash = false;
 		m_bCanRise2 = true;
 	}
 }
@@ -227,10 +227,15 @@ void COlmec::Rise2()
 {
 	if (m_bCanRise2 == true)
 	{
-		m_tInfo.fCY = TILECY * 4;
-		m_pFrameKey = L"Olmec2";
+		if (m_bFirstChangeCheck == true)
+		{
+			m_tInfo.fCY = TILECY * 4;
+			m_pFrameKey = L"Olmec2";
+			m_fPreY2 = m_tInfo.fY;
+			m_bFirstChangeCheck = false;
+		}
 
-		if (m_tInfo.fY >= m_fPreY - TILECY * 2.5f)
+		if (m_tInfo.fY >= m_fPreY2 - TILECY * 3)
 		{
 			m_tInfo.fY -= 5.f;
 		}
