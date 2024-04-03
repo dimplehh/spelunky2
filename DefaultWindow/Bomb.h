@@ -17,6 +17,7 @@ public:
 public:
 	void		Set_PreY(float _fY) { m_fPreY = _fY; }
 	void		Move_Frame();
+	void		SetFlip(bool _flip) { m_bFlip = _flip; };
 
 private:
 	void		Explosion();

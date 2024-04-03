@@ -56,6 +56,21 @@ public:
 	~CAbstractFactory(){}
 };
 
+class CBombFactory
+{
+public:
+	static CObj* Create(float _fX, float _fY, bool _flip)
+	{
+		CObj* pObj = new CBomb;
+		pObj->Initialize();
+		pObj->Set_Pos(_fX, _fY);
+		dynamic_cast<CBomb*>(pObj)->Set_PreY(_fY);
+		dynamic_cast<CBomb*>(pObj)->SetFlip(_flip);
+
+		return pObj;
+	}
+};
+
 class CLineFactory
 {
 public:

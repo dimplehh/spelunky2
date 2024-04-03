@@ -287,8 +287,8 @@ void COlmec::Attack()
 		}
 		if (m_dwTime + 1000 < GetTickCount())
 		{
-			CObjMgr::Get_Instance()->Add_Object(OBJ_BOMB, CAbstractFactory<CBomb>::Create(m_tInfo.fX + TILECX * 3, m_tInfo.fY));
-			CObjMgr::Get_Instance()->Add_Object(OBJ_BOMB, CAbstractFactory<CBomb>::Create(m_tInfo.fX - TILECX * 3, m_tInfo.fY));
+			CObjMgr::Get_Instance()->Add_Object(OBJ_BOMB, CBombFactory::Create(m_tInfo.fX + TILECX * 3, m_tInfo.fY, false));
+			CObjMgr::Get_Instance()->Add_Object(OBJ_BOMB, CBombFactory::Create(m_tInfo.fX - TILECX * 3, m_tInfo.fY, true));
 			m_iBombCount++;
 			m_dwTime = GetTickCount();
 		}
