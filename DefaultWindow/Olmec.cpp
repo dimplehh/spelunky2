@@ -35,12 +35,30 @@ int COlmec::Update()
 	if (m_bDead == true)
 		return OBJ_DEAD;
 
-	if (m_tInfo.fY > TILECY * TILEY - TILECY * 4)
+	if (m_tInfo.fY > TILECY * TILEY - TILECY * 4) //용암에 빠졌을 경우 모든 동작을 멈춤
 		return OBJ_NOEVENT;
+	
+	if (m_iPhase == 0)
+	{
+		// 플레이어가 울맥 위치까지 오는것 기다렸다가 카메라에 울맥 들어오면 컷신 나오면서 컷신 끝나면 페이즈 1로 변함
 
-	Idle();
-	Rise();
-	Smash();
+		if (m_tInfo.fX - TILECX * 5.f <= CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX
+			&& CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX < m_tInfo.fX + TILECX * 5.f)
+		{
+			// 컷신 실행 함수 넣고 컷신이 끝날 경우 m_iPhase = 1;
+			m_iPhase = 1;
+		}
+	}
+	else if (m_iPhase == 1)
+	{
+		Idle();
+		Rise();
+		Smash();
+	}
+	else if (m_iPhase == 2)  // 두번째 구간 진입 시
+	{
+		//플레이어 화면 안으로 들어오는것 기다린 후 들어오면 공격패턴 시작
+	}
 
 	__super::Update_Rect();
 	return OBJ_NOEVENT;
@@ -52,15 +70,6 @@ void COlmec::Late_Update()
 		Gravity();
 
 	m_headLine->Set_Info(LINE(LINEPOINT{ m_tInfo.fX - TILECX * 1.6f , m_tInfo.fY - TILECY * 1.2f}, LINEPOINT{ m_tInfo.fX + TILECX * 1.6f, m_tInfo.fY - TILECY * 1.2f}));
-
-	#ifdef _DEBUG
-
-	if (m_dwTime + 1000 < GetTickCount())
-	{
-		cout << "CanRise:" << m_bCanRise << "/ CanSmash:" << m_bCanSmash << "/ CheckOneTime:" << m_bCheckOneTime << endl;
-		m_dwTime = GetTickCount();
-	}
-#endif
 }
 
 void COlmec::Render(HDC hDC)

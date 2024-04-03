@@ -32,7 +32,7 @@ void CStage3::Initialize()
 	CObjMgr::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CPlayer>::Create()); //잠깐 스3에서시작하기위한 용도
 
 	float _responPosX = TILECX * (4 + 0.5f);
-	float _responPosY = TILECY * (5 + 0.5f);
+	float _responPosY = TILECY * (5.5f);
 	dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetRespawnPos(_responPosX, _responPosY);
 	CObjMgr::Get_Instance()->Get_Player()->Set_Pos(_responPosX, _responPosY);
 
@@ -146,6 +146,7 @@ void CStage3::InsertBmps()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/GhostFlip.bmp", L"GhostFlip");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/GhostUp.bmp", L"GhostUp");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/Olmec.bmp", L"Olmec");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/Olmec2.bmp", L"Olmec2");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/DecoLand3.bmp", L"DecoLand3");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Font/Font.bmp", L"Font");
 }
@@ -173,7 +174,7 @@ void CStage3::InsertUIs()
 
 void CStage3::InsertMonsters()
 {
-	CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(TILECX * (23 + 0.5f), TILECY * (6.f), CMonster::OLMEC));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(TILECX * (23 + 0.5f), TILECY * (4.5f), CMonster::OLMEC));
 
 	//CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(TILECX * (21 + 0.5f), TILECY * (6.5f), CMonster::SNAKE));
 	//CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(TILECX * (23 + 0.5f), TILECY * (6.5f), CMonster::FROG));

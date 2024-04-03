@@ -45,11 +45,6 @@ void CSceneMgr::Scene_Change(SCENEID eID)
 
 			case SC_STAGE2:
 			{
-				//float _responPosX = TILECX * (58 + 0.5f);
-				//float _responPosY = TILECY * (3 + 0.5f);
-				//dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetRespawnPos(_responPosX, _responPosY);
-				//CObjMgr::Get_Instance()->Get_Player()->Set_Pos(_responPosX, _responPosY);
-
 				m_pScene = new CStage2;
 				break;
 			}

@@ -54,6 +54,8 @@ private:
 	STATE		m_ePreState;
 	STATE		m_eCurState;
 
+	int			m_iPhase = 0;
+
 private:
 	DWORD		m_dwTime;
 
