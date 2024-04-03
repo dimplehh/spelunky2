@@ -6,7 +6,7 @@
 class COlmec : public CMonster
 {
 public:
-	enum STATE { IDLE, RISE, SMASH, ATTACK, ATTACKEND, BROKEN, ST_END };
+	enum STATE { CUTSCENE, IDLE, RISE, SMASH, ATTACK, ATTACKEND, BROKEN, ST_END };
 
 public:
 	COlmec();

@@ -26,10 +26,10 @@ void COlmec::Initialize()
 	m_fSpeed = 1.5f;
 	m_iHp = 100000;
 	m_iAttackPower = 100000;
-	m_pFrameKey = L"Olmec";
+	m_pFrameKey = L"Olmec3";
 	m_pVecTile = CTileMgr::Get_Instance()->Get_VecTile();
 
-	m_tFrame = { 0, 0, 0, 5, true, 60, GetTickCount(), 0 }; //일단 애니메이션 현재는 안쓰긴 하지만 차후에 쓸듯..
+	m_tFrame = { 0, 0, 0, 5, true, 60, GetTickCount(), 0 }; 
 	m_eRender = RENDER_GAMEOBJECT;
 }
 
@@ -90,10 +90,17 @@ void COlmec::Release()
 void COlmec::Phase0()
 {		// 플레이어가 울맥 위치까지 오는것 기다렸다가 카메라에 울맥 들어오면 컷신 나오면서 컷신 끝나면 페이즈 1로 변함
 
-	if (m_tInfo.fX - TILECX * 5.f <= CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX
-		&& CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX < m_tInfo.fX + TILECX * 5.f)
-	{	// 컷신 실행 함수 넣고 컷신이 끝날 경우 m_iPhase = 1;
-		m_iPhase = 1;
+	if (m_tInfo.fX - TILECX * 3.f <= CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX
+		&& CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX < m_tInfo.fX + TILECX * 3.f)
+	{
+		m_pFrameKey = L"Olmec3";
+		m_eCurState = CUTSCENE;
+	}
+	if (m_eCurState == CUTSCENE && m_tFrame.iFrameStart == 4) //임시 하드코딩..ㅋ
+	{
+		m_iPhase = 1;		
+		m_pFrameKey = L"Olmec";
+		m_eCurState = IDLE;
 	}
 }
 
@@ -325,6 +332,7 @@ void COlmec::Motion_Change() //차후 폭탄 발사 시 울맥 벌어질 때 필요
 		m_iRepeatCount = 0;
 		switch (m_eCurState)
 		{
+		case COlmec::CUTSCENE:	Set_Frame(0, 4, 0, false, 1500, 0, 4);		break;
 		case COlmec::IDLE:		Set_Frame(0, 0, 0, true, 120, 0, 7);		break;
 		case COlmec::ATTACK:	Set_Frame(0, 3, 0, false, 120, 0, 7);		break;
 		case COlmec::ATTACKEND:	Set_Frame(3, 6, 0, false, 120, 0, 7);		break;
