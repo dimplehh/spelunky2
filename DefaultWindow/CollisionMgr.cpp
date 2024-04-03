@@ -69,6 +69,10 @@ void CCollisionMgr::Collision_RectMon(CObj* Dst, CObj* Src)
 				{
 					if(Src->Get_Info().fY > Dst->Get_Info().fY && dynamic_cast<COlmec*>(Dst)->GetCanSmash() == true)
 						dynamic_cast<CPlayer*>(Src)->SetHp(-10000);
+					else if (Src->Get_Info().fY > Dst->Get_Info().fY && dynamic_cast<COlmec*>(Dst)->GetPhaseNum() == 2)
+					{
+						dynamic_cast<COlmec*>(Dst)->SetCanBroken(true);
+					}
 				}
 			}
 		}

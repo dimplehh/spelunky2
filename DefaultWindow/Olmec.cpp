@@ -111,7 +111,11 @@ void COlmec::Phase1()
 
 void COlmec::Phase2() // 두번째 구간 진입 시 플레이어 화면 안으로 들어오는것 기다린 후 들어오면 공격패턴 시작
 {
-	Broken();
+	if (m_bCanBroken == true)
+	{
+		Broken();
+		return;
+	}
 	
 	Idle2();
 	Rise2();
@@ -308,6 +312,10 @@ void COlmec::Attack()
 
 void COlmec::Broken()
 {
+	m_eCurState = BROKEN;
+	if (CLineMgr::Get_Instance()->Collision_Olmec_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
+		Break();
+	Gravity();
 }
 
 void COlmec::Motion_Change() //차후 폭탄 발사 시 울맥 벌어질 때 필요
@@ -317,9 +325,10 @@ void COlmec::Motion_Change() //차후 폭탄 발사 시 울맥 벌어질 때 필요
 		m_iRepeatCount = 0;
 		switch (m_eCurState)
 		{
-		case COlmec::IDLE:		Set_Frame(0, 0, 0, true, 120, 0, 6);		break;
-		case COlmec::ATTACK:	Set_Frame(0, 3, 0, false, 120, 0, 6);		break;
-		case COlmec::ATTACKEND:	Set_Frame(3, 6, 0, false, 120, 0, 6);		break;
+		case COlmec::IDLE:		Set_Frame(0, 0, 0, true, 120, 0, 7);		break;
+		case COlmec::ATTACK:	Set_Frame(0, 3, 0, false, 120, 0, 7);		break;
+		case COlmec::ATTACKEND:	Set_Frame(3, 6, 0, false, 120, 0, 7);		break;
+		case COlmec::BROKEN:	Set_Frame(7, 7, 0, false, 120, 0, 7);		break;
 		}
 		m_ePreState = m_eCurState;
 	}

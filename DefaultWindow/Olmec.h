@@ -6,7 +6,7 @@
 class COlmec : public CMonster
 {
 public:
-	enum STATE { IDLE, RISE, SMASH, ATTACK, ATTACKEND, ST_END };
+	enum STATE { IDLE, RISE, SMASH, ATTACK, ATTACKEND, BROKEN, ST_END };
 
 public:
 	COlmec();
@@ -25,6 +25,8 @@ public:
 
 	void		SetHp(int _hp) { m_iHp += _hp; };
 	bool		GetCanSmash() { return m_bCanSmash; }
+	void		SetCanBroken(bool _canBroken) { m_bCanBroken = _canBroken; }
+	int			GetPhaseNum() { return m_iPhase; }
 
 public:
 	void	SetHeadLine(CLine* headLine) { m_headLine = headLine; };
@@ -74,6 +76,7 @@ private:
 	bool		m_bFirstChangeCheck = true;
 	bool		m_bCanAttack = false;
 	bool		m_bFirstAttack = true;
+	bool		m_bCanBroken = false;
 
 	STATE		m_ePreState;
 	STATE		m_eCurState;
