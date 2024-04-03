@@ -37,6 +37,7 @@ void CMainGame::Initialize()
 //	}
 //
 //#endif // _DEBUG
+
 	m_hDC = GetDC(g_hWnd);
 	CKeyMgr::CreateSingleTonInst()->init();
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Ground1.bmp", L"Back");

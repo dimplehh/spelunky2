@@ -5,6 +5,7 @@
 #include "AbstractFactory.h"
 #include "ObjMgr.h"
 #include "Player.h"
+#include "SceneMgr.h"
 
 CLineMgr*	CLineMgr::m_pInstance = nullptr;
 
@@ -33,6 +34,11 @@ void CLineMgr::Release()
 	{
 		for_each(m_BoxLineList.begin(), m_BoxLineList.end(), Safe_Delete<CLine*>);
 		m_BoxLineList.clear();
+	}
+	if (m_headLineList.empty() == false)
+	{
+		for_each(m_headLineList.begin(), m_headLineList.end(), Safe_Delete<CLine*>);
+		m_headLineList.clear();
 	}
 	if (m_LineList.empty() == false)
 	{
@@ -65,10 +71,16 @@ void CLineMgr::SetLine()
 				m_LineList.push_back(CLineFactory::Create(LINEPOINT{ iterInfo.fX - iterInfo.fCX / 2, iterInfo.fY + iterInfo.fCY / 2 }, LINEPOINT{ iterInfo.fX + iterInfo.fCX / 2, iterInfo.fY + iterInfo.fCY / 2 }, CLine::CEILING));
 		}
 	}
-	MakeEtcLine();	// 맵 상하좌우 끝, 사다리, 발판 함수
+	if (CSceneMgr::Get_Instance()->GetRealScene()->GetMapNum() == 1)
+		MakeEtcLine();
+	else if (CSceneMgr::Get_Instance()->GetRealScene()->GetMapNum() == 2)
+		MakeEtcLine2();
+	else if (CSceneMgr::Get_Instance()->GetRealScene()->GetMapNum() == 3)
+		MakeEtcLine3();
+
 }
 
-void CLineMgr::MakeEtcLine()
+void CLineMgr::MakeEtcLine() 	// 맵 상하좌우 끝, 사다리, 발판 함수
 {
 	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 2 * TILECX, 1 * TILECY }, LINEPOINT{ (TILEX - 2) * TILECX, 1 * TILECY }, CLine::CEILING));							// 천장
 	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 2 * TILECX, (TILEY - 2) * TILECY }, LINEPOINT{ (TILEX - 2) * TILECX, (TILEY - 2) * TILECY }, CLine::FLOOR));		// 바닥
@@ -77,7 +89,7 @@ void CLineMgr::MakeEtcLine()
 
 	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ (17 + 0.5f) * TILECX, 19 * TILECY }, LINEPOINT{ (17 + 0.5f) * TILECX, 15 * TILECY }, CLine::LADDER));				// 사다리
 	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ (3 + 0.5f) * TILECX, 19 * TILECY }, LINEPOINT{ (3 + 0.5f) * TILECX, 14 * TILECY }, CLine::LADDER));
-	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ (7 + 0.5f) * TILECX, 14 * TILECY }, LINEPOINT{ (7 + 0.5f) * TILECX, 11 * TILECY }, CLine::LADDER));
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ (7 + 0.5f) * TILECX, 14 * TILECY }, LINEPOINT{ (7 + 0.5f) * TILECX, 10.5f * TILECY }, CLine::LADDER));
 	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ (32 + 0.5f) * TILECX, 23 * TILECY }, LINEPOINT{ (32 + 0.5f) * TILECX, 19 * TILECY }, CLine::LADDER));
 	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ (4 + 0.5f) * TILECX, 6 * TILECY }, LINEPOINT{ (4 + 0.5f) * TILECX, 1 * TILECY }, CLine::LADDER));
 
@@ -108,10 +120,28 @@ void CLineMgr::MakeEtcLine()
 	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 58 * TILECX, 21 * TILECY + 10 }, LINEPOINT{ 59 * TILECX, 21 * TILECY + 10 }, CLine::BOARD));
 }
 
+void CLineMgr::MakeEtcLine2()
+{
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 2 * TILECX, 1 * TILECY }, LINEPOINT{ (TILEX - 2) * TILECX, 1 * TILECY }, CLine::CEILING));							// 천장
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 2 * TILECX, (TILEY - 2) * TILECY }, LINEPOINT{ (TILEX - 2) * TILECX, (TILEY - 2) * TILECY }, CLine::FLOOR));		// 바닥
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 2 * TILECX, 1 * TILECY }, LINEPOINT{ 2 * TILECX, (TILEY - 2) * TILECY }, CLine::RIGHTWALL));						// 왼쪽 벽
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ (TILEX - 2) * TILECX, 1 * TILECY }, LINEPOINT{ (TILEX - 2) * TILECX, (TILEY - 2) * TILECY }, CLine::LEFTWALL));	// 오른쪽 벽
+}
+
+void CLineMgr::MakeEtcLine3()
+{
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 2 * TILECX, 1 * TILECY }, LINEPOINT{ (TILEX - 2) * TILECX, 1 * TILECY }, CLine::CEILING));							// 천장
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 2 * TILECX, (TILEY - 2) * TILECY }, LINEPOINT{ (TILEX - 2) * TILECX, (TILEY - 2) * TILECY }, CLine::FLOOR));		// 바닥
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 2 * TILECX, 1 * TILECY }, LINEPOINT{ 2 * TILECX, (TILEY - 2) * TILECY }, CLine::RIGHTWALL));						// 왼쪽 벽
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ (TILEX - 2) * TILECX, 1 * TILECY }, LINEPOINT{ (TILEX - 2) * TILECX, (TILEY - 2) * TILECY }, CLine::LEFTWALL));	// 오른쪽 벽
+}
 
 void CLineMgr::Render(HDC hDC)
 {
 	for (auto& iter : m_BoxLineList)
+		iter->Render(hDC);
+	
+	for (auto& iter : m_headLineList)
 		iter->Render(hDC);
 
 	for (auto& iter : m_LineList)
@@ -122,6 +152,11 @@ void CLineMgr::Set_Box_Line(float fX, float fY)
 {
 	m_BoxLineList.push_back(CLineFactory::Create(	LINEPOINT{ fX - TILECX * 0.6f , fY - TILECY * 0.5f - 0.01f },  
 		LINEPOINT{ fX + TILECX * 0.6f, fY - TILECY * 0.5f - 0.01f }, CLine::FLOOR));								//이거 박스에서 업데이트해줄때 값을 완전 똑같이 넣어줘야함
+}
+
+void CLineMgr::Set_Head_Line(float fX, float fY)
+{
+	m_headLineList.push_back(CLineFactory::Create(LINEPOINT{ fX - TILECX * 1.6f , fY - TILECY * 1.f - 0.01f }, LINEPOINT{ fX + TILECX * 1.6f, fY - TILECY * 1.f - 0.01f }, CLine::FLOOR));
 }
 
 bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool _Jumping) //바닥충돌 - 상향점프까지
@@ -140,6 +175,23 @@ bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool
 				&& fY >= iter->Get_Info().tLPoint.fY - fCY / 2)
 			{
 				m_fY = iter->Get_Info().tLPoint.fY;	
+
+				if (((fY + (fCY / 6.f)) <= m_fY) && (m_fY <= (fY + (fCY / 2.f))))
+				{
+					m_AttachedLine = iter;
+					fY = m_fY - (fCY / 2);
+					return true;
+				}
+			}
+		}
+
+		for (auto& iter : m_headLineList)
+		{
+			if ((iter->Get_LineType() == CLine::FLOOR || iter->Get_LineType() == CLine::BOARD)
+				&& iter->Get_Info().tLPoint.fX <= fX && fX < iter->Get_Info().tRPoint.fX
+				&& fY >= iter->Get_Info().tLPoint.fY - fCY / 2)
+			{
+				m_fY = iter->Get_Info().tLPoint.fY;
 
 				if (((fY + (fCY / 6.f)) <= m_fY) && (m_fY <= (fY + (fCY / 2.f))))
 				{

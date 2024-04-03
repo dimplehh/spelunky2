@@ -198,7 +198,11 @@ public:
 		else if (_monsterID == CMonster::FROG)
 			pObj = new CFrog;
 		else if (_monsterID == CMonster::OLMEC)
+		{
 			pObj = new COlmec;
+			CLineMgr::Get_Instance()->Set_Head_Line(_fX, _fY);
+			dynamic_cast<COlmec*>(pObj)->SetHeadLine(CLineMgr::Get_Instance()->Get_Head_Line()->back());
+		}
 
 		pObj->Initialize();
 		pObj->Set_Pos(_fX, _fY);

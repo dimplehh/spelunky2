@@ -33,6 +33,10 @@ public:
 	void		Set_Box_Line(float fX, float fY);
 	list<CLine*>* Get_Box_Line() { return &m_BoxLineList; }
 
+	void		Set_Head_Line(float fX, float fY);
+	list<CLine*>* Get_Head_Line() { return &m_headLineList; }
+
+
 	CLine*		Get_AttachedLine() { return m_AttachedLine; };
 	float		Get_fY() { return m_fY; }
 
@@ -42,6 +46,8 @@ public:
 	void		Release();
 	void		SetLine();
 	void		MakeEtcLine();
+	void		MakeEtcLine2();
+	void		MakeEtcLine3();
 	void		Change_idx();
 
 public:
@@ -66,6 +72,8 @@ private:
 	list<CLine*>			m_FirstLineList;
 	list<CLine*>			m_LineList;
 	list<CLine*>			m_BoxLineList;
+
+	list<CLine*>			m_headLineList;
 
 	CLine*					m_AttachedLine;
 	float					m_fX;

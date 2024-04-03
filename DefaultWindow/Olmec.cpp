@@ -47,20 +47,7 @@ int COlmec::Update()
 
 void COlmec::Late_Update()
 {
-	//if (m_bCanJump == false)
-	//	Gravity();
-
-	//Motion_Change();
-	//__super::Move_Frame();
-
-#ifdef _DEBUG
-
-	if (m_dwTime + 500 < GetTickCount())
-	{
-		cout << m_fPreY << "/" << m_tInfo.fY << endl;
-		m_dwTime = GetTickCount();
-	}
-#endif
+	m_headLine->Set_Info(LINE(LINEPOINT{ m_tInfo.fX - TILECX * 1.6f , m_tInfo.fY - TILECY * 1.2f}, LINEPOINT{ m_tInfo.fX + TILECX * 1.6f, m_tInfo.fY - TILECY * 1.2f}));
 }
 
 void COlmec::Render(HDC hDC)
@@ -97,10 +84,16 @@ void COlmec::Rise()
 {
 	if (m_bCanRise == true)
 	{
-		if (m_tInfo.fY > m_fPreY - TILECY * 2.f)
+		if (m_tInfo.fY > m_fPreY - TILECY * 3.f)
 		{
-			m_tInfo.fX += (m_fPrePlayerX - m_fPreX) / TILECX;
-			m_tInfo.fY -= 7.f;
+			m_tInfo.fY -= 5.f;
+			if (abs(m_fPrePlayerX - m_tInfo.fX) >= 5)
+			{
+				if (m_fPrePlayerX < m_tInfo.fX)
+					m_tInfo.fX -= 4.f;
+				else
+					m_tInfo.fX += 4.f;
+			}
 		}
 		else
 		{
@@ -109,7 +102,7 @@ void COlmec::Rise()
 	}
 }
 
-void COlmec::Smash() //여기서 타일도 깨뜨려야 함
+void COlmec::Smash()
 {
 	if (m_bCanSmash)
 	{
@@ -126,17 +119,41 @@ void COlmec::Smash() //여기서 타일도 깨뜨려야 함
 	}
 }
 
-void COlmec::Break()
+void COlmec::Break() //타일 깨뜨리는 함수
 {
 	int index = CTileMgr::Get_Instance()->Get_Tile_Idx(m_tInfo.fX, m_tInfo.fY);
 
-	for (int _add = -1; _add <= 1; _add++)
+	if (GetUpNoBrokenTile(index) == true)
 	{
-		SetBrokenTile(index + _add + TILEX * 2);
+		for (int _add = -1; _add <= 1; _add++)
+		{
+			SetBrokenTile(index + _add + TILEX);
+		}
 	}
-
+	else
+	{
+		for (int _add = -1; _add <= 1; _add++)
+		{
+			SetBrokenTile(index + _add + TILEX * 2);
+		}
+	}
 	CLineMgr::Get_Instance()->Release();
 	CLineMgr::Get_Instance()->SetLine(); //라인 재세팅
+}
+
+bool COlmec::GetUpNoBrokenTile(int index)
+{
+	if (0 > index || (size_t)index >= (*m_pVecTile).size())
+		return false;
+
+	for (int _add = -1; _add <= 1; _add++)
+	{
+		if (!((*m_pVecTile)[index + _add + TILEX]->Get_Option() == 0 && (*m_pVecTile)[index + _add + TILEX]->Get_DrawID() == 0))
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 void COlmec::SetBrokenTile(int index)

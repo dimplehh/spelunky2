@@ -7,6 +7,7 @@
 #include "HoldObj.h"
 #include "Item.h"
 #include "Snake.h"
+#include "Olmec.h"
 
 extern float g_fVolume;
 
@@ -66,7 +67,7 @@ void CCollisionMgr::Collision_RectMon(CObj* Dst, CObj* Src)
 					dynamic_cast<CSnake*>(Dst)->SetCurState(CSnake::ATTACK);
 				else if (dynamic_cast<CMonster*>(Dst)->GetMonsterID() == CMonster::OLMEC)
 				{
-					if(Src->Get_Info().fY > Dst->Get_Info().fY)
+					if(Src->Get_Info().fY > Dst->Get_Info().fY && dynamic_cast<COlmec*>(Dst)->GetCanSmash() == true)
 						dynamic_cast<CPlayer*>(Src)->SetHp(-10000);
 				}
 			}
@@ -134,17 +135,20 @@ void CCollisionMgr::Collision_RectEx(CObj* Dst, CObj* Src)
 
 	if (Check_Rect(Dst, Src, &fX, &fY))
 	{
-		if (fX <= fY)		// 谅快 面倒
+		if (OBJECT_TYPE::BOX == Dst->Get_MyObjType() && CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY >= Dst->Get_Info().fY)
 		{
-			// 谅 面倒
-			if (Dst->Get_Info().fX < Src->Get_Info().fX)
+			if (fX <= fY)		// 谅快 面倒
 			{
-				Dst->Set_PosX(-fX);
-			}
-			// 快 面倒
-			else
-			{
-				Dst->Set_PosX(fX);
+				// 谅 面倒
+				if (Dst->Get_Info().fX < Src->Get_Info().fX)
+				{
+					Dst->Set_PosX(-fX);
+				}
+				// 快 面倒
+				else
+				{
+					Dst->Set_PosX(fX);
+				}
 			}
 		}
 		Dst->SetCollision(true);
