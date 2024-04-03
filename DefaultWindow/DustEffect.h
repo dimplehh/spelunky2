@@ -14,4 +14,7 @@ public:
 	virtual void Render(HDC hDC) override;
 	virtual void Release() override;
 
+private:
+	DWORD	m_dwTime;
+	bool	m_bCheckFirstTime = true;
 };

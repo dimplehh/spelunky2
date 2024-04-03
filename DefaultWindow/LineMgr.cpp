@@ -6,6 +6,7 @@
 #include "ObjMgr.h"
 #include "Player.h"
 #include "SceneMgr.h"
+#include "EffectMgr.h"
 
 CLineMgr*	CLineMgr::m_pInstance = nullptr;
 

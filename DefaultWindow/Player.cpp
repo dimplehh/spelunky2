@@ -190,7 +190,6 @@ void CPlayer::TapZ()
 	{
 		if (m_iJumpCount < 1) //무한점프 방지
 		{
-			CEffectMgr::Get_Instance()->ActiveEffect(CEffect::EFFECT_DUST, m_tInfo.fX, m_tInfo.fY);
 			m_bJump = true;
 			m_eCurState = JUMP;
 			m_fTime = 0.f;
@@ -577,7 +576,10 @@ void CPlayer::Gravity()	//숫자 의미 판단, 더 정리 필요 -> Obj로 나중에 빼야될듯
 				m_bJump = false;
 			}
 			else if (fGravity > 5.f)
+			{
+
 				fGravity = 5.f;
+			}
 			if (fGravity < 0)
 				m_bJump = false;
 
@@ -593,6 +595,7 @@ void CPlayer::Gravity()	//숫자 의미 판단, 더 정리 필요 -> Obj로 나중에 빼야될듯
 			{
 				m_fDiffY = -(m_fPreY - m_fCurY);
 				m_fPreY = m_fCurY;
+				CEffectMgr::Get_Instance()->ActiveEffect(CEffect::EFFECT_DUST, m_tInfo.fX, m_tInfo.fY + m_tInfo.fCY / 3 * 2);
 			}
 			else
 			{
