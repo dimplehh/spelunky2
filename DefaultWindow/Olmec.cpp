@@ -42,7 +42,7 @@ int COlmec::Update()
 	if (m_bDead == true)
 		return OBJ_DEAD;
 
-	if (m_tInfo.fY > TILECY * TILEY - TILECY * 4) //용암에 빠졌을 경우 모든 동작을 멈춤
+	if (m_tInfo.fY > TILECY * TILEY - TILECY * 1) //용암에 빠졌을 경우 모든 동작을 멈춤
 		return OBJ_NOEVENT;
 
 	switch (m_iPhase)
@@ -101,7 +101,7 @@ void COlmec::Phase0()
 		m_pFrameKey = L"Olmec3";
 		m_eCurState = CUTSCENE;
 	}
-	if (m_eCurState == CUTSCENE && m_tFrame.iFrameStart == 4) //임시 하드코딩..ㅋ
+	if (m_eCurState == CUTSCENE && m_tFrame.iFrameStart == 4)
 	{
 		CScrollMgr::Get_Instance()->Set_ScrollXY(WINCX / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX,
 			WINCY / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY);
@@ -285,6 +285,7 @@ void COlmec::Move()
 {
 	if (m_bCanMove == true)
 	{
+		m_eCurState = IDLE;
 		if (abs(m_fPrePlayerX2 - m_tInfo.fX) >= 5)
 		{
 			if (m_fPrePlayerX2 < m_tInfo.fX)
@@ -292,10 +293,9 @@ void COlmec::Move()
 			else
 				m_tInfo.fX += 4.f;
 		}
-		else
+		if(CUIMgr::Get_Instance()->Get_Time() % m_iAttackCount2 == 0)
 		{
 			m_bCanAttack = true;
-			m_bCanMove = false;
 		}
 	}
 }
@@ -315,8 +315,8 @@ void COlmec::Attack()
 		}
 		if (m_dwTime + 1000 < GetTickCount())
 		{
-			CObjMgr::Get_Instance()->Add_Object(OBJ_BOMB, CBombFactory::Create(m_tInfo.fX + TILECX * 3, m_tInfo.fY, false));
-			CObjMgr::Get_Instance()->Add_Object(OBJ_BOMB, CBombFactory::Create(m_tInfo.fX - TILECX * 3, m_tInfo.fY, true));
+			CObjMgr::Get_Instance()->Add_Object(OBJ_BOMB, CBombFactory::Create(m_tInfo.fX + TILECX * 1.6f, m_tInfo.fY, false));
+			CObjMgr::Get_Instance()->Add_Object(OBJ_BOMB, CBombFactory::Create(m_tInfo.fX - TILECX * 1.6f, m_tInfo.fY, true));
 			m_iBombCount++;
 			m_dwTime = GetTickCount();
 		}
@@ -328,6 +328,7 @@ void COlmec::Attack()
 				m_bCanAttack = false;
 				m_bCanMove = true;
 				m_bFirstAttack = true;
+				m_iBombCount = 0;
 				m_fPrePlayerX2 = CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX;
 			}
 		}
@@ -349,6 +350,7 @@ void COlmec::Motion_Change() //차후 폭탄 발사 시 울맥 벌어질 때 필요
 		m_iRepeatCount = 0;
 		switch (m_eCurState)
 		{
+		//case COlmec::CUTSCENE:	Set_Frame(0, 4, 0, false, 150, 0, 4);		break;		//빨리 테스트하기용
 		case COlmec::CUTSCENE:	Set_Frame(0, 4, 0, false, 1500, 0, 4);		break;
 		case COlmec::IDLE:		Set_Frame(0, 0, 0, true, 120, 0, 7);		break;
 		case COlmec::ATTACK:	Set_Frame(0, 3, 0, false, 120, 0, 7);		break;

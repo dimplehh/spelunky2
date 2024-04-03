@@ -73,6 +73,7 @@ private:
 	int			m_iPreTime = 0;
 	float		m_fPrePlayerX2 = 0;
 	int			m_iBombCount = 0;
+	int			m_iAttackCount2 = 5;
 
 	bool		m_bCanRise2 = false;
 	bool		m_bCanMove = false;
