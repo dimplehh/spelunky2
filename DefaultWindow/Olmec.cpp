@@ -49,7 +49,7 @@ void COlmec::Late_Update()
 	if (m_bCanSmash == true)
 		Gravity();
 
-	m_headLine->Set_Info(LINE(LINEPOINT{ m_tInfo.fX - TILECX * 1.6f , m_tInfo.fY - TILECY * 1.2f}, LINEPOINT{ m_tInfo.fX + TILECX * 1.6f, m_tInfo.fY - TILECY * 1.2f}));
+	m_headLine->Set_Info(LINE(LINEPOINT{ m_tInfo.fX - TILECX * 1.6f , m_tInfo.fY - TILECY * 1.f}, LINEPOINT{ m_tInfo.fX + TILECX * 1.6f, m_tInfo.fY - TILECY * 1.f}));
 
 	#ifdef _DEBUG
 
@@ -95,7 +95,7 @@ void COlmec::Rise()
 {
 	if (m_bCanRise == true)
 	{
-		if (m_tInfo.fY >= m_fPreY - TILECY * 3.f)
+		if (m_tInfo.fY >= m_fPreY - TILECY * 2.5f)
 		{
 			m_tInfo.fY -= 5.f;
 			if (abs(m_fPrePlayerX - m_tInfo.fX) >= 5)
