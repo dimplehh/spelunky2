@@ -21,7 +21,6 @@ void COlmec::Initialize()
 {
 	m_tInfo = { 0.f, 0.f, TILECX * 3.f , TILECY * 3.f };
 	m_fSpeed = 1.5f;
-	//m_fPower = 40.f;
 	m_iHp = 100000;
 	m_iAttackPower = 100000;
 	//m_iMoveX = 6.f;
@@ -47,6 +46,9 @@ int COlmec::Update()
 
 void COlmec::Late_Update()
 {
+	if (m_bCanSmash == true)
+		Gravity();
+
 	m_headLine->Set_Info(LINE(LINEPOINT{ m_tInfo.fX - TILECX * 1.6f , m_tInfo.fY - TILECY * 1.2f}, LINEPOINT{ m_tInfo.fX + TILECX * 1.6f, m_tInfo.fY - TILECY * 1.2f}));
 }
 
@@ -98,6 +100,7 @@ void COlmec::Rise()
 		else
 		{
 			m_bCanSmash = true;
+			m_bCheckOneTime = true;
 		}
 	}
 }
@@ -109,12 +112,13 @@ void COlmec::Smash()
 		m_bCanRise = false;
 		if (CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
 		{
-			Break();
-			m_bCanSmash = false;
-		}
-		else
-		{
-			m_tInfo.fY += 7.f;
+			if (m_bCheckOneTime == true)
+			{
+				Break();
+				m_bCheckOneTime = false;
+			}
+			if (CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
+				m_bCanSmash = false;
 		}
 	}
 }
@@ -123,20 +127,24 @@ void COlmec::Break() //타일 깨뜨리는 함수
 {
 	int index = CTileMgr::Get_Instance()->Get_Tile_Idx(m_tInfo.fX, m_tInfo.fY);
 
-	if (GetUpNoBrokenTile(index) == true)
+	for (int _add = -1; _add <= 1; _add++)
 	{
-		for (int _add = -1; _add <= 1; _add++)
-		{
-			SetBrokenTile(index + _add + TILEX);
-		}
+		SetBrokenTile(index + _add + TILEX * 2);
 	}
-	else
-	{
-		for (int _add = -1; _add <= 1; _add++)
-		{
-			SetBrokenTile(index + _add + TILEX * 2);
-		}
-	}
+	//if (GetUpNoBrokenTile(index) == true)
+	//{
+	//	for (int _add = -1; _add <= 1; _add++)
+	//	{
+	//		SetBrokenTile(index + _add + TILEX);
+	//	}
+	//}
+	//else if(0 <= index && (size_t)index < (*m_pVecTile).size())
+	//{
+	//	for (int _add = -1; _add <= 1; _add++)
+	//	{
+	//		SetBrokenTile(index + _add + TILEX * 2);
+	//	}
+	//}
 	CLineMgr::Get_Instance()->Release();
 	CLineMgr::Get_Instance()->SetLine(); //라인 재세팅
 }

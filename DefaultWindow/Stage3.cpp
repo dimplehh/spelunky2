@@ -171,7 +171,7 @@ void CStage3::InsertUIs()
 
 void CStage3::InsertMonsters()
 {
-	CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(TILECX * (23 + 0.5f), TILECY * (5.f), CMonster::OLMEC));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(TILECX * (23 + 0.5f), TILECY * (6.f), CMonster::OLMEC));
 
 	//CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(TILECX * (21 + 0.5f), TILECY * (6.5f), CMonster::SNAKE));
 	//CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(TILECX * (23 + 0.5f), TILECY * (6.5f), CMonster::FROG));
