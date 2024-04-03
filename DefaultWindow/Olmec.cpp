@@ -9,6 +9,8 @@
 #include "TileMgr.h"
 #include "Player.h"
 #include "UIMgr.h"
+#include "AbstractFactory.h"
+#include "Bomb.h"
 
 COlmec::COlmec() : m_ePreState(ST_END), m_eCurState(IDLE), m_dwTime(GetTickCount()), m_pVecTile(nullptr), m_headLine(nullptr)
 {
@@ -265,6 +267,7 @@ void COlmec::Move()
 		else
 		{
 			m_bCanAttack = true;
+			m_bCanMove = false;
 		}
 	}
 }
@@ -274,7 +277,32 @@ void COlmec::Attack()
 	if (m_bCanAttack == true)
 	{
 		m_eCurState = ATTACK;
-		//공격 다 끝나면 m_bCanAttack이 false로, m_bCanMove가 true가 됨
+		if (m_tFrame.iFrameStart == 3)
+		{
+			if (m_bFirstAttack == true)
+			{
+				m_dwTime = GetTickCount();
+				m_bFirstAttack = false;
+			}
+		}
+		if (m_dwTime + 1000 < GetTickCount())
+		{
+			CObjMgr::Get_Instance()->Add_Object(OBJ_BOMB, CAbstractFactory<CBomb>::Create(m_tInfo.fX + TILECX * 3, m_tInfo.fY));
+			CObjMgr::Get_Instance()->Add_Object(OBJ_BOMB, CAbstractFactory<CBomb>::Create(m_tInfo.fX - TILECX * 3, m_tInfo.fY));
+			m_iBombCount++;
+			m_dwTime = GetTickCount();
+		}
+		if (m_iBombCount >= 3)
+		{
+			m_eCurState = ATTACKEND;
+			if (m_tFrame.iFrameStart == 6)
+			{
+				m_bCanAttack = false;
+				m_bCanMove = true;
+				m_bFirstAttack = true;
+				m_fPrePlayerX2 = CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX;
+			}
+		}
 	}
 }
 
@@ -291,6 +319,7 @@ void COlmec::Motion_Change() //차후 폭탄 발사 시 울맥 벌어질 때 필요
 		{
 		case COlmec::IDLE:		Set_Frame(0, 0, 0, true, 120, 0, 6);		break;
 		case COlmec::ATTACK:	Set_Frame(0, 3, 0, false, 120, 0, 6);		break;
+		case COlmec::ATTACKEND:	Set_Frame(3, 6, 0, false, 120, 0, 6);		break;
 		}
 		m_ePreState = m_eCurState;
 	}

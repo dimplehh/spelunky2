@@ -6,7 +6,7 @@
 class COlmec : public CMonster
 {
 public:
-	enum STATE { IDLE, RISE, SMASH, ATTACK, ST_END };
+	enum STATE { IDLE, RISE, SMASH, ATTACK, ATTACKEND, ST_END };
 
 public:
 	COlmec();
@@ -67,11 +67,13 @@ private:
 	float		m_fPreY2 = 0;
 	int			m_iPreTime = 0;
 	float		m_fPrePlayerX2 = 0;
+	int			m_iBombCount = 0;
 
 	bool		m_bCanRise2 = false;
 	bool		m_bCanMove = false;
 	bool		m_bFirstChangeCheck = true;
 	bool		m_bCanAttack = false;
+	bool		m_bFirstAttack = true;
 
 	STATE		m_ePreState;
 	STATE		m_eCurState;
