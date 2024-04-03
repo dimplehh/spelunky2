@@ -30,6 +30,11 @@ public:
 	void	SetHeadLine(CLine* headLine) { m_headLine = headLine; };
 
 private:
+	void		Phase0();
+	void		Phase1();
+	void		Phase2();
+
+private:										// Phase 1
 	void		Idle();
 	void		Rise();
 	void		Smash();
@@ -37,8 +42,6 @@ private:
 	void		Break();
 	void		SetBrokenTile(int index);
 	bool		GetUpNoBrokenTile(int index);
-
-	void		Motion_Change();
 
 private:
 	int			m_iAttackCycle = 3;
@@ -51,12 +54,26 @@ private:
 	bool		m_bCanSmash = false;
 	bool		m_bCheckOneTime = true;
 
+
+private:										// Phase 2
+	void		Broken();
+	void		Idle2();
+	void		Rise2();
+	void		Move();
+	void		Attack();
+	void		Motion_Change();
+
+private:
+	float		m_fPreY2 = 0;
+
+	bool		m_bCanRise2 = false;
+	bool		m_bCanMove = false;
+
 	STATE		m_ePreState;
 	STATE		m_eCurState;
 
-	int			m_iPhase = 0;
-
 private:
+	int			m_iPhase = 0;
 	DWORD		m_dwTime;
 
 	vector<CTile*>* m_pVecTile;
