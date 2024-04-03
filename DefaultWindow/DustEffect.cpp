@@ -35,7 +35,7 @@ int CDustEffect::Update()
 
 	if (m_bCheckFirstTime == true)
 	{
-		int xs[5] = { -5, -2, 0, 5, 10 };
+		int xs[5] = { 0, 5, 10, 20, 25 };
 
 		m_tInfo.fX += xs[rand() % 5];
 		m_dwTime = GetTickCount();

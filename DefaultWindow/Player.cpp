@@ -577,8 +577,8 @@ void CPlayer::Gravity()	//숫자 의미 판단, 더 정리 필요 -> Obj로 나중에 빼야될듯
 			}
 			else if (fGravity > 5.f)
 			{
-
 				fGravity = 5.f;
+				m_bFirstGrounded = true;
 			}
 			if (fGravity < 0)
 				m_bJump = false;
@@ -587,6 +587,13 @@ void CPlayer::Gravity()	//숫자 의미 판단, 더 정리 필요 -> Obj로 나중에 빼야될듯
 		}
 		else
 		{
+			if (m_bFirstGrounded == true)
+			{
+				CEffectMgr::Get_Instance()->ActiveEffect(CEffect::EFFECT_DUST, m_tInfo.fX, m_tInfo.fY + m_tInfo.fCY / 3 * 2);
+				CSoundMgr::Get_Instance()->PlaySound(L"bounce.wav", SOUND_EFFECT, g_fVolume);
+
+				m_bFirstGrounded = false;
+			}
 			m_fPower = 0.f;
 			m_iJumpCount = 0;
 			if (nullptr != CLineMgr::Get_Instance()->Get_AttachedLine())
@@ -595,7 +602,6 @@ void CPlayer::Gravity()	//숫자 의미 판단, 더 정리 필요 -> Obj로 나중에 빼야될듯
 			{
 				m_fDiffY = -(m_fPreY - m_fCurY);
 				m_fPreY = m_fCurY;
-				CEffectMgr::Get_Instance()->ActiveEffect(CEffect::EFFECT_DUST, m_tInfo.fX, m_tInfo.fY + m_tInfo.fCY / 3 * 2);
 			}
 			else
 			{

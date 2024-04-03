@@ -139,6 +139,7 @@ private:
 	bool		m_bIsHold;		// 무엇인가를 잡은 상태
 	bool		m_bThrow;
 	bool		m_bAttacked;
+	bool		m_bFirstGrounded = true;
 
 	int			m_iHoldObjIdx = -1;
 
