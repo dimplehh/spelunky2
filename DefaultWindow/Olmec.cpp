@@ -8,6 +8,7 @@
 #include "Obj.h"
 #include "TileMgr.h"
 #include "Player.h"
+#include "UIMgr.h"
 
 COlmec::COlmec() : m_ePreState(ST_END), m_eCurState(IDLE), m_dwTime(GetTickCount()), m_pVecTile(nullptr), m_headLine(nullptr)
 {
@@ -62,6 +63,9 @@ void COlmec::Late_Update()
 		Gravity();
 
 	m_headLine->Set_Info(LINE(LINEPOINT{ m_tInfo.fX - TILECX * 1.6f , m_tInfo.fY - TILECY * 0.7f}, LINEPOINT{ m_tInfo.fX + TILECX * 1.6f, m_tInfo.fY - TILECY * 0.7f}));
+
+	Motion_Change();
+	__super::Move_Frame();
 }
 
 void COlmec::Render(HDC hDC)
@@ -232,6 +236,7 @@ void COlmec::Rise2()
 			m_tInfo.fCY = TILECY * 4;
 			m_pFrameKey = L"Olmec2";
 			m_fPreY2 = m_tInfo.fY;
+			m_fPrePlayerX2 = CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX;
 			m_bFirstChangeCheck = false;
 		}
 
@@ -250,12 +255,27 @@ void COlmec::Move()
 {
 	if (m_bCanMove == true)
 	{
-
+		if (abs(m_fPrePlayerX2 - m_tInfo.fX) >= 5)
+		{
+			if (m_fPrePlayerX2 < m_tInfo.fX)
+				m_tInfo.fX -= 4.f;
+			else
+				m_tInfo.fX += 4.f;
+		}
+		else
+		{
+			m_bCanAttack = true;
+		}
 	}
 }
 
 void COlmec::Attack()
 {
+	if (m_bCanAttack == true)
+	{
+		m_eCurState = ATTACK;
+		//°ø°Ý ´Ù ³¡³ª¸é m_bCanAttackÀÌ false·Î, m_bCanMove°¡ true°¡ µÊ
+	}
 }
 
 void COlmec::Broken()
@@ -264,13 +284,14 @@ void COlmec::Broken()
 
 void COlmec::Motion_Change() //Â÷ÈÄ ÆøÅº ¹ß»ç ½Ã ¿ï¸Æ ¹ú¾îÁú ¶§ ÇÊ¿ä
 {
-	//if (m_ePreState != m_eCurState)
-	//{
-	//	m_iRepeatCount = 0;
-	//	switch (m_eCurState)
-	//	{
-	//	case COlmec::IDLE:		Set_Frame(0, 0, 0, true, 120, 0, 5);		break;
-	//	}
-	//	m_ePreState = m_eCurState;
-	//}
+	if (m_ePreState != m_eCurState)
+	{
+		m_iRepeatCount = 0;
+		switch (m_eCurState)
+		{
+		case COlmec::IDLE:		Set_Frame(0, 0, 0, true, 120, 0, 6);		break;
+		case COlmec::ATTACK:	Set_Frame(0, 3, 0, false, 120, 0, 6);		break;
+		}
+		m_ePreState = m_eCurState;
+	}
 }
