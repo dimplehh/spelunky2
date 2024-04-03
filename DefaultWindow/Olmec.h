@@ -36,6 +36,9 @@ private:
 	void		Phase1();
 	void		Phase2();
 
+private:
+	int			m_iPreFrameStart = 0;
+
 private:										// Phase 1
 	void		Idle();
 	void		Rise();

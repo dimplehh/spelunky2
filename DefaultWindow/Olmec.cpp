@@ -11,6 +11,9 @@
 #include "UIMgr.h"
 #include "AbstractFactory.h"
 #include "Bomb.h"
+#include "SoundMgr.h"
+
+extern float g_fVolume;
 
 COlmec::COlmec() : m_ePreState(ST_END), m_eCurState(IDLE), m_dwTime(GetTickCount()), m_pVecTile(nullptr), m_headLine(nullptr)
 {
@@ -90,17 +93,26 @@ void COlmec::Release()
 void COlmec::Phase0()
 {		// 플레이어가 울맥 위치까지 오는것 기다렸다가 카메라에 울맥 들어오면 컷신 나오면서 컷신 끝나면 페이즈 1로 변함
 
-	if (m_tInfo.fX - TILECX * 3.f <= CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX
-		&& CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX < m_tInfo.fX + TILECX * 3.f)
+	if (m_tInfo.fX - TILECX * 5.f <= CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX
+		&& CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX < m_tInfo.fX + TILECX * 5.f)
 	{
+		CScrollMgr::Get_Instance()->Set_ScrollXY(WINCX / 2 - m_tInfo.fX, WINCY / 2 - m_tInfo.fY);
 		m_pFrameKey = L"Olmec3";
 		m_eCurState = CUTSCENE;
 	}
 	if (m_eCurState == CUTSCENE && m_tFrame.iFrameStart == 4) //임시 하드코딩..ㅋ
 	{
+		CScrollMgr::Get_Instance()->Set_ScrollXY(WINCX / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX,
+			WINCY / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY);
 		m_iPhase = 1;		
 		m_pFrameKey = L"Olmec";
 		m_eCurState = IDLE;
+	}
+
+	if (m_iPreFrameStart != m_tFrame.iFrameStart)
+	{
+		CSoundMgr::Get_Instance()->PlaySound(L"StoneBreak.wav", SOUND_EFFECT, g_fVolume);
+		m_iPreFrameStart = m_tFrame.iFrameStart;
 	}
 }
 
@@ -179,6 +191,7 @@ void COlmec::Smash()
 			{
 				Break();
 				m_bCheckOneTime = false;
+				CSoundMgr::Get_Instance()->PlaySound(L"Crush.wav", SOUND_EFFECT, g_fVolume);
 			}
 			if (CLineMgr::Get_Instance()->Collision_Olmec_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
 			{
