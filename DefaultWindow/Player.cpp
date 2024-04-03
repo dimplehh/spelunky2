@@ -403,7 +403,7 @@ void CPlayer::ResetPlayer()
 	m_tInfo.fY = m_fFirstY;
 
 	CScrollMgr::Get_Instance()->Set_ScrollXY(WINCX / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX,
-		WINCY - -CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY);
+		WINCY / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY);
 
 	m_eCurState = IDLE;
 	SetHp(0);

@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "SceneMgr.h"
-
+#include "ScrollMgr.h"
+#include "ObjMgr.h"
+#include "Player.h"
 
 CSceneMgr*		CSceneMgr::m_pInstance = nullptr;
 
@@ -42,9 +44,13 @@ void CSceneMgr::Scene_Change(SCENEID eID)
 			break;
 
 		case SC_STAGE2:
+			dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetRespawnPos(TILECX * (55 + 0.5f), TILECY * (10 + 0.5f));
+			CObjMgr::Get_Instance()->Get_Player()->Set_Pos(TILECX * (55+ 0.5f), TILECY * (10 + 0.5f));
 			m_pScene = new CStage2;
 			break;
 		case SC_STAGE3:
+			dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetRespawnPos(TILECX * (4 + 0.5f), TILECY * (5 + 0.5f));
+			CObjMgr::Get_Instance()->Get_Player()->Set_Pos(TILECX * (4 + 0.5f), TILECY * (5 + 0.5f));
 			m_pScene = new CStage3;
 			break;
 		}

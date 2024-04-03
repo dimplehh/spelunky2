@@ -3,15 +3,17 @@
 #include "Obj.h"
 #include "UIMgr.h"
 
-class CPlayer :	public CObj
+class CPlayer : public CObj
 {
-public:	
-	enum STATE {IDLE, WALK, JUMP, DIZZY, DIE, LOOKUP, LOOKFRONT, KNEELDOWN, KNEELSTAY, CRAWL, STANDUP,	FALLING,
-				HOLD, ATTACKED, ALMOSTFELL, ATTACK, ENTER, EXIT, LADDER, PUSH, HANGON, THROW, ST_END };
+public:
+	enum STATE {
+		IDLE, WALK, JUMP, DIZZY, DIE, LOOKUP, LOOKFRONT, KNEELDOWN, KNEELSTAY, CRAWL, STANDUP, FALLING,
+		HOLD, ATTACKED, ALMOSTFELL, ATTACK, ENTER, EXIT, LADDER, PUSH, HANGON, THROW, ST_END
+	};
 public:
 	CPlayer();
 	virtual ~CPlayer();
-	
+
 public:
 	virtual void Initialize() override;
 	virtual int Update() override;
@@ -75,16 +77,17 @@ public:
 	bool		GetCanHold() { return m_bCanHold; }
 	void		SetCanHold(bool _canHold) { m_bCanHold = _canHold; }
 	void		SetIsHold(bool _isHold) { m_bIsHold = _isHold; }
-	bool		GetIsHold(){ return m_bIsHold; }
+	bool		GetIsHold() { return m_bIsHold; }
 	bool		GetThrow() { return m_bThrow; }
 	void		SetThrow(bool _throw) { m_bThrow = _throw; }
-	bool		GetCheckFirstInit(){ return m_bCheckFirstInit; }
+	bool		GetCheckFirstInit() { return m_bCheckFirstInit; }
 	void		SetCheckFirstInit(bool _checkFirstInit) { m_bCheckFirstInit = _checkFirstInit; }
 	bool		GetAttacked() { return m_bAttacked; }
 	void		SetAttacked(bool _attacked) { m_bAttacked = _attacked; }
 	void		SetResetFirstTime(bool _resetFirstTime) { m_bResetFirstTime = _resetFirstTime; }
 	int			GetHoldObjIdx() { return m_iHoldObjIdx; }
 	void		SetHoldObjIdx(int _idx) { m_iHoldObjIdx = _idx; }
+	void		SetRespawnPos(float _fX, float _fY) { m_fFirstX = _fX; m_fFirstY = _fY; }
 
 private:
 	void		SetRenderImage(HDC hDC);

@@ -28,17 +28,17 @@ void CStage3::Initialize()
 {
 	__super::m_iMapNum = 3;
 
-	CObjMgr::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CPlayer>::Create()); //잠깐 스3에서시작하기위한 용도
+	//CObjMgr::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CPlayer>::Create()); //잠깐 스3에서시작하기위한 용도
 
 	InsertBmps();
-	InsertUIs(); //잠깐 스3에서시작하기위한 용도
+	//InsertUIs(); //잠깐 스3에서시작하기위한 용도
 	InsertGimics();
 
 	CTileMgr::Get_Instance()->Load_Tile(3);
 	CLineMgr::Get_Instance()->Initialize();
 
 	CScrollMgr::Get_Instance()->Set_ScrollXY(WINCX / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX,
-		WINCY - -CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY);
+		WINCY / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY);
 	CUIMgr::Get_Instance()->Set_UINum(CUIIcon::UI_MAP, __super::m_iMapNum);
 
 	_bf.BlendOp = AC_SRC_OVER;
