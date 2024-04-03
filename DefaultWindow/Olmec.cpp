@@ -23,7 +23,6 @@ void COlmec::Initialize()
 	m_fSpeed = 1.5f;
 	m_iHp = 100000;
 	m_iAttackPower = 100000;
-	//m_iMoveX = 6.f;
 	m_pFrameKey = L"Olmec";
 	m_pVecTile = CTileMgr::Get_Instance()->Get_VecTile();
 
@@ -35,6 +34,9 @@ int COlmec::Update()
 {
 	if (m_bDead == true)
 		return OBJ_DEAD;
+
+	if (m_tInfo.fY > TILECY * TILEY - TILECY * 4)
+		return OBJ_NOEVENT;
 
 	Idle();
 	Rise();
@@ -49,7 +51,7 @@ void COlmec::Late_Update()
 	if (m_bCanSmash == true)
 		Gravity();
 
-	m_headLine->Set_Info(LINE(LINEPOINT{ m_tInfo.fX - TILECX * 1.6f , m_tInfo.fY - TILECY * 1.f}, LINEPOINT{ m_tInfo.fX + TILECX * 1.6f, m_tInfo.fY - TILECY * 1.f}));
+	m_headLine->Set_Info(LINE(LINEPOINT{ m_tInfo.fX - TILECX * 1.6f , m_tInfo.fY - TILECY * 1.2f}, LINEPOINT{ m_tInfo.fX + TILECX * 1.6f, m_tInfo.fY - TILECY * 1.2f}));
 
 	#ifdef _DEBUG
 
