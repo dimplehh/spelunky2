@@ -23,6 +23,7 @@ private:
 private:
 	void		InsertMonsters();
 	void		InsertBmps();
+	void		InsertItems();
 	void		InsertUIs();
 	void		InsertObstacles();
 	void		InsertBoxs();
