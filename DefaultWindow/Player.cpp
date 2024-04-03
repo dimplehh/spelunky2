@@ -16,6 +16,8 @@
 #include "SoundMgr.h"
 #include "SceneMgr.h"
 #include "TileMgr.h"
+#include "Effect.h"
+#include "EffectMgr.h"
 
 float g_fVolume(0.25f);
 
@@ -188,6 +190,7 @@ void CPlayer::TapZ()
 	{
 		if (m_iJumpCount < 1) //무한점프 방지
 		{
+			CEffectMgr::Get_Instance()->ActiveEffect(CEffect::EFFECT_DUST, m_tInfo.fX, m_tInfo.fY);
 			m_bJump = true;
 			m_eCurState = JUMP;
 			m_fTime = 0.f;

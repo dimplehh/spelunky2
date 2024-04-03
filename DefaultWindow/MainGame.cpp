@@ -12,6 +12,7 @@
 #include "TileMgr.h"
 #include "SoundMgr.h"
 #include "UIMgr.h"
+#include "EffectMgr.h"
 
 CMainGame::CMainGame() : m_iFPS(0), m_dwTime(GetTickCount())
 {
@@ -95,6 +96,7 @@ void CMainGame::Release()
 	CSceneMgr::Destroy();
 	CObjMgr::Destroy();
 	CUIMgr::Destroy();
+	CEffectMgr::Destroy();
 	CSoundMgr::Destroy_Instance();
 		
 	ReleaseDC(g_hWnd, m_hDC);

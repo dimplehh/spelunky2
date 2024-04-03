@@ -17,6 +17,7 @@ public:
 	CObj*		Get_UI() { return m_ObjList[OBJ_UI].back(); }
 	CObj*		Get_Target(OBJID eID, CObj* pObj);
 	int			GetHoldObjSize() { return m_ObjList[OBJ_HOLDOBJ].size(); }
+	list<CObj*>* GetEffectList() { return &m_ObjList[OBJ_EFFECT]; }
 	CHoldObj::HOLDOBJID GetHoldObjID(int _idx) 
 	{
 		if (_idx == -1)

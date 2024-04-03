@@ -17,6 +17,7 @@
 #include "Olmec.h"
 #include "HoldObj.h"
 #include "ObjMgr.h"
+#include "Effect.h"
 
 template<typename T>
 class CAbstractFactory

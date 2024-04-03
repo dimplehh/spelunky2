@@ -13,6 +13,8 @@
 #include "Obstacle.h"
 #include "UIIcon.h"
 #include "UIMgr.h"
+#include "EffectMgr.h"
+#include "DustEffect.h"
 #pragma comment(lib, "msimg32.lib")
 
 CStage::CStage()
@@ -33,6 +35,7 @@ void CStage::Initialize()
 	InsertBmps();
 	InsertUIs();
 	InsertGimics();
+	CEffectMgr::Get_Instance()->Initialize();
 	CTileMgr::Get_Instance()->Load_Tile(1);
 	CLineMgr::Get_Instance()->Initialize();
 	CScrollMgr::Get_Instance()->Set_ScrollXY(	WINCX / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX, 
@@ -132,6 +135,7 @@ void CStage::InsertBmps()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/SnakeFlip.bmp",	L"SnakeFlip");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/DecoLand1.bmp",		L"DecoLand1");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Font/Font.bmp",			L"Font");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Effect/DustEffect.bmp",	L"DustEffect");
 }
 
 void CStage::InsertUIs()
@@ -190,6 +194,12 @@ void CStage::InsertHoldObjs()
 	CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(TILECX * (50 + 0.5f), TILECY * (13 + 0.7f), CHoldObj::HOLDOBJ_STONE));
 }
 
+void CStage::InsertEffects()
+{
+	for(int i = 0; i < 5; i++)
+		CObjMgr::Get_Instance()->Add_Object(OBJ_EFFECT, CAbstractFactory<CDustEffect>::Create(0, 0));
+}
+
 void CStage::InsertGimics()
 {
 	InsertMonsters();
@@ -197,6 +207,7 @@ void CStage::InsertGimics()
 	InsertBoxs();
 	InsertChests();
 	InsertHoldObjs();
+	InsertEffects();
 }
 
 void CStage::ReleaseGimics()
@@ -209,4 +220,5 @@ void CStage::ReleaseGimics()
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_ITEM);
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_MONSTER);
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_BOMB);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_EFFECT);
 }
