@@ -12,6 +12,7 @@
 #include "AbstractFactory.h"
 #include "Bomb.h"
 #include "SoundMgr.h"
+#include "EffectMgr.h"
 
 extern float g_fVolume;
 
@@ -112,6 +113,8 @@ void COlmec::Phase0()
 	if (m_iPreFrameStart != m_tFrame.iFrameStart)
 	{
 		CSoundMgr::Get_Instance()->PlaySound(L"StoneBreak.wav", SOUND_EFFECT, g_fVolume);
+		if(m_tFrame.iFrameStart != 4)
+			CEffectMgr::Get_Instance()->ActiveEffect(CEffect::EFFECT_STONE, m_tInfo.fX, m_tInfo.fY);
 		m_iPreFrameStart = m_tFrame.iFrameStart;
 	}
 }
@@ -192,6 +195,7 @@ void COlmec::Smash()
 				Break();
 				m_bCheckOneTime = false;
 				CSoundMgr::Get_Instance()->PlaySound(L"Crush.wav", SOUND_EFFECT, g_fVolume);
+				CEffectMgr::Get_Instance()->ActiveEffect(CEffect::EFFECT_STONE, m_tInfo.fX, m_tInfo.fY);
 			}
 			if (CLineMgr::Get_Instance()->Collision_Olmec_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
 			{

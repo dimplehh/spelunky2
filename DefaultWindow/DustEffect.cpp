@@ -17,13 +17,13 @@ void CDustEffect::Initialize()
 	m_tInfo.fCX = 48.f;
 	m_tInfo.fCY = 48.f;
 		
-	m_iSize = 20;
+	m_iSize = 26;
 
 	m_pFrameKey = L"DustEffect";
 
 	m_eEffectID = EFFECT_DUST;
-	m_tFrame = { 0, 0, 0, 2, true, 300, GetTickCount(), 1 };
-	Set_Frame(0, 2, 0, true, 300, 0, 1);
+	m_tFrame = { 0, 0, 0, 2, true, 200, GetTickCount(), 1 };
+	Set_Frame(0, 2, 0, true, 200, 0, 1);
 
 	m_eRender = RENDER_EFFECT;
 }
@@ -38,6 +38,7 @@ int CDustEffect::Update()
 		int xs[5] = { 0, 5, 10, 20, 25 };
 
 		m_tInfo.fX += xs[rand() % 5];
+
 		m_dwTime = GetTickCount();
 		m_bCheckFirstTime = false;
 	}
