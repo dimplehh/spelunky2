@@ -9,6 +9,7 @@
 #include "Monster.h"
 #include "LineMgr.h"
 #include "Box.h"
+#include "Lava.h"
 #include "HoldObj.h"
 #include "Obstacle.h"
 #include "UIIcon.h"
@@ -136,6 +137,7 @@ void CStage3::InsertBmps()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Obstacle.bmp", L"Obstacle");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Chest.bmp", L"Chest");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/HoldObj.bmp", L"HoldObj");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Object/Lava.bmp", L"Lava");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/Snake.bmp", L"Snake");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/SnakeFlip.bmp", L"SnakeFlip");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/Frog.bmp", L"Frog");
@@ -205,6 +207,15 @@ void CStage3::InsertHoldObjs()
 	//CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(TILECX * (19 + 0.5f), TILECY * (6 + 0.5f), CHoldObj::HOLDOBJ_STONE));
 }
 
+void CStage3::InsertLava()
+{
+	CObjMgr::Get_Instance()->Add_Object(OBJ_LAVA, CAbstractFactory<CLava>::Create(TILECX * (7), TILECY * (24.5f)));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_LAVA, CAbstractFactory<CLava>::Create(TILECX * (17), TILECY * (24.5f)));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_LAVA, CAbstractFactory<CLava>::Create(TILECX * (27), TILECY * (24.5f)));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_LAVA, CAbstractFactory<CLava>::Create(TILECX * (37), TILECY * (24.5f)));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_LAVA, CAbstractFactory<CLava>::Create(TILECX * (47), TILECY * (24.5f)));
+}
+
 void CStage3::InsertGimics()
 {
 	InsertMonsters();
@@ -212,6 +223,7 @@ void CStage3::InsertGimics()
 	InsertBoxs();
 	InsertChests();
 	InsertHoldObjs();
+	InsertLava();
 }
 
 void CStage3::ReleaseGimics()
@@ -224,4 +236,5 @@ void CStage3::ReleaseGimics()
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_ITEM);
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_MONSTER);
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_BOMB);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_LAVA);
 }
