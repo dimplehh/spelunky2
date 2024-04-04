@@ -24,7 +24,7 @@ float g_fVolume(0.25f);
 CPlayer::CPlayer()
 	: m_fDistance(0.f), m_bJump(false), m_bLadder(false), m_iJumpCount(0), m_iHp(4), m_fPreY(0.f), m_fCurY(0.f), m_bCanHang(false), m_fDiffY(0.f),
 	m_fTime(0.f), m_fPower(0.f), m_ePreState(ST_END), m_eCurState(IDLE), m_bKneelDown(false), m_bAttachedBox(false), m_bIsHold(false), m_bCanHold(false), 
-	m_bThrow(false), m_bAttacked(false), m_dwTime(GetTickCount()), m_fFirstX(TILECX * (57 + m_tInfo.fCX / 2)), m_fFirstY(TILECY * (12 + m_tInfo.fCY / 2))
+	m_bThrow(false), m_bAttacked(false), m_dwTime(GetTickCount()), m_fFirstX(TILECX * (57 + m_tInfo.fCX / 2)), m_fFirstY(TILECY * (20 + m_tInfo.fCY / 2))
 {
 	m_eMyObjType = OBJECT_TYPE::PLAYER;
 }

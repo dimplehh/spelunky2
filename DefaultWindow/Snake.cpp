@@ -90,7 +90,7 @@ void CSnake::Motion_Change()
 
 void CSnake::Idle()
 {
-	if (CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
+	if (CLineMgr::Get_Instance()->Collision_MonsterLine(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
 	{
 		m_tInfo.fX += m_fSpeed;
 	}

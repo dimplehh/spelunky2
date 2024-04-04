@@ -43,7 +43,8 @@ int CHoldObj::Update()
 
 void CHoldObj::Late_Update()
 {
-	if (dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetHoldObjIdx() != m_iIdx)
+	if (dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetHoldObjIdx() != m_iIdx && 
+		dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetCanHold() == false)
 		return ;
 
 	if (dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->GetThrow() == true)
