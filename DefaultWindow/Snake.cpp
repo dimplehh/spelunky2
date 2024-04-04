@@ -6,6 +6,8 @@
 #include "ObjMgr.h"
 #include "Obj.h"
 #include "Player.h"
+#include "Effect.h"
+#include "EffectMgr.h"
 
 CSnake::CSnake()  :m_ePreState(ST_END), m_eCurState(IDLE), m_dwTime(GetTickCount())
 {
@@ -29,7 +31,15 @@ void CSnake::Initialize()
 int CSnake::Update()
 {
 	if (m_iHp <= 0)
-		return OBJ_DEAD;
+	{
+		if (m_bCheckOneTime == true)
+		{
+			CEffectMgr::Get_Instance()->ActiveEffect(CEffect::EFFECT_STAR, m_tInfo.fX, m_tInfo.fY + m_tInfo.fCY / 3 * 2);
+			m_bCheckOneTime = false;
+		}
+		if(CEffectMgr::Get_Instance()->GetEffectEnd(CEffect::EFFECT_STAR) == true)
+			return OBJ_DEAD;
+	}
 
 	Idle();
 	Attack();
@@ -44,16 +54,6 @@ void CSnake::Late_Update()
 	Gravity();
 	Motion_Change();
 	__super::Move_Frame();
-
-	
-//#ifdef _DEBUG
-//
-//	if (m_dwTime + 1000 < GetTickCount())
-//	{
-//		cout << m_iHp << endl;
-//		m_dwTime = GetTickCount();
-//	}
-//#endif
 }
 
 void CSnake::Render(HDC hDC)

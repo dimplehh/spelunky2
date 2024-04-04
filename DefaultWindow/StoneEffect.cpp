@@ -22,8 +22,8 @@ void CStoneEffect::Initialize()
 	m_pFrameKey = L"StoneEffect";
 
 	m_eEffectID = EFFECT_STONE;
-	m_tFrame = { 0, 4, 0, 4, true, 300, GetTickCount(), 1 };
-	Set_Frame(0, 4, 0, true, 300, 0, 4);
+	m_tFrame = { 0, 3, 0, 3, true, 300, GetTickCount(), 1 };
+	Set_Frame(0, 3, 0, true, 300, 0, 4);
 
 	m_eRender = RENDER_EFFECT;
 }

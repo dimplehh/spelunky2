@@ -12,6 +12,7 @@ private:
 public:
 	void	Initialize();
 	void	ActiveEffect(CEffect::EFFECTID _id, float _fX, float _fY);
+	bool	GetEffectEnd(CEffect::EFFECTID _id);
 
 public:
 	static CEffectMgr* Get_Instance()

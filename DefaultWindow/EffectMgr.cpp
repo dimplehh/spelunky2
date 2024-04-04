@@ -31,3 +31,17 @@ void CEffectMgr::ActiveEffect(CEffect::EFFECTID _id, float _fX, float _fY)
 	}
 }
 
+bool CEffectMgr::GetEffectEnd(CEffect::EFFECTID _id)
+{
+	for (auto iter = m_pEffectList->begin(); iter != m_pEffectList->end(); iter++)
+	{
+
+		if (dynamic_cast<CEffect*>(*iter)->GetEffectID() == _id)
+		{
+			if (dynamic_cast<CEffect*>(*iter)->GetActive() == false)
+				return true;
+		}
+	}
+	return false;
+}
+

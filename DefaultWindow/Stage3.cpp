@@ -17,6 +17,7 @@
 #include "EffectMgr.h"
 #include "DustEffect.h"
 #include "StoneEffect.h"
+#include "StarEffect.h"
 #pragma comment(lib, "msimg32.lib")
 
 CStage3::CStage3()
@@ -156,6 +157,7 @@ void CStage3::InsertBmps()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Font/Font.bmp", L"Font");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Effect/DustEffect.bmp", L"DustEffect");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Effect/StoneEffect.bmp", L"StoneEffect");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Effect/StarEffect.bmp", L"StarEffect");
 }
 
 void CStage3::InsertUIs()
@@ -211,10 +213,9 @@ void CStage3::InsertLava()
 
 void CStage3::InsertEffects()
 {
-	for (int i = 0; i < 10; i++)
-		CObjMgr::Get_Instance()->Add_Object(OBJ_EFFECT, CAbstractFactory<CDustEffect>::Create(0, 0));
-	for (int i = 0; i < 15; i++)
-		CObjMgr::Get_Instance()->Add_Object(OBJ_EFFECT, CAbstractFactory<CStoneEffect>::Create(0, 0));
+	for (int i = 0; i < 7; i++)		CObjMgr::Get_Instance()->Add_Object(OBJ_EFFECT, CAbstractFactory<CDustEffect>::Create(0, 0));
+	for (int i = 0; i < 15; i++)	CObjMgr::Get_Instance()->Add_Object(OBJ_EFFECT, CAbstractFactory<CStoneEffect>::Create(0, 0));
+	for (int i = 0; i < 10; i++)	CObjMgr::Get_Instance()->Add_Object(OBJ_EFFECT, CAbstractFactory<CStarEffect>::Create(0, 0));
 }
 
 void CStage3::InsertGimics()

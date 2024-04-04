@@ -35,6 +35,7 @@ private:
 
 	bool		m_bFirstAttack = true;
 	bool		m_bFirstDamaged = true;
+	bool		m_bCheckOneTime = true;
 private:
 	DWORD				m_dwTime;
 };
