@@ -121,7 +121,7 @@ private:
 	void		TapD();
 	void		TapA();
 	void		ResetAllStat();
-
+	void		StageChange();
 	void		ResetPlayer();
 	void		ResetScene(); //여기서 만드는거 아닐거같긴한데..
 
@@ -173,6 +173,7 @@ private:
 
 	bool		m_bCheckFirstInit = false;
 	bool		m_bResetFirstTime = true;
+	bool		m_bCanEnter = false;
 
 private:
 	DWORD				m_dwTime;

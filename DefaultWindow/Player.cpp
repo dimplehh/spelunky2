@@ -65,6 +65,8 @@ int CPlayer::Update()
 		return OBJ_NOEVENT;
 
 	Key_Input();
+
+	StageChange();
 	
 	__super::Update_Rect();
 
@@ -237,25 +239,8 @@ void CPlayer::TapA()
 	//if ((TILECX * 9 <= m_tInfo.fX && m_tInfo.fX <= TILECX * 11) && (TILECY * 12 <= m_tInfo.fY && m_tInfo.fY <= TILECY * 14)) // 동굴 입구 위치 ( 매 스테이지마다 바껴야 할 것)
 	//{
 		m_eCurState = ENTER;
-		ResetPlayer();
-		ResetScene();
-		
-		CSoundMgr::Get_Instance()->StopSound(SOUND_BGM);
-		wstring wStr = L"Stage" + to_wstring(CSceneMgr::Get_Instance()->GetRealScene()->GetMapNum() + 1) + L".wav";
-		const wchar_t* soundName = wStr.c_str();
-		CSoundMgr::Get_Instance()->PlayBGM((TCHAR*)soundName, g_fVolume);
-
-		switch (dynamic_cast<CScene*>(CSceneMgr::Get_Instance()->GetRealScene())->GetMapNum())
-		{
-		case 1:
-			CSceneMgr::Get_Instance()->Scene_Change(SC_STAGE2);
-			break;
-		case 2:
-			CSceneMgr::Get_Instance()->Scene_Change(SC_STAGE3);
-			break;
-		default:
-			break;
-		}
+		m_bCanEnter = true;
+		m_dwTime = GetTickCount();
 	//}
 }
 
@@ -453,6 +438,32 @@ void CPlayer::ResetScene()
 	}
 }
 
+void CPlayer::StageChange()
+{
+	if (m_bCanEnter == true && m_dwTime + 1000 < GetTickCount())
+	{
+		ResetPlayer();
+		ResetScene();
+		CSoundMgr::Get_Instance()->StopSound(SOUND_BGM);
+		wstring wStr = L"Stage" + to_wstring(CSceneMgr::Get_Instance()->GetRealScene()->GetMapNum() + 1) + L".wav";
+		const wchar_t* soundName = wStr.c_str();
+		CSoundMgr::Get_Instance()->PlayBGM((TCHAR*)soundName, g_fVolume);
+
+		switch (dynamic_cast<CScene*>(CSceneMgr::Get_Instance()->GetRealScene())->GetMapNum())
+		{
+		case 1:
+			CSceneMgr::Get_Instance()->Scene_Change(SC_STAGE2);
+			break;
+		case 2:
+			CSceneMgr::Get_Instance()->Scene_Change(SC_STAGE3);
+			break;
+		default:
+			break;
+		}
+		m_bCanEnter = false;
+	}
+}
+
 void CPlayer::FallDamage()
 {
 	if (m_bJump == false && !CLineMgr::Get_Instance()->Collision_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump) && m_eCurState != DIZZY)
@@ -546,33 +557,8 @@ void CPlayer::ResetAllStat()
 	m_bFirstGrounded = true;
 	m_iHoldObjIdx = -1;
 	m_iJumpCount = 0;
-
-	//float		m_fPower;
-	//float		m_fTime;
-
-	//STATE		m_ePreState;
-	//STATE		m_eCurState;
-
-	//float		m_fPreY = 0;
-	//float		m_fCurY = 0;
-	//float		m_fDiffY = 0;
-
-	//float		m_fMoveOffset = 0;
-
 	m_bAlmostFell = false;
 	m_bWallAttatched = false;
-
-	//bool		m_bRevival = false;
-
-	//bool		m_bFirstDieCheck = true;
-	//int			m_iDeathTime = 0;
-
-	//int			m_iRopeCount = 0;
-	//int			m_iBombCount = 0;
-	//int			m_iMoney = 0;
-
-	//bool		m_bCheckFirstInit = false;
-	//bool		m_bResetFirstTime = true;
 
 }
 
