@@ -39,12 +39,13 @@ private:
 	bool		m_bFirstGrounded	= true;
 	
 	bool		m_bCanJump			= false;
+	bool		m_bCheckOneTime = true;
+
 	
 	int			m_iJumpCycle		= 2;
 	int			m_iFirstGroundTime	= 0;
 	int			m_iMoveX			= 0;
 	float		m_fPreY				= 0;
-
 private:
-	DWORD		m_dwTime;
+	DWORD				m_dwTime;
 };

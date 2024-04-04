@@ -13,6 +13,10 @@
 #include "Obstacle.h"
 #include "UIIcon.h"
 #include "UIMgr.h"
+#include "DustEffect.h"
+#include "StarEffect.h"
+#include "BlinkEffect.h"
+#include "BombEffect.h"
 #pragma comment(lib, "msimg32.lib")
 
 CStage2::CStage2()
@@ -71,7 +75,7 @@ void CStage2::Render(HDC hDC)
 
 	CObjMgr::Get_Instance()->Render(hDC);
 	CTileMgr::Get_Instance()->Render(hDC);
-	CLineMgr::Get_Instance()->Render(hDC);
+	//CLineMgr::Get_Instance()->Render(hDC);
 	CObjMgr::Get_Instance()->RenderGhost(hDC);	// ui 전에 유령 렌더
 	CObjMgr::Get_Instance()->RenderUI(hDC);		// ui 가장 마지막에 렌더
 	FadeInOut(hDC);								// fade 효과 그보다 더 마지막에 렌더
@@ -139,33 +143,57 @@ void CStage2::InsertBmps()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/Ghost.bmp", L"Ghost");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/GhostFlip.bmp", L"GhostFlip");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Monster/GhostUp.bmp", L"GhostUp");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Effect/DustEffect.bmp", L"DustEffect");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Effect/StarEffect.bmp", L"StarEffect");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Effect/BlinkEffect.bmp", L"BlinkEffect");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Effect/BombEffect.bmp", L"BombEffect");
 }
 
 void CStage2::InsertMonsters()
 {
-	//CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(TILECX * (21 + 0.5f), TILECY * (6.5f), CMonster::SNAKE));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(TILECX * (40 + 0.5f), TILECY * (6.5f), CMonster::SNAKE));
 	CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(TILECX * (55 + 0.5f), TILECY * (6.5f), CMonster::FROG));
 	CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(WINCX + 50.f, -50.f, CMonster::GHOST));
 }
 
+void CStage2::InsertEffects()
+{
+	for (int i = 0; i < 10; i++)		CObjMgr::Get_Instance()->Add_Object(OBJ_EFFECT, CAbstractFactory<CDustEffect>::Create(0, 0));
+	for (int i = 0; i < 10; i++)	CObjMgr::Get_Instance()->Add_Object(OBJ_EFFECT, CAbstractFactory<CStarEffect>::Create(0, 0));
+	for (int i = 0; i < 6; i++)		CObjMgr::Get_Instance()->Add_Object(OBJ_EFFECT, CAbstractFactory<CBlinkEffect>::Create(0, 0));
+	for (int i = 0; i < 50; i++)	CObjMgr::Get_Instance()->Add_Object(OBJ_EFFECT, CAbstractFactory<CBombEffect>::Create(0, 0));
+}
+
 void CStage2::InsertObstacles()
 {
-	//CObjMgr::Get_Instance()->Add_Object(OBJ_OBSTACLE, CAbstractFactory<CObstacle>::Create(TILECX * (27 + 0.5f), TILECY * (6 + 0.5f)));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_OBSTACLE, CAbstractFactory<CObstacle>::Create(TILECX * (36 + 0.5f), TILECY * (2 + 0.5f)));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_OBSTACLE, CAbstractFactory<CObstacle>::Create(TILECX * (37 + 0.5f), TILECY * (2 + 0.5f)));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_OBSTACLE, CAbstractFactory<CObstacle>::Create(TILECX * (38 + 0.5f), TILECY * (2 + 0.5f)));
+
+	CObjMgr::Get_Instance()->Add_Object(OBJ_OBSTACLE, CAbstractFactory<CObstacle>::Create(TILECX * (36 + 0.5f), TILECY * (6 + 0.5f)));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_OBSTACLE, CAbstractFactory<CObstacle>::Create(TILECX * (37 + 0.5f), TILECY * (6 + 0.5f)));
+
+	CObjMgr::Get_Instance()->Add_Object(OBJ_OBSTACLE, CAbstractFactory<CObstacle>::Create(TILECX * (36 + 0.5f), TILECY * (8 + 0.5f)));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_OBSTACLE, CAbstractFactory<CObstacle>::Create(TILECX * (37 + 0.5f), TILECY * (8 + 0.5f)));
 }
 
 void CStage2::InsertBoxs()
 {
 	//CObjMgr::Get_Instance()->Add_Object(OBJ_BOX, CBoxFactory::Create(TILECX * (59 + 0.5f), TILECY * 10));
 	//CObjMgr::Get_Instance()->Add_Object(OBJ_BOX, CBoxFactory::Create(TILECX * (38 + 0.5f), TILECY * 17));
-	//CObjMgr::Get_Instance()->Add_Object(OBJ_BOX, CBoxFactory::Create(TILECX * (15 + 0.5f), TILECY * 1));
+	//CObjMgr::Get_Instance()->Add_Object(OBJ_BOX, CBoxFactory::Create(TILECX * (35 + 0.5f), TILECY * 1));
 }
 
 void CStage2::InsertChests()
 {
 	CObjMgr::Get_Instance()->Add_Object(OBJ_CHEST, CChestFactory::Create(TILECX * (50 + 0.5f), TILECY * (5.5f), CItem::ITEM_BOMB));
-	//CObjMgr::Get_Instance()->Add_Object(OBJ_CHEST, CChestFactory::Create(TILECX * (22 + 0.5f), TILECY * (6.5f), CItem::ITEM_ROPE));
-	//CObjMgr::Get_Instance()->Add_Object(OBJ_CHEST, CChestFactory::Create(TILECX * (24 + 0.5f), TILECY * (6.5f), CItem::ITEM_GEM));
-	//CObjMgr::Get_Instance()->Add_Object(OBJ_CHEST, CChestFactory::Create(TILECX * (26 + 0.5f), TILECY * (6.5f), CItem::ITEM_GOLD));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_CHEST, CChestFactory::Create(TILECX * (37 + 0.5f), TILECY * (4.5f), CItem::ITEM_BOMB));
+
+	CObjMgr::Get_Instance()->Add_Object(OBJ_CHEST, CChestFactory::Create(TILECX * (42 + 0.5f), TILECY * (6.5f), CItem::ITEM_ROPE));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_CHEST, CChestFactory::Create(TILECX * (44 + 0.5f), TILECY * (6.5f), CItem::ITEM_GEM));
+	
+	CObjMgr::Get_Instance()->Add_Object(OBJ_CHEST, CChestFactory::Create(TILECX * (46 + 0.5f), TILECY * (6.5f), CItem::ITEM_GOLD));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_CHEST, CChestFactory::CreateHoldChest(TILECX * (39 + 0.5f), TILECY * (14.5f), CHoldObj::HOLDOBJ_KEY));
 }
 
 void CStage2::InsertItems()
@@ -176,8 +204,6 @@ void CStage2::InsertItems()
 void CStage2::InsertHoldObjs()
 {
 	CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(TILECX * (60 + 0.5f), TILECY * (7 + 0.5f), CHoldObj::HOLDOBJ_JAR));
-	//CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(TILECX * (18 + 0.5f), TILECY * (4 + 0.5f), CHoldObj::HOLDOBJ_KEY));
-	//CObjMgr::Get_Instance()->Add_Object(OBJ_HOLDOBJ, CHoldObjFactory::Create(TILECX * (19 + 0.5f), TILECY * (6 + 0.5f), CHoldObj::HOLDOBJ_STONE));
 }
 
 void CStage2::InsertGimics()
@@ -188,6 +214,7 @@ void CStage2::InsertGimics()
 	InsertItems();
 	InsertChests();
 	InsertHoldObjs();
+	InsertEffects();
 }
 
 void CStage2::ReleaseGimics()
@@ -200,4 +227,5 @@ void CStage2::ReleaseGimics()
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_ITEM);
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_MONSTER);
 	CObjMgr::Get_Instance()->Delete_ID(OBJ_BOMB);
+	CObjMgr::Get_Instance()->Delete_ID(OBJ_EFFECT);
 }

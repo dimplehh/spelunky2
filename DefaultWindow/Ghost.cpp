@@ -41,7 +41,7 @@ int CGhost::Update()
 		__super::Update_Rect();
 	}
 
-	if (CUIMgr::Get_Instance()->Get_Time() < 10) //일단 10초 지나면 등장함
+	if (CUIMgr::Get_Instance()->Get_Time() < 30) //일단 10초 지나면 등장함
 		return OBJ_NOEVENT;
 
 	Follow();

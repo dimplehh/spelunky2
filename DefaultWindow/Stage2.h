@@ -25,6 +25,7 @@ private:
 	void		InsertBmps();
 	void		InsertItems();
 	void		InsertUIs();
+	void		InsertEffects();
 	void		InsertObstacles();
 	void		InsertBoxs();
 	void		InsertChests();

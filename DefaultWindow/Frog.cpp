@@ -6,6 +6,11 @@
 #include "ObjMgr.h"
 #include "Obj.h"
 #include "Player.h"
+#include "Effect.h"
+#include "EffectMgr.h"
+#include "SoundMgr.h"
+
+extern float g_fVolume;
 
 CFrog::CFrog() :m_ePreState(ST_END), m_eCurState(IDLE), m_dwTime(GetTickCount())
 {
@@ -31,7 +36,16 @@ void CFrog::Initialize()
 int CFrog::Update()
 {
 	if (m_iHp <= 0)
-		return OBJ_DEAD;
+	{
+		if (m_bCheckOneTime == true)
+		{
+			CEffectMgr::Get_Instance()->ActiveEffect(CEffect::EFFECT_STAR, m_tInfo.fX, m_tInfo.fY + m_tInfo.fCY / 3 * 2);
+			CSoundMgr::Get_Instance()->PlaySound(L"MonsterDie.wav", SOUND_EFFECT, g_fVolume);
+			m_bCheckOneTime = false;
+		}
+		if (CEffectMgr::Get_Instance()->GetEffectEnd(CEffect::EFFECT_STAR) == true)
+			return OBJ_DEAD;
+	}
 
 	Idle();
 	Jump();
