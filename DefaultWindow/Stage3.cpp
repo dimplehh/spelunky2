@@ -33,7 +33,7 @@ void CStage3::Initialize()
 {
 	__super::m_iMapNum = 3;
 
-	CObjMgr::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CPlayer>::Create()); //잠깐 스3에서시작하기위한 용도
+	//CObjMgr::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CPlayer>::Create()); //잠깐 스3에서시작하기위한 용도
 
 	float _responPosX = TILECX * (4 + 0.5f);
 	float _responPosY = TILECY * (5.5f);
@@ -41,7 +41,7 @@ void CStage3::Initialize()
 	CObjMgr::Get_Instance()->Get_Player()->Set_Pos(_responPosX, _responPosY);
 
 	InsertBmps();
-	InsertUIs(); //잠깐 스3에서시작하기위한 용도
+	//InsertUIs(); //잠깐 스3에서시작하기위한 용도
 	InsertGimics();
 
 	CEffectMgr::Get_Instance()->Initialize();

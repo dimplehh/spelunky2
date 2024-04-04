@@ -58,6 +58,11 @@ void CTile::Render(HDC hDC)
 		if (m_iOption == 1) m_pFrameKey = L"Tile5";
 		else if (m_iOption == 2) m_pFrameKey = L"Tile6";
 	}
+	else if (CSceneMgr::Get_Instance()->Get_Scene() == SC_STAGE4)
+	{
+		if (m_iOption == 1) m_pFrameKey = L"Tile7";
+		else if (m_iOption == 2) m_pFrameKey = L"Tile8";
+	}
 
 	HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
 	int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();

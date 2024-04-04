@@ -459,6 +459,12 @@ void CPlayer::StageChange()
 		case 2:
 			CSceneMgr::Get_Instance()->Scene_Change(SC_STAGE3);
 			break;
+		case 3:
+			CSceneMgr::Get_Instance()->Scene_Change(SC_STAGE4);
+			break;
+		case 4:
+			CSceneMgr::Get_Instance()->Scene_Change(SC_LOGO);
+			break;
 		default:
 			break;
 		}
