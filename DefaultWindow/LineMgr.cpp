@@ -167,25 +167,25 @@ bool CLineMgr::Collision_Line(float& fX, float& fY, float& fCX, float& fCY, bool
 
 	m_AttachedLine = nullptr;
 
-	if (!_Jumping) //점프 상태가 아닐 때만 지면과의 충돌판정하라는 뜻
+	for (auto& iter : m_BoxLineList)
 	{
-		for (auto& iter : m_BoxLineList)
+		if ((iter->Get_LineType() == CLine::FLOOR || iter->Get_LineType() == CLine::BOARD)
+			&& iter->Get_Info().tLPoint.fX <= fX && fX < iter->Get_Info().tRPoint.fX
+			/*&& fY >= iter->Get_Info().tLPoint.fY - fCY / 2*/)
 		{
-			if ((iter->Get_LineType() == CLine::FLOOR || iter->Get_LineType() == CLine::BOARD)
-				&& iter->Get_Info().tLPoint.fX <= fX && fX < iter->Get_Info().tRPoint.fX
-				&& fY >= iter->Get_Info().tLPoint.fY - fCY / 2)
-			{
-				m_fY = iter->Get_Info().tLPoint.fY;	
+			m_fY = iter->Get_Info().tLPoint.fY;
 
-				if (((fY + (fCY / 6.f)) <= m_fY) && (m_fY <= (fY + (fCY / 2.f))))
-				{
-					m_AttachedLine = iter;
-					fY = m_fY - (fCY / 2);
-					return true;
-				}
+			if (((fY + (fCY / 6.f)) <= m_fY) && (m_fY <= (fY + (fCY / 2.f))))
+			{
+				m_AttachedLine = iter;
+				fY = m_fY - (fCY / 2);
+				return true;
 			}
 		}
+	}
 
+	if (!_Jumping) //점프 상태가 아닐 때만 지면과의 충돌판정하라는 뜻
+	{
 		for (auto& iter : m_headLineList)
 		{
 			if ((iter->Get_LineType() == CLine::FLOOR || iter->Get_LineType() == CLine::BOARD)
@@ -234,7 +234,7 @@ bool CLineMgr::Collision_Line(float& fX, float& fY, float fCX, float fCY)
 	for (auto& iter : m_LineList)
 	{
 		if ((iter->Get_LineType() == CLine::FLOOR || iter->Get_LineType() == CLine::BOARD)
-			&& iter->Get_Info().tLPoint.fX <= fX && fX < iter->Get_Info().tRPoint.fX
+			&& iter->Get_Info().tLPoint.fX < fX && fX < iter->Get_Info().tRPoint.fX
 			&& fY >= iter->Get_Info().tLPoint.fY - fCY / 2)
 		{
 			m_fY = iter->Get_Info().tLPoint.fY;										//플레이어 위치를 변경시켜주는 부분

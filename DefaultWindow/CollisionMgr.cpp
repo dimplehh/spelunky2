@@ -138,41 +138,47 @@ void CCollisionMgr::Collision_RectHoldMon(list<CObj*> _Dst, list<CObj*> _Src)
 void CCollisionMgr::Collision_RectEx(CObj* Dst, CObj* Src)
 {
 	float	fX(0.f), fY(0.f);
-
-	if (Check_Rect(Dst, Src, &fX, &fY))
+	if (CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY < Dst->Get_Info().fY - TILECY / 2 + 10)
+		dynamic_cast<CPlayer*>(Src)->SetAttachedBox(false);
+	else if(CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX <= Dst->Get_Info().fX - TILECX / 2 + 5
+		|| Dst->Get_Info().fX + TILECX / 2 - 5 <= CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX)
 	{
-		if (OBJECT_TYPE::BOX == Dst->Get_MyObjType() && CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY >= Dst->Get_Info().fY)
-		{
-			if (fX <= fY)		// 谅快 面倒
-			{
-				// 谅 面倒
-				if (Dst->Get_Info().fX < Src->Get_Info().fX)
-				{
-					Dst->Set_PosX(-fX);
-				}
-				// 快 面倒
-				else
-				{
-					Dst->Set_PosX(fX);
-				}
-			}
-		}
-		Dst->SetCollision(true);
-		Src->SetCollision(true);
-		if (OBJECT_TYPE::PLAYER == Src->Get_MyObjType())
+		if (Check_Rect(Dst, Src, &fX, &fY))
 		{
 			if (OBJECT_TYPE::BOX == Dst->Get_MyObjType())
 			{
-				Dst->SetCollision(true);
-				Src->SetCollision(true);
-				if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::HOLD || 
-					CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::HOLD)
-					dynamic_cast<CPlayer*>(Src)->SetAttachedBox(true);
+				int playerY = CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY;
+				int BoxY = Dst->Get_Info().fY;
+
+				if (fX <= fY)		// 谅快 面倒
+				{
+					// 谅 面倒
+					if (Dst->Get_Info().fX < Src->Get_Info().fX)
+					{
+						Dst->Set_PosX(-fX);
+					}
+					// 快 面倒
+					else
+					{
+						Dst->Set_PosX(fX);
+					}
+				}
+			}
+			Dst->SetCollision(true);
+			Src->SetCollision(true);
+			if (OBJECT_TYPE::PLAYER == Src->Get_MyObjType())
+			{
+				if (OBJECT_TYPE::BOX == Dst->Get_MyObjType())
+				{
+					Dst->SetCollision(true);
+					Src->SetCollision(true);
+					if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::LEFT) == KEY_STATE::HOLD ||
+						CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::RIGHT) == KEY_STATE::HOLD)
+						dynamic_cast<CPlayer*>(Src)->SetAttachedBox(true);
+				}
 			}
 		}
 	}
-	else
-		dynamic_cast<CPlayer*>(Src)->SetAttachedBox(false);
 }
 
 void CCollisionMgr::Collision_RectChest(CObj* Dst, CObj* Src)
