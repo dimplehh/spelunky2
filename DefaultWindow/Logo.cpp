@@ -5,7 +5,7 @@
 #include "SceneMgr.h"
 #include "SoundMgr.h"
 
-extern float g_fVolume;
+extern float g_fBgmVolume;
 
 CLogo::CLogo()
 {
@@ -21,7 +21,7 @@ void CLogo::Initialize()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Logo/Title.bmp", L"Logo");
 	m_tFrame = { 0, 5, 0, 5, true, 80, GetTickCount(), 0 };
 	m_pFrameKey = L"Logo";
-	CSoundMgr::Get_Instance()->PlayBGM(L"Menu.wav", g_fVolume);
+	CSoundMgr::Get_Instance()->PlayBGM(L"Menu.wav", g_fBgmVolume);
 }
 
 int CLogo::Update()

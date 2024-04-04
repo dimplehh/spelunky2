@@ -19,7 +19,8 @@
 #include "Effect.h"
 #include "EffectMgr.h"
 
-float g_fVolume(0.25f);
+float g_fBgmVolume(0.3f);
+float g_fVolume(1.f);
 
 CPlayer::CPlayer()
 	: m_fDistance(0.f), m_bJump(false), m_bLadder(false), m_iJumpCount(0), m_iHp(4), m_fPreY(0.f), m_fCurY(0.f), m_bCanHang(false), m_fDiffY(0.f),
@@ -56,7 +57,7 @@ void CPlayer::Initialize()
 	wstring wStr = L"Stage" + to_wstring(CSceneMgr::Get_Instance()->GetRealScene()->GetMapNum()) + L".wav";
 	const wchar_t* soundName = wStr.c_str();
 
-	CSoundMgr::Get_Instance()->PlayBGM((TCHAR*)soundName, g_fVolume);
+	CSoundMgr::Get_Instance()->PlayBGM((TCHAR*)soundName, g_fBgmVolume);
 }
 
 int CPlayer::Update()
@@ -241,6 +242,7 @@ void CPlayer::TapA()
 		m_eCurState = ENTER;
 		m_bCanEnter = true;
 		m_dwTime = GetTickCount();
+		CSoundMgr::Get_Instance()->PlaySound(L"Enter.wav", SOUND_EFFECT, g_fVolume);
 	//}
 }
 
@@ -447,7 +449,7 @@ void CPlayer::StageChange()
 		CSoundMgr::Get_Instance()->StopSound(SOUND_BGM);
 		wstring wStr = L"Stage" + to_wstring(CSceneMgr::Get_Instance()->GetRealScene()->GetMapNum() + 1) + L".wav";
 		const wchar_t* soundName = wStr.c_str();
-		CSoundMgr::Get_Instance()->PlayBGM((TCHAR*)soundName, g_fVolume);
+		CSoundMgr::Get_Instance()->PlayBGM((TCHAR*)soundName, g_fBgmVolume);
 
 		switch (dynamic_cast<CScene*>(CSceneMgr::Get_Instance()->GetRealScene())->GetMapNum())
 		{
@@ -474,6 +476,7 @@ void CPlayer::FallDamage()
 	{
 		SetHp(-1);
 		m_eCurState = DIZZY;
+		CSoundMgr::Get_Instance()->PlaySound(L"Hit.wav", SOUND_EFFECT, g_fVolume);
 	}
 }
 
