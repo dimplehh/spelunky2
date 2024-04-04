@@ -43,6 +43,7 @@ int CBomb::Update()
 
 	if(m_dwTime + 3000 < GetTickCount())
 	{
+		CEffectMgr::Get_Instance()->ActiveEffect(CEffect::EFFECT_BOMB, m_tInfo.fX, m_tInfo.fY);
 		Explosion();
 	}
 
@@ -178,7 +179,6 @@ bool CBomb::Gravity()
 void CBomb::Release()
 {
 	CSoundMgr::Get_Instance()->PlaySound(L"Eruption.wav", SOUND_EFFECT, g_fVolume);
-	CEffectMgr::Get_Instance()->ActiveEffect(CEffect::EFFECT_BOMB, m_tInfo.fX, m_tInfo.fY);
 }
 
 

@@ -24,7 +24,7 @@ float g_fVolume(0.25f);
 CPlayer::CPlayer()
 	: m_fDistance(0.f), m_bJump(false), m_bLadder(false), m_iJumpCount(0), m_iHp(4), m_fPreY(0.f), m_fCurY(0.f), m_bCanHang(false), m_fDiffY(0.f),
 	m_fTime(0.f), m_fPower(0.f), m_ePreState(ST_END), m_eCurState(IDLE), m_bKneelDown(false), m_bAttachedBox(false), m_bIsHold(false), m_bCanHold(false), 
-	m_bThrow(false), m_bAttacked(false), m_dwTime(GetTickCount()), m_fFirstX(TILECX * (57 + m_tInfo.fCX / 2)), m_fFirstY(TILECY * (20 + m_tInfo.fCY / 2))
+	m_bThrow(false), m_bAttacked(false), m_dwTime(GetTickCount()), m_fFirstX(TILECX * (21 + m_tInfo.fCX / 2)), m_fFirstY(TILECY * (2 + m_tInfo.fCY / 2))
 {
 	m_eMyObjType = OBJECT_TYPE::PLAYER;
 }
@@ -181,6 +181,7 @@ void CPlayer::TapZ()
 {
 	if (m_bKneelDown == true)	// 하향점프
 	{
+		m_eCurState = IDLE;
 		if (CLineMgr::Get_Instance()->Collision_Board_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
 		{
 			m_tInfo.fY += 50;
@@ -268,6 +269,9 @@ void CPlayer::HoldLeft()
 	}
 	else if (m_bAttachedBox)
 	{
+		m_bIsHold = false;
+		m_bCanHold = false;
+		m_bThrow = false;
 		m_eCurState = PUSH;
 		m_tInfo.fX -= m_fSpeed * 0.5f;
 	}
@@ -304,6 +308,9 @@ void CPlayer::HoldRight()
 	}
 	else if (m_bAttachedBox)
 	{
+		m_bIsHold = false;
+		m_bCanHold = false;
+		m_bThrow = false;
 		m_eCurState = PUSH;
 		m_tInfo.fX += m_fSpeed * 0.5f;
 	}

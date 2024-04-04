@@ -22,7 +22,7 @@ void CBombEffect::Initialize()
 	m_eEffectID = EFFECT_BOMB;
 	m_tFrame = { 0, 3, 0, 3, true, 200, GetTickCount(), 1 };
 	Set_Frame(0, 3, 0, true, 200, 0, 1);
-
+	m_iSize = m_iMinSize;
 	m_eRender = RENDER_EFFECT;
 }
 
@@ -37,24 +37,25 @@ int CBombEffect::Update()
 		float ys[8] = {1, 1, -1, -1, 1.4f, -1.4f, 0, 0};
 
 		int random = rand() % 8;
-		m_fAddX = xs[random] * 0.2f;
-		m_fAddY = ys[random] * 0.2f;
 
-		int random2 = rand() % 8;
-		m_iSpeed = random2 * 2;
+		m_fAddX = xs[random] * 0.5f;
+		m_fAddY = ys[random] * 0.5f;
+
+		int random2 = rand() % 4;
+		m_iSpeed = random2;
 
 		m_dwTime = GetTickCount();
 		m_bCheckFirstTime = false;
 	}
 
 	m_tInfo.fX += m_fAddX * m_iSpeed;
-	m_tInfo.fY += m_fAddY * m_iSpeed;;
+	m_tInfo.fY += m_fAddY * m_iSpeed;
 
-	if (m_dwTime + 500 < GetTickCount())
+	if (m_dwTime + 300 < GetTickCount())
 	{
 		m_bIsActive = false;
 		m_bCheckFirstTime = true;
-		m_iSize = m_iMinSize;
+		m_iSize = m_iMaxSize;
 	}
 
 	__super::Update_Rect();

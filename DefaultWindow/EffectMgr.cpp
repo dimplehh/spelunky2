@@ -25,6 +25,7 @@ void CEffectMgr::ActiveEffect(CEffect::EFFECTID _id, float _fX, float _fY)
 
 		if (dynamic_cast<CEffect*>(*iter)->GetEffectID() == _id)
 		{
+			(*iter)->Initialize();
 			(*iter)->Set_Pos(_fX, _fY);
 			dynamic_cast<CEffect*>(*iter)->SetActive(true);
 		}
