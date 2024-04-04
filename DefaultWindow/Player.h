@@ -33,6 +33,7 @@ public:
 	int			GetDeathTime() { return m_iDeathTime; }
 	int			GetHp() { return m_iHp; }
 	void		SetHp(int _num);
+	void		ResetHp(int _num);
 	int			GetRopeCount() { return m_iRopeCount; };
 	void		SetRopeCount() { m_iRopeCount = 0; CUIMgr::Get_Instance()->Set_UINum(CUIIcon::UI_ROPE, m_iRopeCount); }
 	bool		SetRopeCount(int _num)

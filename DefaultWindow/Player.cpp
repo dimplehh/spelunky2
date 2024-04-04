@@ -416,8 +416,7 @@ void CPlayer::ResetPlayer()
 		WINCY / 2 - CObjMgr::Get_Instance()->Get_Player()->Get_Info().fY);
 
 	m_eCurState = IDLE;
-	SetHp(0);
-	SetHp(4);
+	ResetHp(4);
 	ResetNum();
 	CUIMgr::Get_Instance()->Reset_Time();
 	m_iDeathTime = CUIMgr::Get_Instance()->Get_Time();
@@ -523,6 +522,13 @@ void CPlayer::SetHp(int _num)
 
 	if (_num < 0)
 		m_eCurState = DIZZY;
+}
+
+void CPlayer::ResetHp(int _num)
+{
+	m_iHp = _num;
+	CUIMgr::Get_Instance()->Set_UINum(CUIIcon::UI_HP, m_iHp);
+	return;
 }
 
 void CPlayer::Offset()
