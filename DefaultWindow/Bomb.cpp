@@ -7,6 +7,8 @@
 #include "ObjMgr.h"
 #include "Player.h"
 #include "Bomb.h"
+#include "Effect.h"
+#include "EffectMgr.h"
 
 extern float g_fVolume;
 
@@ -176,6 +178,7 @@ bool CBomb::Gravity()
 void CBomb::Release()
 {
 	CSoundMgr::Get_Instance()->PlaySound(L"Eruption.wav", SOUND_EFFECT, g_fVolume);
+	CEffectMgr::Get_Instance()->ActiveEffect(CEffect::EFFECT_BOMB, m_tInfo.fX, m_tInfo.fY);
 }
 
 

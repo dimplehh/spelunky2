@@ -17,6 +17,7 @@
 #include "DustEffect.h"
 #include "StarEffect.h"
 #include "BlinkEffect.h"
+#include "BombEffect.h"
 #pragma comment(lib, "msimg32.lib")
 
 CStage::CStage()
@@ -140,6 +141,7 @@ void CStage::InsertBmps()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Effect/DustEffect.bmp",	L"DustEffect");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Effect/StarEffect.bmp",	L"StarEffect");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Effect/BlinkEffect.bmp", L"BlinkEffect");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Effect/BombEffect.bmp", L"BombEffect");
 }
 
 void CStage::InsertUIs()
@@ -166,7 +168,7 @@ void CStage::InsertUIs()
 void CStage::InsertMonsters()
 {
 	CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(TILECX * (41 + 0.5f), TILECY * (10.5f), CMonster::SNAKE));
-	CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(TILECX * (55 + 0.5f), TILECY * (10.5f), CMonster::SNAKE));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(TILECX * (53 + 0.5f), TILECY * (10.5f), CMonster::SNAKE));
 }
 
 void CStage::InsertObstacles()
@@ -202,7 +204,8 @@ void CStage::InsertEffects()
 {
 	for(int i = 0; i < 10; i++)		CObjMgr::Get_Instance()->Add_Object(OBJ_EFFECT, CAbstractFactory<CDustEffect>::Create(0, 0));
 	for (int i = 0; i < 10; i++)	CObjMgr::Get_Instance()->Add_Object(OBJ_EFFECT, CAbstractFactory<CStarEffect>::Create(0, 0));
-	for (int i = 0; i < 6; i++)	CObjMgr::Get_Instance()->Add_Object(OBJ_EFFECT, CAbstractFactory<CBlinkEffect>::Create(0, 0));
+	for (int i = 0; i < 6; i++)		CObjMgr::Get_Instance()->Add_Object(OBJ_EFFECT, CAbstractFactory<CBlinkEffect>::Create(0, 0));
+	for (int i = 0; i < 100; i++)	CObjMgr::Get_Instance()->Add_Object(OBJ_EFFECT, CAbstractFactory<CBombEffect>::Create(0, 0));
 }
 
 void CStage::InsertGimics()
