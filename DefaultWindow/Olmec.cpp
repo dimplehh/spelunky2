@@ -42,8 +42,11 @@ int COlmec::Update()
 	if (m_bDead == true)
 		return OBJ_DEAD;
 
-	if (m_tInfo.fY > TILECY * TILEY - TILECY * 1) //용암에 빠졌을 경우 모든 동작을 멈춤
+	if (m_tInfo.fY > TILECY * TILEY - TILECY * 6) //용암에 빠졌을 경우 모든 동작을 멈춤
+	{
+		m_bInLava = true;
 		return OBJ_NOEVENT;
+	}
 
 	switch (m_iPhase)
 	{
@@ -68,7 +71,8 @@ void COlmec::Late_Update()
 	if (m_bCanSmash == true)
 		Gravity();
 
-	m_headLine->Set_Info(LINE(LINEPOINT{ m_tInfo.fX - TILECX * 1.6f , m_tInfo.fY - TILECY * 0.7f}, LINEPOINT{ m_tInfo.fX + TILECX * 1.6f, m_tInfo.fY - TILECY * 0.7f}));
+	if(m_bInLava == false)
+		m_headLine->Set_Info(LINE(LINEPOINT{ m_tInfo.fX - TILECX * 1.6f , m_tInfo.fY - TILECY * 0.7f}, LINEPOINT{ m_tInfo.fX + TILECX * 1.6f, m_tInfo.fY - TILECY * 0.7f}));
 
 	Motion_Change();
 	__super::Move_Frame();
@@ -81,8 +85,16 @@ void COlmec::Render(HDC hDC)
 
 	HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
 
-	GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, (int)m_tInfo.fCX, (int)m_tInfo.fCY, hMemDC,
-		m_tFrame.iFrameStart * (int)m_tInfo.fCX, m_tFrame.iMotion * (int)m_tInfo.fCY, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(81, 81, 81));
+	if(m_bInLava == false)
+		GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, (int)m_tInfo.fCX, (int)m_tInfo.fCY, hMemDC,
+			m_tFrame.iFrameStart * (int)m_tInfo.fCX, m_tFrame.iMotion * (int)m_tInfo.fCY, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(81, 81, 81));
+	else
+	{
+		m_headLine->Set_Info(LINE(LINEPOINT{ m_tInfo.fX - TILECX * 1.6f , m_tInfo.fY + TILECY * 6 - TILECY * 0.7f }, LINEPOINT{ m_tInfo.fX + TILECX * 1.6f, m_tInfo.fY + TILECY * 6 - TILECY * 0.7f }));
+		GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + TILECY * 3 + iScrollY, (int)m_tInfo.fCX, (int)m_tInfo.fCY, hMemDC,
+			m_tFrame.iFrameStart * (int)m_tInfo.fCX, m_tFrame.iMotion * (int)m_tInfo.fCY, (int)m_tInfo.fCX, (int)m_tInfo.fCY, RGB(81, 81, 81));
+	}
+
 }
 
 void COlmec::Release()
@@ -351,7 +363,7 @@ void COlmec::Motion_Change() //차후 폭탄 발사 시 울맥 벌어질 때 필요
 		switch (m_eCurState)
 		{
 		//case COlmec::CUTSCENE:	Set_Frame(0, 4, 0, false, 150, 0, 4);		break;		//빨리 테스트하기용
-		case COlmec::CUTSCENE:	Set_Frame(0, 4, 0, false, 1500, 0, 4);		break;
+		case COlmec::CUTSCENE:	Set_Frame(0, 4, 0, false, 150, 0, 4);		break;
 		case COlmec::IDLE:		Set_Frame(0, 0, 0, true, 120, 0, 7);		break;
 		case COlmec::ATTACK:	Set_Frame(0, 3, 0, false, 120, 0, 7);		break;
 		case COlmec::ATTACKEND:	Set_Frame(3, 6, 0, false, 120, 0, 7);		break;

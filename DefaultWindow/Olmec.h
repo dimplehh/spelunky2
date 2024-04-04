@@ -82,6 +82,8 @@ private:
 	bool		m_bFirstAttack = true;
 	bool		m_bCanBroken = false;
 
+	bool		m_bInLava = false;
+
 	STATE		m_ePreState;
 	STATE		m_eCurState;
 

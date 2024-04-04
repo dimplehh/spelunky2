@@ -132,7 +132,7 @@ void CLineMgr::MakeEtcLine2()
 void CLineMgr::MakeEtcLine3()
 {
 	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 2 * TILECX, 1 * TILECY }, LINEPOINT{ (TILEX - 2) * TILECX, 1 * TILECY }, CLine::CEILING));							// ÃµÀå
-	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 2 * TILECX, (TILEY - 1) * TILECY }, LINEPOINT{ (TILEX - 2) * TILECX, (TILEY - 1) * TILECY }, CLine::FLOOR));		// ¹Ù´Ú
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 2 * TILECX, (TILEY - 4) * TILECY }, LINEPOINT{ (TILEX - 2) * TILECX, (TILEY - 4) * TILECY }, CLine::FLOOR));		// ¹Ù´Ú
 	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 2 * TILECX, 1 * TILECY }, LINEPOINT{ 2 * TILECX, (TILEY - 2) * TILECY }, CLine::RIGHTWALL));						// ¿ÞÂÊ º®
 	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ (TILEX - 2) * TILECX, 1 * TILECY }, LINEPOINT{ (TILEX - 2) * TILECX, (TILEY - 2) * TILECY }, CLine::LEFTWALL));	// ¿À¸¥ÂÊ º®
 }
