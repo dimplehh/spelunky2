@@ -22,6 +22,7 @@ private:
 
 private:
 	void		InsertBmps();
+	void		InsertItems();
 	void		InsertChests();
 	void		InsertHoldObjs();
 	void		InsertEffects();

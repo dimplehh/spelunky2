@@ -28,7 +28,7 @@ void CStage2::Initialize()
 {
 	__super::m_iMapNum = 2;
 
-	float _responPosX = TILECX * (60 + 0.5f);
+	float _responPosX = TILECX * (60.f);
 	float _responPosY = TILECY * (3.5f);
 	dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetRespawnPos(_responPosX, _responPosY);
 	CObjMgr::Get_Instance()->Get_Player()->Set_Pos(_responPosX, _responPosY);

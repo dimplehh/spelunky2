@@ -30,6 +30,7 @@ private:
 	void		InsertHoldObjs();
 	void		InsertLava();
 	void		InsertEffects();
+	void		InsertItems();
 
 private:
 	BLENDFUNCTION	_bf = {};

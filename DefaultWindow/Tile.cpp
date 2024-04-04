@@ -40,8 +40,8 @@ void CTile::Render(HDC hDC)
 {
 	if (CSceneMgr::Get_Instance()->Get_Scene() == SC_EDIT)
 	{
-		if (m_iOption == 1) m_pFrameKey = L"Tile5";
-		else if (m_iOption == 2) m_pFrameKey = L"Tile6";
+		if (m_iOption == 1) m_pFrameKey = L"Tile7";
+		else if (m_iOption == 2) m_pFrameKey = L"Tile8";
 	}
 	else if (CSceneMgr::Get_Instance()->Get_Scene() == SC_STAGE)
 	{

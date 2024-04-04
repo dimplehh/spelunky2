@@ -7,6 +7,9 @@
 #include "LineMgr.h"
 #include "ScrollMgr.h"
 #include "BmpMgr.h"
+#include "AbstractFactory.h"
+#include "DustEffect.h"
+#include "StarEffect.h"
 
 CStage4::CStage4()
 {
@@ -14,13 +17,14 @@ CStage4::CStage4()
 
 CStage4::~CStage4()
 {
+	Release();
 }
 
 void CStage4::Initialize()
 {
 	__super::m_iMapNum = 4;
-	float _responPosX = TILECX * (4 + 0.5f);
-	float _responPosY = TILECY * (5.5f);
+	float _responPosX = TILECX * (16.5f);
+	float _responPosY = TILECY * (14.5f);
 	dynamic_cast<CPlayer*>(CObjMgr::Get_Instance()->Get_Player())->SetRespawnPos(_responPosX, _responPosY);
 	CObjMgr::Get_Instance()->Get_Player()->Set_Pos(_responPosX, _responPosY);
 
@@ -94,8 +98,19 @@ void CStage4::InsertBmps()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Effect/BlinkEffect.bmp", L"BlinkEffect");
 }
 
+void CStage4::InsertItems()
+{
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CItemFactory::Create(TILECX * (23 + 0.5f), TILECY * (10.5f), CItem::ITEM_GOLD));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CItemFactory::Create(TILECX * (24 + 0.5f), TILECY * (10.5f), CItem::ITEM_GOLD));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CItemFactory::Create(TILECX * (25 + 0.5f), TILECY * (10.5f), CItem::ITEM_GOLD));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CItemFactory::Create(TILECX * (27 + 0.5f), TILECY * (10.5f), CItem::ITEM_GOLD));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CItemFactory::Create(TILECX * (28 + 0.5f), TILECY * (10.5f), CItem::ITEM_GOLD));
+}
+
 void CStage4::InsertChests()
 {
+	CObjMgr::Get_Instance()->Add_Object(OBJ_CHEST, CChestFactory::Create(TILECX * (25 + 0.5f), TILECY * (13.5f), CItem::ITEM_ROPE));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_CHEST, CChestFactory::CreateHoldChest(TILECX * (26 + 0.5f), TILECY * (10.5f), CHoldObj::HOLDOBJ_KEY));
 }
 
 void CStage4::InsertHoldObjs()
@@ -104,11 +119,14 @@ void CStage4::InsertHoldObjs()
 
 void CStage4::InsertEffects()
 {
+	for (int i = 0; i < 10; i++)	CObjMgr::Get_Instance()->Add_Object(OBJ_EFFECT, CAbstractFactory<CDustEffect>::Create(0, 0));
+	for (int i = 0; i < 10; i++)	CObjMgr::Get_Instance()->Add_Object(OBJ_EFFECT, CAbstractFactory<CStarEffect>::Create(0, 0));
 }
 
 void CStage4::InsertGimics()
 {
 	InsertChests();
+	InsertItems();
 	InsertHoldObjs();
 	InsertEffects();
 }

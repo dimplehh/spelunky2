@@ -70,6 +70,7 @@ void CChest::Render(HDC hDC)
 
 void CChest::Release()
 {
+
 	if (m_eItemID == CItem::ITEM_GEM)	// 보석일 경우 1~3개의 보석을 떨어뜨린다.
 	{
 		int _rand = 1 + rand() % 3;

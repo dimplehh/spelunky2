@@ -32,7 +32,6 @@ CStage3::~CStage3()
 void CStage3::Initialize()
 {
 	__super::m_iMapNum = 3;
-
 	//CObjMgr::Get_Instance()->Add_Object(OBJ_PLAYER, CAbstractFactory<CPlayer>::Create()); //잠깐 스3에서시작하기위한 용도
 
 	float _responPosX = TILECX * (4 + 0.5f);
@@ -184,6 +183,10 @@ void CStage3::InsertUIs()
 void CStage3::InsertMonsters()
 {
 	CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(TILECX * (23 + 0.5f), TILECY * (4.5f), CMonster::OLMEC));
+
+	CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(TILECX * (15 + 0.5f), TILECY * (9.5f), CMonster::SNAKE));
+
+	CObjMgr::Get_Instance()->Add_Object(OBJ_MONSTER, CMonsterFactory::Create(TILECX * (34 + 0.5f), TILECY * (10.5f), CMonster::SNAKE));
 }
 
 void CStage3::InsertObstacles()
@@ -196,10 +199,21 @@ void CStage3::InsertBoxs()
 
 void CStage3::InsertChests()
 {
+	CObjMgr::Get_Instance()->Add_Object(OBJ_CHEST, CChestFactory::Create(TILECX * (30 + 0.5f), TILECY * (4.5f), CItem::ITEM_ROPE));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_CHEST, CChestFactory::Create(TILECX * (10 + 0.5f), TILECY * (9.5f), CItem::ITEM_ROPE));
 }
 
 void CStage3::InsertHoldObjs()
 {
+}
+
+void CStage3::InsertItems()
+{
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CItemFactory::Create(TILECX * (15 + 0.5f), TILECY * (4.5f), CItem::ITEM_GOLD));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CItemFactory::Create(TILECX * (17 + 0.5f), TILECY * (4.5f), CItem::ITEM_GOLD));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CItemFactory::Create(TILECX * (20 + 0.5f), TILECY * (4.5f), CItem::ITEM_GOLD));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CItemFactory::Create(TILECX * (33 + 0.5f), TILECY * (4.5f), CItem::ITEM_GOLD));
+	CObjMgr::Get_Instance()->Add_Object(OBJ_ITEM, CItemFactory::Create(TILECX * (36 + 0.5f), TILECY * (4.5f), CItem::ITEM_GOLD));
 }
 
 void CStage3::InsertLava()
@@ -227,6 +241,7 @@ void CStage3::InsertGimics()
 	InsertHoldObjs();
 	InsertLava();
 	InsertEffects();
+	InsertItems();
 }
 
 void CStage3::ReleaseGimics()
