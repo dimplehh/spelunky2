@@ -114,7 +114,7 @@ void CSnake::Idle()
 
 void CSnake::Attack()
 {
-	if (m_eCurState == ATTACK)
+	if (m_eCurState == ATTACK && abs(CObjMgr::Get_Instance()->Get_Player()->Get_Info().fX - m_tInfo.fX) < TILECX / 3)
 	{
 		if (m_bFirstAttack == true)
 		{

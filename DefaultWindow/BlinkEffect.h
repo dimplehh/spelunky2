@@ -14,4 +14,9 @@ public:
 	virtual void Render(HDC hDC) override;
 	virtual void Release() override;
 
+private:
+	DWORD	m_dwTime;
+	bool	m_bCheckFirstTime = true;
+	int		m_iMaxSize = 20;
+	int		m_iMinSize = 10;
 };

@@ -16,6 +16,7 @@
 #include "EffectMgr.h"
 #include "DustEffect.h"
 #include "StarEffect.h"
+#include "BlinkEffect.h"
 #pragma comment(lib, "msimg32.lib")
 
 CStage::CStage()
@@ -138,6 +139,7 @@ void CStage::InsertBmps()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Font/Font.bmp",			L"Font");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Effect/DustEffect.bmp",	L"DustEffect");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Effect/StarEffect.bmp",	L"StarEffect");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Effect/BlinkEffect.bmp", L"BlinkEffect");
 }
 
 void CStage::InsertUIs()
@@ -200,6 +202,7 @@ void CStage::InsertEffects()
 {
 	for(int i = 0; i < 10; i++)		CObjMgr::Get_Instance()->Add_Object(OBJ_EFFECT, CAbstractFactory<CDustEffect>::Create(0, 0));
 	for (int i = 0; i < 10; i++)	CObjMgr::Get_Instance()->Add_Object(OBJ_EFFECT, CAbstractFactory<CStarEffect>::Create(0, 0));
+	for (int i = 0; i < 6; i++)	CObjMgr::Get_Instance()->Add_Object(OBJ_EFFECT, CAbstractFactory<CBlinkEffect>::Create(0, 0));
 }
 
 void CStage::InsertGimics()

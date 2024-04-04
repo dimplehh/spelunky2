@@ -8,6 +8,8 @@
 #include "Item.h"
 #include "Snake.h"
 #include "Olmec.h"
+#include "Effect.h"
+#include "EffectMgr.h"
 
 extern float g_fVolume;
 
@@ -192,6 +194,7 @@ void CCollisionMgr::Collision_RectChest(CObj* Dst, CObj* Src)
 				case CItem::ITEM_GEM:
 				case CItem::ITEM_GOLD:
 				{
+					CEffectMgr::Get_Instance()->ActiveEffect(CEffect::EFFECT_BLINK, Dst->Get_Info().fX, Dst->Get_Info().fY + 10);
 					CSoundMgr::Get_Instance()->PlaySound(L"Gem.wav", SOUND_EFFECT, g_fVolume);
 					dynamic_cast<CPlayer*>(Src)->SetMoney(_num);
 					break;
