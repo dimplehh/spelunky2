@@ -150,6 +150,7 @@ void CPlayer::Key_Input()
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::X) == KEY_STATE::TAP)			{ TapX(); }
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::A) == KEY_STATE::TAP)			{ TapA(); }
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::F) == KEY_STATE::TAP)			{ m_eCurState = EXIT; }
+	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::P) == KEY_STATE::TAP)			{ ResetAllStat(); }
 
 	if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::UP) == KEY_STATE::HOLD)		{ HoldUp(); }
 	else if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::UP) == KEY_STATE::AWAY)	{ if (!m_bLadder)		m_eCurState = LOOKFRONT; }
@@ -182,7 +183,7 @@ void CPlayer::TapZ()
 	if (m_bKneelDown == true)	// 하향점프
 	{
 		m_eCurState = IDLE;
-		if (CLineMgr::Get_Instance()->Collision_Board_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump))
+		if (CLineMgr::Get_Instance()->Collision_Board_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, false))
 		{
 			m_tInfo.fY += 50;
 		}
@@ -529,6 +530,50 @@ void CPlayer::ResetHp(int _num)
 	m_iHp = _num;
 	CUIMgr::Get_Instance()->Set_UINum(CUIIcon::UI_HP, m_iHp);
 	return;
+}
+
+void CPlayer::ResetAllStat()
+{
+	m_bJump = false;
+	m_bLadder = false;
+	m_bCanHang = false;
+	m_bKneelDown = false;	// 엎드린 상태
+	m_bAttachedBox = false;	// 상자와 닿은 상태
+	m_bCanHold = false;		// 잡을 수 있는 상태 ( 아래키 + x)
+	m_bIsHold = false;		// 무엇인가를 잡은 상태
+	m_bThrow = false;
+	m_bAttacked = false;
+	m_bFirstGrounded = true;
+	m_iHoldObjIdx = -1;
+	m_iJumpCount = 0;
+
+	//float		m_fPower;
+	//float		m_fTime;
+
+	//STATE		m_ePreState;
+	//STATE		m_eCurState;
+
+	//float		m_fPreY = 0;
+	//float		m_fCurY = 0;
+	//float		m_fDiffY = 0;
+
+	//float		m_fMoveOffset = 0;
+
+	m_bAlmostFell = false;
+	m_bWallAttatched = false;
+
+	//bool		m_bRevival = false;
+
+	//bool		m_bFirstDieCheck = true;
+	//int			m_iDeathTime = 0;
+
+	//int			m_iRopeCount = 0;
+	//int			m_iBombCount = 0;
+	//int			m_iMoney = 0;
+
+	//bool		m_bCheckFirstInit = false;
+	//bool		m_bResetFirstTime = true;
+
 }
 
 void CPlayer::Offset()

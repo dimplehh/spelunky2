@@ -16,7 +16,7 @@ CBox::~CBox()
 
 void CBox::Initialize()
 {
-	m_tInfo = { 0, 0, TILECX, TILECY };
+	m_tInfo = { 0, 0, TILECX - 1, TILECY - 1};
 	m_fSpeed = 3.f;
 	m_pFrameKey = L"Box";
 	m_eRender = RENDER_GAMEOBJECT;
@@ -46,7 +46,7 @@ void CBox::Render(HDC hDC)
 	int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
 	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
 	HDC	hMemDC = CBmpMgr::Get_Instance()->Find_Image(m_pFrameKey);
-	GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, (int)m_tInfo.fCX, (int)m_tInfo.fCY,
+	GdiTransparentBlt(hDC, m_tRect.left + iScrollX, m_tRect.top + iScrollY, TILECX, TILECY,
 		hMemDC, 0, 0, TILECX, TILECY, RGB(255, 255, 255));
 }
 

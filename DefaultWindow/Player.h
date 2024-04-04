@@ -120,6 +120,7 @@ private:
 	void		TapC();
 	void		TapD();
 	void		TapA();
+	void		ResetAllStat();
 
 	void		ResetPlayer();
 	void		ResetScene(); //여기서 만드는거 아닐거같긴한데..
