@@ -20,7 +20,7 @@ void CTile::Initialize()
 	m_tInfo.fCX = TILECX;
 	m_tInfo.fCY = TILECY;
 
-	m_pFrameKey = L"Tile5";
+	m_pFrameKey = L"Tile3";
 	m_eRender = RENDER_TILE;
 }
 
@@ -40,8 +40,8 @@ void CTile::Render(HDC hDC)
 {
 	if (CSceneMgr::Get_Instance()->Get_Scene() == SC_EDIT)
 	{
-		if (m_iOption == 1) m_pFrameKey = L"Tile7";
-		else if (m_iOption == 2) m_pFrameKey = L"Tile8";
+		if (m_iOption == 1) m_pFrameKey = L"Tile3";
+		else if (m_iOption == 2) m_pFrameKey = L"Tile4";
 	}
 	else if (CSceneMgr::Get_Instance()->Get_Scene() == SC_STAGE)
 	{

@@ -70,7 +70,7 @@ void CStage4::Render(HDC hDC)
 
 	CObjMgr::Get_Instance()->Render(hDC);
 	CTileMgr::Get_Instance()->Render(hDC);
-	CLineMgr::Get_Instance()->Render(hDC);
+	//CLineMgr::Get_Instance()->Render(hDC);
 	CObjMgr::Get_Instance()->RenderUI(hDC);		// ui 가장 마지막에 렌더
 	FadeInOut(hDC);								// fade 효과 그보다 더 마지막에 렌더
 }

@@ -363,7 +363,7 @@ void COlmec::Motion_Change() //Â÷ÈÄ ÆøÅº ¹ß»ç ½Ã ¿ï¸Æ ¹ú¾îÁú ¶§ ÇÊ¿ä
 		switch (m_eCurState)
 		{
 		//case COlmec::CUTSCENE:	Set_Frame(0, 4, 0, false, 150, 0, 4);		break;		//»¡¸® Å×½ºÆ®ÇÏ±â¿ë
-		case COlmec::CUTSCENE:	Set_Frame(0, 4, 0, false, 150, 0, 4);		break;
+		case COlmec::CUTSCENE:	Set_Frame(0, 4, 0, false, 1500, 0, 4);		break;
 		case COlmec::IDLE:		Set_Frame(0, 0, 0, true, 120, 0, 7);		break;
 		case COlmec::ATTACK:	Set_Frame(0, 3, 0, false, 120, 0, 7);		break;
 		case COlmec::ATTACKEND:	Set_Frame(3, 6, 0, false, 120, 0, 7);		break;

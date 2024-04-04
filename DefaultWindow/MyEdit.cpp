@@ -17,9 +17,9 @@ CMyEdit::~CMyEdit()
 
 void CMyEdit::Initialize()
 {
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Ground4.bmp", L"Ground4");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette7.bmp", L"Tile7");
-	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette8.bmp", L"Tile8");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Background/Ground2.bmp", L"Ground2");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette3.bmp", L"Tile3");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Edit/Palette4.bmp", L"Tile4");
 	CTileMgr::Get_Instance()->Initialize();
 }
 
@@ -39,7 +39,7 @@ void CMyEdit::Late_Update()
 
 void CMyEdit::Render(HDC hDC)
 {
-	HDC	hGroundDC = CBmpMgr::Get_Instance()->Find_Image(L"Ground4");
+	HDC	hGroundDC = CBmpMgr::Get_Instance()->Find_Image(L"Ground2");
 	// 비트맵 출력 함수
 	int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
 	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();

@@ -23,7 +23,7 @@ float g_fBgmVolume(0.3f);
 float g_fVolume(1.f);
 
 CPlayer::CPlayer()
-	: m_fDistance(0.f), m_bJump(false), m_bLadder(false), m_iJumpCount(0), m_iHp(4), m_fPreY(0.f), m_fCurY(0.f), m_bCanHang(false), m_fDiffY(0.f),
+	: m_fDistance(0.f), m_bJump(false), m_bLadder(false), m_iJumpCount(0), m_iHp(6), m_fPreY(0.f), m_fCurY(0.f), m_bCanHang(false), m_fDiffY(0.f),
 	m_fTime(0.f), m_fPower(0.f), m_ePreState(ST_END), m_eCurState(IDLE), m_bKneelDown(false), m_bAttachedBox(false), m_bIsHold(false), m_bCanHold(false), 
 	m_bThrow(false), m_bAttacked(false), m_dwTime(GetTickCount()), m_fFirstX(TILECX * (21 + m_tInfo.fCX / 2)), m_fFirstY(TILECY * (2 + m_tInfo.fCY / 2))
 {
