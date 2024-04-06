@@ -41,6 +41,7 @@ public:
 
 public:
 	void			Scene_Change(SCENEID eID);
+	void			Scene_Change(SCENEID eID, int _money, int _time);
 	void			Update();
 	void			Late_Update();
 	void			Render(HDC hDC);

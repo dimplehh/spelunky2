@@ -457,6 +457,9 @@ void CPlayer::StageChange()
 		CSceneMgr::Get_Instance()->SetTotalMoney(CUIMgr::Get_Instance()->Get_Money());
 		CSceneMgr::Get_Instance()->SetTotalTime(CUIMgr::Get_Instance()->Get_Time());
 
+		int _money = CUIMgr::Get_Instance()->Get_Money();
+		int _time = CUIMgr::Get_Instance()->Get_Time();
+
 		ResetPlayer();
 		ResetScene();
 		CSoundMgr::Get_Instance()->StopSound(SOUND_BGM);
@@ -476,7 +479,7 @@ void CPlayer::StageChange()
 			CSceneMgr::Get_Instance()->Scene_Change(SC_STAGE4);
 			break;
 		case 4:
-			CSceneMgr::Get_Instance()->Scene_Change(SC_ENDING);
+			CSceneMgr::Get_Instance()->Scene_Change(SC_ENDING, _money, _time);
 			break;
 		case 5:
 			CSceneMgr::Get_Instance()->Scene_Change(SC_LOGO);

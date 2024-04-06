@@ -169,7 +169,7 @@ private:
 
 	int			m_iRopeCount = 0;
 	int			m_iBombCount = 0;
-	int			m_iMoney = 4000;
+	int			m_iMoney = 0;
 
 	bool		m_bCheckFirstInit = false;
 	bool		m_bResetFirstTime = true;

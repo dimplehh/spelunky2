@@ -15,6 +15,10 @@ CEnding::CEnding() : m_dwTime(GetTickCount())
 {
 }
 
+CEnding::CEnding(int _money, int _time) : m_dwTime(GetTickCount()), m_iMoney(_money), m_iTime(_time)
+{
+}
+
 CEnding::~CEnding()
 {
 	Release();
@@ -48,12 +52,11 @@ int CEnding::Update()
 void CEnding::Late_Update()
 {
 	CObjMgr::Get_Instance()->Late_Update();
-	//Move_Frame();
 	#ifdef _DEBUG
 
 	if (m_dwTime + 1000 < GetTickCount())
 	{
-		cout << CSceneMgr::Get_Instance()->GetTotalMoney() << "/" << CSceneMgr::Get_Instance()->GetTotalTime() << endl;
+		cout << m_iMoney << "/" << m_iTime << "/" << CSceneMgr::Get_Instance()->GetTotalMoney() << "/" << CSceneMgr::Get_Instance()->GetTotalTime() << endl;
 		m_dwTime = GetTickCount();
 	}
 #endif
@@ -65,7 +68,14 @@ void CEnding::Render(HDC hDC)
 	BitBlt(hDC, 0, 0, WINCX, WINCY, hMemDC, m_tFrame.iFrameStart * WINCX, 0, SRCCOPY); 
 	
 	CObjMgr::Get_Instance()->Render(hDC);
-	SetNumberToFont(200, 200, hDC);
+	
+	SetMapFont(320, 80, hDC);
+
+	SetTimeToFont(m_iTime, 230, 195, hDC);
+	SetTimeToFont(CSceneMgr::Get_Instance()->GetTotalTime(), 470, 195, hDC);
+
+	SetNumberToFont(m_iMoney, 230, 230, hDC);
+	SetNumberToFont(CSceneMgr::Get_Instance()->GetTotalMoney(), 470, 230, hDC);
 }
 
 void CEnding::Release()
@@ -86,11 +96,10 @@ void CEnding::Move_Frame()
 	}
 }
 
-void CEnding::SetNumberToFont(float _fX, float _fY, HDC  hDC)
+void CEnding::SetNumberToFont(int m_iNum, float _fX, float _fY, HDC  hDC)
 {
 	HDC hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"Font");
 
-	int m_iNum = CSceneMgr::Get_Instance()->GetTotalMoney();
 	int m_iSize = 16;
 
 	if (m_iNum < 10)
@@ -101,7 +110,7 @@ void CEnding::SetNumberToFont(float _fX, float _fY, HDC  hDC)
 		int addX = 0;
 		while (1)
 		{
-			GdiTransparentBlt(hDC, _fX + 10 - 8.f * addX, _fY, m_iSize, m_iSize, hMemDC, (iTemp % 10) * 16, 0, 16, 16, RGB(63, 63, 63));
+			GdiTransparentBlt(hDC, _fX + 10 + 8.f * addX, _fY, m_iSize, m_iSize, hMemDC, (iTemp % 10) * 16, 0, 16, 16, RGB(63, 63, 63));
 			iTemp = iTemp / 10;
 			addX++;
 			if (iTemp == 0)
@@ -110,16 +119,25 @@ void CEnding::SetNumberToFont(float _fX, float _fY, HDC  hDC)
 	}
 }
 
-//void CEnding::SetTimeToFont(HDC hDC)
-//{
-//	HDC hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"Font");
-//
-//	int _min = CUIMgr::Get_Instance()->Get_Time() / 60;
-//	int _sec = CUIMgr::Get_Instance()->Get_Time() % 60;
-//
-//	GdiTransparentBlt(hDC, m_tInfo.fX + 10 + m_fTextX + 10.f * 0, m_tInfo.fY + m_fTextY, m_iSize, m_iSize, hMemDC, (_min / 10) * 16, 0, 16, 16, RGB(63, 63, 63));
-//	GdiTransparentBlt(hDC, m_tInfo.fX + 10 + m_fTextX + 10.f * 1, m_tInfo.fY + m_fTextY, m_iSize, m_iSize, hMemDC, (_min % 10) * 16, 0, 16, 16, RGB(63, 63, 63));
-//	GdiTransparentBlt(hDC, m_tInfo.fX + 10 + m_fTextX + 10.f * 2, m_tInfo.fY + m_fTextY, m_iSize, m_iSize, hMemDC, 10 * 16, 0, 16, 16, RGB(63, 63, 63));
-//	GdiTransparentBlt(hDC, m_tInfo.fX + 10 + m_fTextX + 10.f * 3, m_tInfo.fY + m_fTextY, m_iSize, m_iSize, hMemDC, (_sec / 10) * 16, 0, 16, 16, RGB(63, 63, 63));
-//	GdiTransparentBlt(hDC, m_tInfo.fX + 10 + m_fTextX + 10.f * 4, m_tInfo.fY + m_fTextY, m_iSize, m_iSize, hMemDC, (_sec % 10) * 16, 0, 16, 16, RGB(63, 63, 63));
-//}
+void CEnding::SetTimeToFont(int m_iTime, float _fX, float _fY, HDC hDC)
+{
+	HDC hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"Font");
+
+	int _min = m_iTime / 60;
+	int _sec = m_iTime % 60;
+
+	GdiTransparentBlt(hDC, _fX + 10 + 10.f * 0, _fY, m_iSize, m_iSize, hMemDC, (_min / 10) * 16, 0, 16, 16, RGB(63, 63, 63));
+	GdiTransparentBlt(hDC, _fX + 10 + 10.f * 1, _fY, m_iSize, m_iSize, hMemDC, (_min % 10) * 16, 0, 16, 16, RGB(63, 63, 63));
+	GdiTransparentBlt(hDC, _fX + 10 + 10.f * 2, _fY, m_iSize, m_iSize, hMemDC, 10 * 16, 0, 16, 16, RGB(63, 63, 63));
+	GdiTransparentBlt(hDC, _fX + 10 + 10.f * 3, _fY, m_iSize, m_iSize, hMemDC, (_sec / 10) * 16, 0, 16, 16, RGB(63, 63, 63));
+	GdiTransparentBlt(hDC, _fX + 10 + 10.f * 4, _fY, m_iSize, m_iSize, hMemDC, (_sec % 10) * 16, 0, 16, 16, RGB(63, 63, 63));
+}
+
+void CEnding::SetMapFont(float _fX, float _fY, HDC hDC)
+{
+	HDC hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"Font");
+
+	GdiTransparentBlt(hDC, _fX + 10 + 10.f * 0, _fY, m_iSize, m_iSize, hMemDC, ((3) % 10) * 16, 0, 16, 16, RGB(63, 63, 63));
+	GdiTransparentBlt(hDC, _fX + 10 + 10.f * 1, _fY, m_iSize, m_iSize, hMemDC, 11 * 16, 0, 16, 16, RGB(63, 63, 63));
+	GdiTransparentBlt(hDC, _fX + 10 + 10.f * 2, _fY, m_iSize, m_iSize, hMemDC, (2) * 16, 0, 16, 16, RGB(63, 63, 63));
+}

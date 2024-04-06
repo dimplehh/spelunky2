@@ -58,6 +58,29 @@ void CSceneMgr::Scene_Change(SCENEID eID)
 	}
 }
 
+void CSceneMgr::Scene_Change(SCENEID eID, int _money, int _time)
+{
+	m_eCurScene = eID;
+
+	if (m_ePreScene != m_eCurScene)
+	{
+		Safe_Delete(m_pScene);
+
+		switch (m_eCurScene)
+		{
+		case SC_STAGE4:
+			m_pScene = new CStage4;
+			break;
+		case SC_ENDING:
+			m_pScene = new CEnding(_money, _time);
+			break;
+		}
+		m_pScene->Initialize();
+
+		m_ePreScene = m_eCurScene;
+	}
+}
+
 void CSceneMgr::Update()
 {
 	m_pScene->Update();
