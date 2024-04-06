@@ -16,9 +16,6 @@ public:
 	void		Move_Frame();
 
 private:
-	HWND	m_hVideo;
-
 	const TCHAR* m_pFrameKey = L"";
 	FRAME		m_tFrame;
 };
-

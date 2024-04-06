@@ -58,6 +58,11 @@ void CSceneMgr::Scene_Change(SCENEID eID)
 				m_pScene = new CStage4;
 				break;
 			}
+			case SC_ENDING:
+			{
+				m_pScene = new CEnding;
+				break;
+			}
 		}
 		m_pScene->Initialize();
 

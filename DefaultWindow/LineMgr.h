@@ -50,6 +50,7 @@ public:
 	void		MakeEtcLine();
 	void		MakeEtcLine2();
 	void		MakeEtcLine3();
+	void		MakeEtcEnding();
 	void		Change_idx();
 
 public:

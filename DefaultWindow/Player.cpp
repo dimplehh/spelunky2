@@ -79,6 +79,7 @@ int CPlayer::Update()
 void CPlayer::Late_Update()	//어떤걸 Late_Update, 어떤걸 Update에 넣어야할지 잘 생각해야 할듯
 {
 	m_bJump = !CLineMgr::Get_Instance()->Collision_Line_Ceiling(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY, m_bJump); //천장체킹
+
 	Gravity();
 	FallDamage();
 	AlmostFell();
@@ -114,8 +115,13 @@ void CPlayer::Render(HDC hDC)
 
 void CPlayer::SetRenderImage(HDC hDC)
 {
-	int	iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
-	int	iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
+	int	iScrollX = 0;
+	int iScrollY = 0;
+	if (CSceneMgr::Get_Instance()->GetRealScene()->GetMapNum() != 5)
+	{
+		iScrollX = (int)CScrollMgr::Get_Instance()->Get_ScrollX();
+		iScrollY = (int)CScrollMgr::Get_Instance()->Get_ScrollY();
+	}
 
 	if (m_eCurState == ATTACK)
 	{
@@ -416,6 +422,10 @@ void CPlayer::ResetPlayer()
 void CPlayer::ResetScene()
 {
 	int _mapNum = CSceneMgr::Get_Instance()->GetRealScene()->GetMapNum();
+
+	if (_mapNum == 5)
+		return;
+
 	CTileMgr::Get_Instance()->Load_Tile(_mapNum);
 	CLineMgr::Get_Instance()->Release();
 	CLineMgr::Get_Instance()->SetLine();
@@ -463,6 +473,9 @@ void CPlayer::StageChange()
 			CSceneMgr::Get_Instance()->Scene_Change(SC_STAGE4);
 			break;
 		case 4:
+			CSceneMgr::Get_Instance()->Scene_Change(SC_ENDING);
+			break;
+		case 5:
 			CSceneMgr::Get_Instance()->Scene_Change(SC_LOGO);
 			break;
 		default:

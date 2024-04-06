@@ -53,7 +53,7 @@ void CLineMgr::SetLine()
 	LINE	tInfo{};
 	INFO	iterInfo{};
 
-	if (nullptr != m_pVecTile)
+	if (nullptr != m_pVecTile && CSceneMgr::Get_Instance()->GetRealScene()->GetMapNum() != 5)
 	{
 		for (int _index = 0; _index < m_pVecTile->size(); _index++)
 		{
@@ -78,7 +78,8 @@ void CLineMgr::SetLine()
 		MakeEtcLine2();
 	else if (CSceneMgr::Get_Instance()->GetRealScene()->GetMapNum() == 3)
 		MakeEtcLine3();
-
+	else if(CSceneMgr::Get_Instance()->GetRealScene()->GetMapNum() == 5)
+		MakeEtcEnding();
 }
 
 void CLineMgr::MakeEtcLine() 	// ¸Ê »óÇÏÁÂ¿ì ³¡, »ç´Ù¸®, ¹ßÆÇ ÇÔ¼ö
@@ -135,6 +136,11 @@ void CLineMgr::MakeEtcLine3()
 	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 2 * TILECX, (TILEY - 4) * TILECY }, LINEPOINT{ (TILEX - 2) * TILECX, (TILEY - 4) * TILECY }, CLine::FLOOR));		// ¹Ù´Ú
 	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 2 * TILECX, 1 * TILECY }, LINEPOINT{ 2 * TILECX, (TILEY - 2) * TILECY }, CLine::RIGHTWALL));						// ¿ÞÂÊ º®
 	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ (TILEX - 2) * TILECX, 1 * TILECY }, LINEPOINT{ (TILEX - 2) * TILECX, (TILEY - 2) * TILECY }, CLine::LEFTWALL));	// ¿À¸¥ÂÊ º®
+}
+
+void CLineMgr::MakeEtcEnding()
+{
+	m_LineList.push_back(CLineFactory::Create(LINEPOINT{ 0, 510 }, LINEPOINT{ 800, 510 }, CLine::FLOOR));		// ¹Ù´Ú
 }
 
 void CLineMgr::Render(HDC hDC)

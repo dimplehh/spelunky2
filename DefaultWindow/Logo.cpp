@@ -51,7 +51,6 @@ void CLogo::Render(HDC hDC)
 
 void CLogo::Release()
 {
-	//MCIWndClose(m_hVideo);
 }
 
 void CLogo::Move_Frame()
