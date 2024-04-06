@@ -15,6 +15,9 @@ public:
 
 	void		Move_Frame();
 
+	void		SetNumberToFont(float _fX, float _fY, HDC  hDC);
+	void		SetTimeToFont(HDC hDC);
+
 private:
 	const TCHAR* m_pFrameKey = L"";
 	FRAME		m_tFrame;

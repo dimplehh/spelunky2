@@ -24,6 +24,7 @@ void CEnding::Initialize()
 {
 	__super::m_iMapNum = 5;
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Logo/Ending.bmp", L"Ending");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Font/Font.bmp", L"Font");
 	m_tFrame = { 0, 5, 0, 5, true, 200, GetTickCount(), 0 };
 	m_pFrameKey = L"Ending";
 	CSoundMgr::Get_Instance()->PlayBGM(L"Ending.wav", g_fBgmVolume);
@@ -64,7 +65,7 @@ void CEnding::Render(HDC hDC)
 	BitBlt(hDC, 0, 0, WINCX, WINCY, hMemDC, m_tFrame.iFrameStart * WINCX, 0, SRCCOPY); 
 	
 	CObjMgr::Get_Instance()->Render(hDC);
-	CLineMgr::Get_Instance()->Render(hDC);
+	SetNumberToFont(200, 200, hDC);
 }
 
 void CEnding::Release()
@@ -84,3 +85,41 @@ void CEnding::Move_Frame()
 		}
 	}
 }
+
+void CEnding::SetNumberToFont(float _fX, float _fY, HDC  hDC)
+{
+	HDC hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"Font");
+
+	int m_iNum = CSceneMgr::Get_Instance()->GetTotalMoney();
+	int m_iSize = 16;
+
+	if (m_iNum < 10)
+		GdiTransparentBlt(hDC, _fX + 10, _fY, m_iSize, m_iSize, hMemDC, (m_iNum % 10) * 16, 0, 16, 16, RGB(63, 63, 63));
+	else
+	{
+		int iTemp = m_iNum;
+		int addX = 0;
+		while (1)
+		{
+			GdiTransparentBlt(hDC, _fX + 10 - 8.f * addX, _fY, m_iSize, m_iSize, hMemDC, (iTemp % 10) * 16, 0, 16, 16, RGB(63, 63, 63));
+			iTemp = iTemp / 10;
+			addX++;
+			if (iTemp == 0)
+				break;
+		}
+	}
+}
+
+//void CEnding::SetTimeToFont(HDC hDC)
+//{
+//	HDC hMemDC = CBmpMgr::Get_Instance()->Find_Image(L"Font");
+//
+//	int _min = CUIMgr::Get_Instance()->Get_Time() / 60;
+//	int _sec = CUIMgr::Get_Instance()->Get_Time() % 60;
+//
+//	GdiTransparentBlt(hDC, m_tInfo.fX + 10 + m_fTextX + 10.f * 0, m_tInfo.fY + m_fTextY, m_iSize, m_iSize, hMemDC, (_min / 10) * 16, 0, 16, 16, RGB(63, 63, 63));
+//	GdiTransparentBlt(hDC, m_tInfo.fX + 10 + m_fTextX + 10.f * 1, m_tInfo.fY + m_fTextY, m_iSize, m_iSize, hMemDC, (_min % 10) * 16, 0, 16, 16, RGB(63, 63, 63));
+//	GdiTransparentBlt(hDC, m_tInfo.fX + 10 + m_fTextX + 10.f * 2, m_tInfo.fY + m_fTextY, m_iSize, m_iSize, hMemDC, 10 * 16, 0, 16, 16, RGB(63, 63, 63));
+//	GdiTransparentBlt(hDC, m_tInfo.fX + 10 + m_fTextX + 10.f * 3, m_tInfo.fY + m_fTextY, m_iSize, m_iSize, hMemDC, (_sec / 10) * 16, 0, 16, 16, RGB(63, 63, 63));
+//	GdiTransparentBlt(hDC, m_tInfo.fX + 10 + m_fTextX + 10.f * 4, m_tInfo.fY + m_fTextY, m_iSize, m_iSize, hMemDC, (_sec % 10) * 16, 0, 16, 16, RGB(63, 63, 63));
+//}
