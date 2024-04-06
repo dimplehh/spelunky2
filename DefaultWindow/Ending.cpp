@@ -74,8 +74,8 @@ void CEnding::Render(HDC hDC)
 	SetTimeToFont(m_iTime, 230, 195, hDC);
 	SetTimeToFont(CSceneMgr::Get_Instance()->GetTotalTime(), 470, 195, hDC);
 
-	SetNumberToFont(m_iMoney, 230, 230, hDC);
-	SetNumberToFont(CSceneMgr::Get_Instance()->GetTotalMoney(), 470, 230, hDC);
+	SetNumberToFont(m_iMoney, 260, 230, hDC);
+	SetNumberToFont(CSceneMgr::Get_Instance()->GetTotalMoney(), 500, 230, hDC);
 }
 
 void CEnding::Release()
@@ -110,7 +110,7 @@ void CEnding::SetNumberToFont(int m_iNum, float _fX, float _fY, HDC  hDC)
 		int addX = 0;
 		while (1)
 		{
-			GdiTransparentBlt(hDC, _fX + 10 + 8.f * addX, _fY, m_iSize, m_iSize, hMemDC, (iTemp % 10) * 16, 0, 16, 16, RGB(63, 63, 63));
+			GdiTransparentBlt(hDC, _fX + 10 - 8.f * addX, _fY, m_iSize, m_iSize, hMemDC, (iTemp % 10) * 16, 0, 16, 16, RGB(63, 63, 63));
 			iTemp = iTemp / 10;
 			addX++;
 			if (iTemp == 0)

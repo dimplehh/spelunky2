@@ -461,6 +461,7 @@ void CPlayer::StageChange()
 		int _time = CUIMgr::Get_Instance()->Get_Time();
 
 		ResetPlayer();
+		ResetAllStat();
 		ResetScene();
 		CSoundMgr::Get_Instance()->StopSound(SOUND_BGM);
 		wstring wStr = L"Stage" + to_wstring(CSceneMgr::Get_Instance()->GetRealScene()->GetMapNum() + 1) + L".wav";
