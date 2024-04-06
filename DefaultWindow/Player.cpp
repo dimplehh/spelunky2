@@ -454,6 +454,9 @@ void CPlayer::StageChange()
 {
 	if (m_bCanEnter == true && m_dwTime + 1000 < GetTickCount())
 	{
+		CSceneMgr::Get_Instance()->SetTotalMoney(CUIMgr::Get_Instance()->Get_Money());
+		CSceneMgr::Get_Instance()->SetTotalTime(CUIMgr::Get_Instance()->Get_Time());
+
 		ResetPlayer();
 		ResetScene();
 		CSoundMgr::Get_Instance()->StopSound(SOUND_BGM);

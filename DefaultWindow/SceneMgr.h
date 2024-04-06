@@ -37,7 +37,7 @@ public:
 
 public:
 	SCENEID			Get_Scene() { return m_eCurScene; }
-	CScene* GetRealScene() { return m_pScene; }
+	CScene*			GetRealScene() { return m_pScene; }
 
 public:
 	void			Scene_Change(SCENEID eID);
@@ -45,6 +45,12 @@ public:
 	void			Late_Update();
 	void			Render(HDC hDC);
 	void			Release();
+
+public:
+	void			SetTotalTime(int _time) { m_iTotalTime += _time; };
+	void			SetTotalMoney(int _money) { m_iTotalMoney += _money; };
+	int				GetTotalTime() { return m_iTotalTime; };
+	int				GetTotalMoney() { return m_iTotalMoney; }
 
 
 private:
@@ -54,5 +60,7 @@ private:
 	SCENEID					m_ePreScene;
 	SCENEID					m_eCurScene;
 
+	int						m_iTotalTime = 0;
+	int						m_iTotalMoney = 0;
 };
 

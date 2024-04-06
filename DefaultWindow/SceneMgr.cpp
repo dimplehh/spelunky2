@@ -30,39 +30,27 @@ void CSceneMgr::Scene_Change(SCENEID eID)
 			case SC_LOGO:
 				m_pScene = new CLogo;
 				break;
-
 			case SC_MENU:
 				m_pScene = new CMyMenu;
 				break;
-
 			case SC_EDIT:
 				m_pScene = new CMyEdit;
 				break;
-
 			case SC_STAGE:
 				m_pScene = new CStage;
 				break;
-
 			case SC_STAGE2:
-			{
 				m_pScene = new CStage2;
 				break;
-			}
 			case SC_STAGE3:
-			{
 				m_pScene = new CStage3;
 				break;
-			}			
 			case SC_STAGE4:
-			{
 				m_pScene = new CStage4;
 				break;
-			}
 			case SC_ENDING:
-			{
 				m_pScene = new CEnding;
 				break;
-			}
 		}
 		m_pScene->Initialize();
 

@@ -11,7 +11,7 @@
 
 extern float g_fBgmVolume;
 
-CEnding::CEnding()
+CEnding::CEnding() : m_dwTime(GetTickCount())
 {
 }
 
@@ -48,6 +48,14 @@ void CEnding::Late_Update()
 {
 	CObjMgr::Get_Instance()->Late_Update();
 	//Move_Frame();
+	#ifdef _DEBUG
+
+	if (m_dwTime + 1000 < GetTickCount())
+	{
+		cout << CSceneMgr::Get_Instance()->GetTotalMoney() << "/" << CSceneMgr::Get_Instance()->GetTotalTime() << endl;
+		m_dwTime = GetTickCount();
+	}
+#endif
 }
 
 void CEnding::Render(HDC hDC)

@@ -12,6 +12,7 @@ public:
 public:
 	void	SetUIID(UIID _uiId) { m_eUiID = _uiId; }
 	void	Set_Num(int _iNum) { m_iNum = _iNum; }
+	int		Get_Num() { return m_iNum; }
 	void	SetTextXY(float _fX, float _fY) { m_fTextX = _fX; m_fTextY = _fY; }
 	void	Set_Size(int _iSize) { m_iSize = _iSize; }
 

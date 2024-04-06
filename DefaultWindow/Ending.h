@@ -18,4 +18,6 @@ public:
 private:
 	const TCHAR* m_pFrameKey = L"";
 	FRAME		m_tFrame;
+
+	DWORD				m_dwTime;
 };
