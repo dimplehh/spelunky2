@@ -48,12 +48,6 @@ void CEnding::Late_Update()
 {
 	CObjMgr::Get_Instance()->Late_Update();
 	//Move_Frame();
-	//if (CKeyMgr::CreateSingleTonInst()->GetKeyState(KEY::ENTER) == KEY_STATE::TAP)
-	//{
-	//	CSoundMgr::Get_Instance()->StopSound(SOUND_BGM);
-	//	CSceneMgr::Get_Instance()->Scene_Change(SC_LOGO);
-	//	return;
-	//}
 }
 
 void CEnding::Render(HDC hDC)
@@ -67,6 +61,7 @@ void CEnding::Render(HDC hDC)
 
 void CEnding::Release()
 {
+	CObjMgr::Get_Instance()->ReleaseWithoutPlayerAndUI();
 }
 
 void CEnding::Move_Frame()
