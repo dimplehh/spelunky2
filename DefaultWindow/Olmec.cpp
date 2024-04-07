@@ -186,22 +186,17 @@ void COlmec::Rise()
 				else
 					m_tInfo.fX += 4.f;
 			}
-			else
-			{
-				float _fX = m_tInfo.fX;
-				float _fCX = m_tInfo.fCX;
-
-				if ((int)(_fX - _fCX / 2) % 64 >= 32)
-					m_tInfo.fX += (64 - (int)(_fX - _fCX / 2) % 64);
-				else
-					m_tInfo.fX -= (int)(_fX - _fCX / 2) % 64;
-				m_bCanSmash = true;
-				m_bCheckOneTime = true;
-				m_bSetPos = true;
-			}
 		}
 		else
 		{
+			float _fX = m_tInfo.fX;
+			float _fCX = m_tInfo.fCX;
+
+			if ((int)(_fX - _fCX / 2) % 64 >= 32)
+				m_tInfo.fX += (64 - (int)(_fX - _fCX / 2) % 64);
+			else
+				m_tInfo.fX -= (int)(_fX - _fCX / 2) % 64;
+
 			m_bCanSmash = true;
 			m_bCheckOneTime = true;
 			m_bSetPos = true;
@@ -367,6 +362,15 @@ void COlmec::Attack()
 void COlmec::Broken()
 {
 	m_eCurState = BROKEN;
+
+	float _fX = m_tInfo.fX;
+	float _fCX = m_tInfo.fCX;
+
+	if ((int)(_fX - _fCX / 2) % 64 >= 32)
+		m_tInfo.fX += (64 - (int)(_fX - _fCX / 2) % 64);
+	else
+		m_tInfo.fX -= (int)(_fX - _fCX / 2) % 64;
+
 	if (CLineMgr::Get_Instance()->Collision_Olmec_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
 		Break();
 	Gravity();
