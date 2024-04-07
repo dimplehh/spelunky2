@@ -179,18 +179,32 @@ void COlmec::Rise()
 		if (m_tInfo.fY >= m_fPreY - TILECY * 2.5f)
 		{
 			m_tInfo.fY -= 5.f;
-			if (abs(m_fPrePlayerX - m_tInfo.fX) >= 5)
+			if (abs(m_fPrePlayerX - m_tInfo.fX) >= 5 && m_bSetPos == false)
 			{
 				if (m_fPrePlayerX < m_tInfo.fX)
 					m_tInfo.fX -= 4.f;
 				else
 					m_tInfo.fX += 4.f;
 			}
+			else
+			{
+				float _fX = m_tInfo.fX;
+				float _fCX = m_tInfo.fCX;
+
+				if ((int)(_fX - _fCX / 2) % 64 >= 32)
+					m_tInfo.fX += (64 - (int)(_fX - _fCX / 2) % 64);
+				else
+					m_tInfo.fX -= (int)(_fX - _fCX / 2) % 64;
+				m_bCanSmash = true;
+				m_bCheckOneTime = true;
+				m_bSetPos = true;
+			}
 		}
 		else
 		{
 			m_bCanSmash = true;
 			m_bCheckOneTime = true;
+			m_bSetPos = true;
 		}
 	}
 }
@@ -200,6 +214,7 @@ void COlmec::Smash()
 	if (m_bCanSmash)
 	{
 		m_bCanRise = false;
+
 		if (CLineMgr::Get_Instance()->Collision_Olmec_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
 		{
 			if (m_bCheckOneTime == true)
@@ -212,6 +227,7 @@ void COlmec::Smash()
 			if (CLineMgr::Get_Instance()->Collision_Olmec_Line(m_tInfo.fX, m_tInfo.fY, m_tInfo.fCX, m_tInfo.fCY))
 			{
 				m_bCanSmash = false;
+				m_bSetPos = false;
 			}
 		}
 	}
@@ -226,6 +242,7 @@ void COlmec::Break() //Å¸ÀÏ ±ú¶ß¸®´Â ÇÔ¼ö
 
 	for (int _add = -1; _add <= 1; _add++)
 	{
+		SetBrokenTile(index + _add);
 		SetBrokenTile(index + _add + TILEX);
 		SetBrokenTile(index + _add + TILEX * 2);
 	}

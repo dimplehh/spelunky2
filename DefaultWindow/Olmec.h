@@ -58,6 +58,7 @@ private:
 	bool		m_bCanRise = false;
 	bool		m_bCanSmash = false;
 	bool		m_bCheckOneTime = true;
+	bool		m_bSetPos = false;
 
 
 private:										// Phase 2

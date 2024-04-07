@@ -135,7 +135,7 @@ int CTileMgr::Get_Tile_Idx(float _fX, float _fY)
 
 void CTileMgr::Save_Tile()
 {
-	HANDLE hFile = CreateFile(L"../Data/Tile2.dat",		// 파일 경로(이름을 포함)
+	HANDLE hFile = CreateFile(L"../Data/Tile3.dat",		// 파일 경로(이름을 포함)
 		GENERIC_WRITE,			// 파일 접근 모드(GENERIC_READ : 읽기 전용)
 		NULL,					// 공유 방식, 파일이 열려 있는 상태에서 다른 프로세서에서 오픈하고자 할 때 허용할 지에 대한 여부(NULL인 경우 공유하지 않음)
 		NULL,					// 보안 모드(NULL인 경우 기본 보안 상태)
@@ -169,7 +169,7 @@ void CTileMgr::Save_Tile()
 
 void CTileMgr::Load_Tile()
 {
-	HANDLE hFile = CreateFile(L"../Data/Tile2.dat", GENERIC_READ, NULL, NULL, OPEN_EXISTING,	FILE_ATTRIBUTE_NORMAL, NULL);
+	HANDLE hFile = CreateFile(L"../Data/Tile3.dat", GENERIC_READ, NULL, NULL, OPEN_EXISTING,	FILE_ATTRIBUTE_NORMAL, NULL);
 
 	if (INVALID_HANDLE_VALUE == hFile)
 	{
