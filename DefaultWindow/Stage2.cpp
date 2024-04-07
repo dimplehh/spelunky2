@@ -147,6 +147,7 @@ void CStage2::InsertBmps()
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Effect/StarEffect.bmp", L"StarEffect");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Effect/BlinkEffect.bmp", L"BlinkEffect");
 	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Effect/BombEffect.bmp", L"BombEffect");
+	CBmpMgr::Get_Instance()->Insert_Bmp(L"../Image/Effect/BombEffectBase.bmp", L"BombEffectBase");
 }
 
 void CStage2::InsertMonsters()
@@ -161,7 +162,7 @@ void CStage2::InsertEffects()
 	for (int i = 0; i < 10; i++)		CObjMgr::Get_Instance()->Add_Object(OBJ_EFFECT, CAbstractFactory<CDustEffect>::Create(0, 0));
 	for (int i = 0; i < 10; i++)	CObjMgr::Get_Instance()->Add_Object(OBJ_EFFECT, CAbstractFactory<CStarEffect>::Create(0, 0));
 	for (int i = 0; i < 6; i++)		CObjMgr::Get_Instance()->Add_Object(OBJ_EFFECT, CAbstractFactory<CBlinkEffect>::Create(0, 0));
-	for (int i = 0; i < 50; i++)	CObjMgr::Get_Instance()->Add_Object(OBJ_EFFECT, CAbstractFactory<CBombEffect>::Create(0, 0));
+	for (int i = 0; i < 10; i++)	CObjMgr::Get_Instance()->Add_Object(OBJ_EFFECT, CAbstractFactory<CBombEffect>::Create(0, 0));
 }
 
 void CStage2::InsertObstacles()
