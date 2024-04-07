@@ -20,10 +20,10 @@ void CBombEffect::Initialize()
 	m_pFrameKey = L"BombEffectBase";
 
 	m_eEffectID = EFFECT_BOMB;
-	m_tFrame = { 0, 24, 0, 24, false, 20, GetTickCount(), 1 };
-	Set_Frame(0, 24, 0, false, 20, 1, 24);
+	m_tFrame = { 0, 24, 0, 24, false, 10, GetTickCount(), 1 };
+	Set_Frame(0, 24, 0, false, 10, 1, 24);
 	m_iSize = m_iMinSize;
-	m_eRender = RENDER_UI;
+	m_eRender = RENDER_EFFECT;
 }
 
 int CBombEffect::Update()
